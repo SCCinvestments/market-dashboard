@@ -160,7 +160,7 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
   "isTransparent": true,
   "width": "100%",
   "height": "400",
-  "locale": "kr",
+  "locale": "ko_KR",
   "importanceFilter": "2,3",
   "countryFilter": "us"
 }}
