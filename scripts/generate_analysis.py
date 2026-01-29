@@ -1,6 +1,6 @@
 import os
 import json
-import anthropic
+import requests
 
 def load_market_data():
     try:
@@ -13,10 +13,11 @@ def generate_analysis(market_data):
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
         return None
-    client = anthropic.Anthropic(api_key=api_key)
+    
     crypto_summary = "\n".join([f"- {c['name']}: ${c['price']:,} ({c['change']:+.2f}%)" for c in market_data.get("crypto", [])])
     indices_summary = "\n".join([f"- {i['name']}: {i['price']:,} ({i['change']:+.2f}%)" for i in market_data.get("us_indices", [])])
     fear_greed = market_data.get("fear_greed", {})
+    
     prompt = f"""전문 금융 애널리스트로서 시장 분석을 작성해주세요.
 
 암호화폐:
@@ -28,11 +29,26 @@ def generate_analysis(market_data):
 
 HTML 형식으로 h3과 p 태그만 사용해서 작성:
 1. 최근 글로벌 이슈
-2. 전반적인 추세 분석  
+2. 전반적인 추세 분석
 3. 종합 견해"""
+
     try:
-        message = client.messages.create(model="claude-sonnet-4-20250514", max_tokens=2000, messages=[{"role": "user", "content": prompt}])
-        return message.content[0].text
+        response = requests.post(
+            "https://api.anthropic.com/v1/messages",
+            headers={
+                "x-api-key": api_key,
+                "content-type": "application/json",
+                "anthropic-version": "2023-06-01"
+            },
+            json={
+                "model": "claude-sonnet-4-20250514",
+                "max_tokens": 2000,
+                "messages": [{"role": "user", "content": prompt}]
+            },
+            timeout=60
+        )
+        data = response.json()
+        return data["content"][0]["text"]
     except:
         return None
 
@@ -40,11 +56,12 @@ def generate_prediction(market_data):
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
         return None
-    client = anthropic.Anthropic(api_key=api_key)
+    
     btc = next((c for c in market_data.get("crypto", []) if c["symbol"] == "BTC"), None)
     if not btc:
         return None
     fear_greed = market_data.get("fear_greed", {})
+    
     prompt = f"""암호화폐 전문가로서 비트코인 분석을 작성해주세요.
 
 비트코인: ${btc['price']:,} ({btc['change']:+.2f}%)
@@ -54,9 +71,24 @@ HTML 형식으로 h3과 p 태그만 사용:
 1. 비트코인 단기 전망
 2. 기술적 분석 근거
 3. 투자자 대응방안"""
+
     try:
-        message = client.messages.create(model="claude-sonnet-4-20250514", max_tokens=1500, messages=[{"role": "user", "content": prompt}])
-        return message.content[0].text
+        response = requests.post(
+            "https://api.anthropic.com/v1/messages",
+            headers={
+                "x-api-key": api_key,
+                "content-type": "application/json",
+                "anthropic-version": "2023-06-01"
+            },
+            json={
+                "model": "claude-sonnet-4-20250514",
+                "max_tokens": 1500,
+                "messages": [{"role": "user", "content": prompt}]
+            },
+            timeout=60
+        )
+        data = response.json()
+        return data["content"][0]["text"]
     except:
         return None
 
@@ -75,3 +107,12 @@ def main():
 
 if __name__ == "__main__":
     main()
+```
+
+4. **"Commit changes"** 클릭
+
+---
+
+그리고 **requirements.txt**도 수정:
+```
+requests==2.31.0
