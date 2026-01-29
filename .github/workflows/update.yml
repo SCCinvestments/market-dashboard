@@ -38,6 +38,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git pull --rebase
           git add -A
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update market data" && git push)
+          git commit -m "Update market data" || true
+          git pull --rebase origin main
+          git push
