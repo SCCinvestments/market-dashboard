@@ -12,20 +12,21 @@ def main():
     kr_indices = data.get("kr_indices", [])
     btc_history = data.get("btc_history", {"labels": [], "prices": []})
     analysis = data.get("analysis", {})
+    economic_calendar = data.get("economic_calendar", [])
+    futures_data = data.get("futures_data", {})
     
     fg_value = fear_greed.get("value", 50)
     fg_label = "극도의 공포" if fg_value <= 25 else "공포" if fg_value <= 45 else "중립" if fg_value <= 55 else "탐욕" if fg_value <= 75 else "극도의 탐욕"
     fg_class = "fear" if fg_value <= 45 else "neutral" if fg_value <= 55 else "greed"
     
-    # BTC 데이터 찾기
-    btc_data = next((c for c in crypto if c["symbol"] == "BTC"), {"price": 0, "change": 0})
-    
-    # 차트 데이터 JSON
+    # JSON 데이터
     btc_labels = json.dumps(btc_history.get("labels", []))
     btc_prices = json.dumps(btc_history.get("prices", []))
     crypto_json = json.dumps(crypto, ensure_ascii=False)
     us_indices_json = json.dumps(us_indices, ensure_ascii=False)
     kr_indices_json = json.dumps(kr_indices, ensure_ascii=False)
+    economic_calendar_json = json.dumps(economic_calendar, ensure_ascii=False)
+    futures_data_json = json.dumps(futures_data, ensure_ascii=False)
     
     global_analysis = analysis.get("global_analysis", "<p>분석 데이터 없음</p>")
     prediction_analysis = analysis.get("prediction_analysis", "<p>분석 데이터 없음</p>")
@@ -40,23 +41,29 @@ def main():
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
 *{{margin:0;padding:0;box-sizing:border-box}}
-:root{{--bg-primary:#0a0a0f;--bg-secondary:#12121a;--bg-card:#1a1a25;--border:#2a2a3a;--text:#fff;--text-secondary:#8a8a9a;--red:#ff4757;--green:#2ed573;--blue:#3742fa;--yellow:#ffa502}}
+:root{{--bg-primary:#0a0a0f;--bg-secondary:#12121a;--bg-card:#1a1a25;--border:#2a2a3a;--text:#fff;--text-secondary:#8a8a9a;--red:#ff4757;--green:#2ed573;--blue:#3742fa;--yellow:#ffa502;--orange:#ff9f43}}
 body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:var(--text);line-height:1.6}}
 .header{{background:var(--bg-secondary);padding:1rem 2rem;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}}
-.header-content{{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}}
+.header-content{{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}}
 .logo{{font-size:1.5rem;font-weight:900;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}}
 .update-time{{color:var(--text-secondary);font-size:0.85rem;display:flex;align-items:center;gap:0.5rem}}
 .live-dot{{width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}}
 @keyframes pulse{{0%,100%{{opacity:1}}50%{{opacity:0.5}}}}
 .container{{max-width:1400px;margin:0 auto;padding:2rem}}
 .section{{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;margin-bottom:1.5rem;overflow:hidden}}
-.section-header{{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 1.5rem;cursor:pointer;border-bottom:1px solid var(--border)}}
+.section-header{{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 1.5rem;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.2s}}
 .section-header:hover{{background:rgba(255,255,255,0.02)}}
 .section-title{{font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:0.75rem}}
 .section-title::before{{content:'';width:4px;height:20px;background:var(--red);border-radius:2px}}
-.toggle-btn{{color:var(--text-secondary);font-size:0.85rem}}
+.section-title.blue::before{{background:var(--blue)}}
+.section-title.green::before{{background:var(--green)}}
+.section-title.yellow::before{{background:var(--yellow)}}
+.section-title.orange::before{{background:var(--orange)}}
+.toggle-btn{{color:var(--text-secondary);font-size:0.85rem;transition:transform 0.2s}}
+.section.collapsed .toggle-btn{{transform:rotate(180deg)}}
 .section-content{{padding:1.5rem}}
 .section.collapsed .section-content{{display:none}}
+.grid-2{{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}}
 .chart-tabs{{display:flex;gap:0.5rem;margin-bottom:1rem;flex-wrap:wrap}}
 .chart-tab{{padding:0.6rem 1.2rem;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-secondary);font-size:0.9rem;font-weight:500;cursor:pointer;transition:all 0.2s}}
 .chart-tab:hover{{border-color:var(--blue);color:var(--text)}}
@@ -100,38 +107,62 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 .analysis-content h3:first-child{{margin-top:0}}
 .analysis-content h3::before{{content:'▸';color:var(--blue)}}
 .analysis-content p{{margin-bottom:1rem;line-height:1.8}}
-.liquidation-section{{margin-top:1rem}}
-.liquidation-bar{{display:flex;height:40px;border-radius:8px;overflow:hidden;margin:1rem 0}}
-.liquidation-long{{background:linear-gradient(90deg,#2ed573,#7bed9f);display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:0.85rem}}
-.liquidation-short{{background:linear-gradient(90deg,#ff6b81,#ff4757);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.85rem}}
-.liquidation-info{{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}}
-.liquidation-card{{background:var(--bg-secondary);padding:1rem;border-radius:8px;text-align:center}}
-.liquidation-card h5{{color:var(--text-secondary);font-size:0.8rem;margin-bottom:0.5rem}}
-.liquidation-card .value{{font-size:1.25rem;font-weight:700}}
-.liquidation-card .value.long{{color:var(--green)}}
-.liquidation-card .value.short{{color:var(--red)}}
+.calendar-table{{width:100%;border-collapse:collapse}}
+.calendar-table th{{background:var(--bg-secondary);padding:0.75rem 1rem;text-align:left;font-weight:600;font-size:0.85rem;color:var(--text-secondary)}}
+.calendar-table td{{padding:0.75rem 1rem;border-bottom:1px solid var(--border);font-size:0.9rem}}
+.calendar-table tr:hover{{background:rgba(255,255,255,0.02)}}
+.importance{{color:var(--yellow)}}
+.event-time{{color:var(--blue);font-weight:600}}
+.futures-grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}}
+.futures-card{{background:var(--bg-secondary);border-radius:12px;padding:1.25rem;text-align:center}}
+.futures-card h5{{color:var(--text-secondary);font-size:0.8rem;margin-bottom:0.5rem;font-weight:500}}
+.futures-card .value{{font-size:1.5rem;font-weight:700}}
+.futures-card .sub{{font-size:0.8rem;color:var(--text-secondary);margin-top:0.25rem}}
+.long-short-bar{{display:flex;height:30px;border-radius:6px;overflow:hidden;margin:1rem 0}}
+.long-bar{{background:linear-gradient(90deg,#2ed573,#7bed9f);display:flex;align-items:center;justify-content:center;color:#000;font-weight:600;font-size:0.8rem}}
+.short-bar{{background:linear-gradient(90deg,#ff6b81,#ff4757);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:0.8rem}}
+.funding-table{{width:100%;margin-top:1rem}}
+.funding-table td{{padding:0.5rem;text-align:center;border-bottom:1px solid var(--border)}}
+.funding-table .symbol{{font-weight:700}}
 .footer{{text-align:center;padding:2rem;color:var(--text-secondary);font-size:0.85rem;border-top:1px solid var(--border);margin-top:2rem}}
 @media(max-width:768px){{
 .container{{padding:1rem}}
+.header-content{{justify-content:center;text-align:center}}
 .fear-greed-container{{flex-direction:column;text-align:center}}
 .crypto-grid{{grid-template-columns:repeat(2,1fr)}}
-.liquidation-info{{grid-template-columns:1fr}}
+.futures-grid{{grid-template-columns:1fr}}
+.grid-2{{grid-template-columns:1fr}}
 }}
 </style>
 </head>
 <body>
 <header class="header">
 <div class="header-content">
-<div class="logo">AI 마켓 대시보드</div>
+<div class="logo">🚀 AI 마켓 대시보드</div>
 <div class="update-time"><span class="live-dot"></span>{updated_at}</div>
 </div>
 </header>
 
 <main class="container">
 
+<!-- 경제지표 일정 -->
+<section class="section" id="calendarSection">
+<div class="section-header" onclick="toggleSection('calendarSection')">
+<h2 class="section-title orange">📅 미국 경제지표 일정</h2>
+<span class="toggle-btn">▲</span>
+</div>
+<div class="section-content">
+<table class="calendar-table">
+<thead><tr><th>날짜</th><th>시간(KST)</th><th>이벤트</th><th>예측</th><th>이전</th></tr></thead>
+<tbody id="calendarBody"></tbody>
+</table>
+</div>
+</section>
+
+<!-- 글로벌 시장 -->
 <section class="section" id="chartSection">
 <div class="section-header" onclick="toggleSection('chartSection')">
-<h2 class="section-title">글로벌 시장</h2>
+<h2 class="section-title">📈 글로벌 시장</h2>
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
@@ -144,9 +175,43 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 </div>
 </section>
 
+<!-- 선물 데이터 -->
+<section class="section" id="futuresSection">
+<div class="section-header" onclick="toggleSection('futuresSection')">
+<h2 class="section-title blue">⚡ BTC 선물 데이터</h2>
+<span class="toggle-btn">▲</span>
+</div>
+<div class="section-content">
+<div class="futures-grid">
+<div class="futures-card">
+<h5>롱/숏 비율</h5>
+<div class="value" id="lsRatio">-</div>
+<div class="sub" id="lsDetail">롱 -% / 숏 -%</div>
+</div>
+<div class="futures-card">
+<h5>펀딩비 (8H)</h5>
+<div class="value" id="fundingRate">-</div>
+<div class="sub" id="fundingDesc">-</div>
+</div>
+<div class="futures-card">
+<h5>미결제약정</h5>
+<div class="value" id="openInterest">-</div>
+<div class="sub">Open Interest</div>
+</div>
+</div>
+<div class="long-short-bar">
+<div class="long-bar" id="longBar" style="width:50%">롱 50%</div>
+<div class="short-bar" id="shortBar" style="width:50%">숏 50%</div>
+</div>
+<h4 style="margin-top:1.5rem;margin-bottom:0.5rem;font-size:0.95rem;">주요 코인 펀딩비</h4>
+<table class="funding-table" id="fundingTable"></table>
+</div>
+</section>
+
+<!-- AI 분석 -->
 <section class="section" id="analysisSection">
 <div class="section-header" onclick="toggleSection('analysisSection')">
-<h2 class="section-title">AI 시장 분석</h2>
+<h2 class="section-title green">🤖 AI 시장 분석</h2>
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
@@ -154,9 +219,10 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 </div>
 </section>
 
+<!-- AI 예측 -->
 <section class="section" id="predictionSection">
 <div class="section-header" onclick="toggleSection('predictionSection')">
-<h2 class="section-title">AI 예측</h2>
+<h2 class="section-title yellow">🔮 AI 예측</h2>
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
@@ -164,9 +230,10 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 </div>
 </section>
 
+<!-- 암호화폐 -->
 <section class="section" id="cryptoSection">
 <div class="section-header" onclick="toggleSection('cryptoSection')">
-<h2 class="section-title">암호화폐</h2>
+<h2 class="section-title">💰 암호화폐</h2>
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
@@ -182,35 +249,10 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 </div>
 </section>
 
-<section class="section" id="liquidationSection">
-<div class="section-header" onclick="toggleSection('liquidationSection')">
-<h2 class="section-title">청산맵 (24H)</h2>
-<span class="toggle-btn">▲</span>
-</div>
-<div class="section-content">
-<div class="liquidation-section">
-<p style="color:var(--text-secondary);margin-bottom:1rem;">최근 24시간 비트코인 선물 청산 현황</p>
-<div class="liquidation-bar">
-<div class="liquidation-long" id="longBar">롱 청산</div>
-<div class="liquidation-short" id="shortBar">숏 청산</div>
-</div>
-<div class="liquidation-info">
-<div class="liquidation-card">
-<h5>롱 청산</h5>
-<div class="value long" id="longValue">$0M</div>
-</div>
-<div class="liquidation-card">
-<h5>숏 청산</h5>
-<div class="value short" id="shortValue">$0M</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-
+<!-- 국내 증시 -->
 <section class="section" id="krSection">
 <div class="section-header" onclick="toggleSection('krSection')">
-<h2 class="section-title">국내 증시</h2>
+<h2 class="section-title">🇰🇷 국내 증시</h2>
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
@@ -224,7 +266,7 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 </main>
 
 <footer class="footer">
-<p>본 정보는 투자 권유가 아니며, 투자 판단의 책임은 본인에게 있습니다.</p>
+<p>⚠️ 본 정보는 투자 권유가 아니며, 투자 판단의 책임은 본인에게 있습니다.</p>
 <p style="margin-top:0.5rem">© 2026 AI 마켓 대시보드 · Powered by Claude AI</p>
 </footer>
 
@@ -234,16 +276,70 @@ const btcPrices = {btc_prices};
 const cryptoData = {crypto_json};
 const usIndices = {us_indices_json};
 const krIndices = {kr_indices_json};
+const economicCalendar = {economic_calendar_json};
+const futuresData = {futures_data_json};
 const fgValue = {fg_value};
 
 let currentChart = null;
-let currentTab = 'btc';
 
 function toggleSection(id) {{
     const section = document.getElementById(id);
-    const btn = section.querySelector('.toggle-btn');
     section.classList.toggle('collapsed');
-    btn.textContent = section.classList.contains('collapsed') ? '▼' : '▲';
+}}
+
+function renderCalendar() {{
+    const tbody = document.getElementById('calendarBody');
+    if (!economicCalendar || economicCalendar.length === 0) {{
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-secondary)">경제지표 일정이 없습니다</td></tr>';
+        return;
+    }}
+    
+    tbody.innerHTML = economicCalendar.map(item => {{
+        const stars = '⭐'.repeat(item.importance || 3);
+        return `<tr>
+            <td>${{item.date}}</td>
+            <td class="event-time">${{item.time}}</td>
+            <td>${{item.event}} <span class="importance">${{stars}}</span></td>
+            <td>${{item.forecast || '-'}}</td>
+            <td>${{item.previous || '-'}}</td>
+        </tr>`;
+    }}).join('');
+}}
+
+function renderFutures() {{
+    // 롱/숏 비율
+    if (futuresData.long_short_ratio) {{
+        const ls = futuresData.long_short_ratio;
+        document.getElementById('lsRatio').textContent = ls.ratio.toFixed(2);
+        document.getElementById('lsDetail').textContent = `롱 ${{ls.long.toFixed(1)}}% / 숏 ${{ls.short.toFixed(1)}}%`;
+        document.getElementById('longBar').style.width = ls.long + '%';
+        document.getElementById('longBar').textContent = '롱 ' + ls.long.toFixed(1) + '%';
+        document.getElementById('shortBar').style.width = ls.short + '%';
+        document.getElementById('shortBar').textContent = '숏 ' + ls.short.toFixed(1) + '%';
+    }}
+    
+    // 펀딩비
+    if (futuresData.funding_rate !== null && futuresData.funding_rate !== undefined) {{
+        const fr = futuresData.funding_rate;
+        document.getElementById('fundingRate').textContent = (fr >= 0 ? '+' : '') + fr.toFixed(4) + '%';
+        document.getElementById('fundingRate').style.color = fr >= 0 ? 'var(--green)' : 'var(--red)';
+        document.getElementById('fundingDesc').textContent = fr >= 0 ? '롱이 숏에게 지불' : '숏이 롱에게 지불';
+    }}
+    
+    // 미결제약정
+    if (futuresData.open_interest) {{
+        const oi = futuresData.open_interest;
+        document.getElementById('openInterest').textContent = oi.toLocaleString() + ' BTC';
+    }}
+    
+    // 펀딩비 테이블
+    if (futuresData.funding_rates && futuresData.funding_rates.length > 0) {{
+        const table = document.getElementById('fundingTable');
+        table.innerHTML = '<tr>' + futuresData.funding_rates.map(f => {{
+            const color = f.rate >= 0 ? 'var(--green)' : 'var(--red)';
+            return `<td><div class="symbol">${{f.symbol}}</div><div style="color:${{color}}">${{f.rate >= 0 ? '+' : ''}}${{f.rate.toFixed(4)}}%</div></td>`;
+        }}).join('') + '</tr>';
+    }}
 }}
 
 function renderChartTabs() {{
@@ -263,11 +359,10 @@ function renderChartTabs() {{
 function switchChart(type) {{
     document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
     document.getElementById('tab-' + type)?.classList.add('active');
-    currentTab = type;
-    renderChart();
+    renderChart(type);
 }}
 
-function renderChart() {{
+function renderChart(type = 'btc') {{
     const ctx = document.getElementById('mainChart').getContext('2d');
     if (currentChart) currentChart.destroy();
     
@@ -276,15 +371,15 @@ function renderChart() {{
     let label = 'BTC/USD';
     let color = '#ffa502';
     
-    if (currentTab !== 'btc') {{
-        const idx = usIndices.find(i => (i.key || i.name.toLowerCase().replace(' ', '')) === currentTab);
+    if (type !== 'btc') {{
+        const idx = usIndices.find(i => (i.key || i.name.toLowerCase().replace(' ', '')) === type);
         if (idx) {{
             label = idx.name;
             const base = idx.price;
             prices = btcLabels.map((_, i) => Math.round(base * (1 + (i - 5) * 0.003 + Math.random() * 0.002)));
-            color = currentTab.includes('nasdaq') || currentTab.includes('나스닥') ? '#3742fa' : 
-                    currentTab.includes('sp') || currentTab.includes('S&P') ? '#2ed573' : 
-                    currentTab.includes('dow') || currentTab.includes('다우') ? '#ff6b81' : '#ff4757';
+            color = type.includes('nasdaq') || type.includes('나스닥') ? '#3742fa' : 
+                    type.includes('sp') || type.includes('S&P') ? '#2ed573' : 
+                    type.includes('dow') || type.includes('다우') ? '#ff6b81' : '#ff4757';
         }}
     }}
     
@@ -379,42 +474,16 @@ function renderFearGreedGauge() {{
     }});
 }}
 
-function renderLiquidation() {{
-    // 청산 데이터 (실제로는 API에서 가져와야 함, 여기선 BTC 가격 변동 기반 추정)
-    const btc = cryptoData.find(c => c.symbol === 'BTC') || {{change: 0}};
-    const volatility = Math.abs(btc.change);
-    
-    // 가격이 하락하면 롱 청산이 많고, 상승하면 숏 청산이 많음
-    let longLiq, shortLiq;
-    if (btc.change < 0) {{
-        longLiq = Math.round(50 + volatility * 15 + Math.random() * 30);
-        shortLiq = Math.round(20 + Math.random() * 20);
-    }} else {{
-        longLiq = Math.round(20 + Math.random() * 20);
-        shortLiq = Math.round(50 + volatility * 15 + Math.random() * 30);
-    }}
-    
-    const total = longLiq + shortLiq;
-    const longPct = (longLiq / total * 100).toFixed(0);
-    const shortPct = (shortLiq / total * 100).toFixed(0);
-    
-    document.getElementById('longBar').style.width = longPct + '%';
-    document.getElementById('longBar').textContent = '롱 ' + longPct + '%';
-    document.getElementById('shortBar').style.width = shortPct + '%';
-    document.getElementById('shortBar').textContent = '숏 ' + shortPct + '%';
-    document.getElementById('longValue').textContent = '$' + longLiq + 'M';
-    document.getElementById('shortValue').textContent = '$' + shortLiq + 'M';
-}}
-
 // 초기화
 document.addEventListener('DOMContentLoaded', function() {{
+    renderCalendar();
+    renderFutures();
     renderChartTabs();
     renderChart();
     renderIndicesTable();
     renderCryptoGrid();
     renderKrTable();
     renderFearGreedGauge();
-    renderLiquidation();
 }});
 </script>
 </body>
