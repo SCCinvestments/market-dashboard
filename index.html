@@ -8,23 +8,29 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg-primary:#0a0a0f;--bg-secondary:#12121a;--bg-card:#1a1a25;--border:#2a2a3a;--text:#fff;--text-secondary:#8a8a9a;--red:#ff4757;--green:#2ed573;--blue:#3742fa;--yellow:#ffa502}
+:root{--bg-primary:#0a0a0f;--bg-secondary:#12121a;--bg-card:#1a1a25;--border:#2a2a3a;--text:#fff;--text-secondary:#8a8a9a;--red:#ff4757;--green:#2ed573;--blue:#3742fa;--yellow:#ffa502;--orange:#ff9f43}
 body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:var(--text);line-height:1.6}
 .header{background:var(--bg-secondary);padding:1rem 2rem;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
-.header-content{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.header-content{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
 .logo{font-size:1.5rem;font-weight:900;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .update-time{color:var(--text-secondary);font-size:0.85rem;display:flex;align-items:center;gap:0.5rem}
 .live-dot{width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
 .container{max-width:1400px;margin:0 auto;padding:2rem}
 .section{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;margin-bottom:1.5rem;overflow:hidden}
-.section-header{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 1.5rem;cursor:pointer;border-bottom:1px solid var(--border)}
+.section-header{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 1.5rem;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.2s}
 .section-header:hover{background:rgba(255,255,255,0.02)}
 .section-title{font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:0.75rem}
 .section-title::before{content:'';width:4px;height:20px;background:var(--red);border-radius:2px}
-.toggle-btn{color:var(--text-secondary);font-size:0.85rem}
+.section-title.blue::before{background:var(--blue)}
+.section-title.green::before{background:var(--green)}
+.section-title.yellow::before{background:var(--yellow)}
+.section-title.orange::before{background:var(--orange)}
+.toggle-btn{color:var(--text-secondary);font-size:0.85rem;transition:transform 0.2s}
+.section.collapsed .toggle-btn{transform:rotate(180deg)}
 .section-content{padding:1.5rem}
 .section.collapsed .section-content{display:none}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
 .chart-tabs{display:flex;gap:0.5rem;margin-bottom:1rem;flex-wrap:wrap}
 .chart-tab{padding:0.6rem 1.2rem;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-secondary);font-size:0.9rem;font-weight:500;cursor:pointer;transition:all 0.2s}
 .chart-tab:hover{border-color:var(--blue);color:var(--text)}
@@ -68,38 +74,62 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:va
 .analysis-content h3:first-child{margin-top:0}
 .analysis-content h3::before{content:'▸';color:var(--blue)}
 .analysis-content p{margin-bottom:1rem;line-height:1.8}
-.liquidation-section{margin-top:1rem}
-.liquidation-bar{display:flex;height:40px;border-radius:8px;overflow:hidden;margin:1rem 0}
-.liquidation-long{background:linear-gradient(90deg,#2ed573,#7bed9f);display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:0.85rem}
-.liquidation-short{background:linear-gradient(90deg,#ff6b81,#ff4757);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.85rem}
-.liquidation-info{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
-.liquidation-card{background:var(--bg-secondary);padding:1rem;border-radius:8px;text-align:center}
-.liquidation-card h5{color:var(--text-secondary);font-size:0.8rem;margin-bottom:0.5rem}
-.liquidation-card .value{font-size:1.25rem;font-weight:700}
-.liquidation-card .value.long{color:var(--green)}
-.liquidation-card .value.short{color:var(--red)}
+.calendar-table{width:100%;border-collapse:collapse}
+.calendar-table th{background:var(--bg-secondary);padding:0.75rem 1rem;text-align:left;font-weight:600;font-size:0.85rem;color:var(--text-secondary)}
+.calendar-table td{padding:0.75rem 1rem;border-bottom:1px solid var(--border);font-size:0.9rem}
+.calendar-table tr:hover{background:rgba(255,255,255,0.02)}
+.importance{color:var(--yellow)}
+.event-time{color:var(--blue);font-weight:600}
+.futures-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+.futures-card{background:var(--bg-secondary);border-radius:12px;padding:1.25rem;text-align:center}
+.futures-card h5{color:var(--text-secondary);font-size:0.8rem;margin-bottom:0.5rem;font-weight:500}
+.futures-card .value{font-size:1.5rem;font-weight:700}
+.futures-card .sub{font-size:0.8rem;color:var(--text-secondary);margin-top:0.25rem}
+.long-short-bar{display:flex;height:30px;border-radius:6px;overflow:hidden;margin:1rem 0}
+.long-bar{background:linear-gradient(90deg,#2ed573,#7bed9f);display:flex;align-items:center;justify-content:center;color:#000;font-weight:600;font-size:0.8rem}
+.short-bar{background:linear-gradient(90deg,#ff6b81,#ff4757);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:0.8rem}
+.funding-table{width:100%;margin-top:1rem}
+.funding-table td{padding:0.5rem;text-align:center;border-bottom:1px solid var(--border)}
+.funding-table .symbol{font-weight:700}
 .footer{text-align:center;padding:2rem;color:var(--text-secondary);font-size:0.85rem;border-top:1px solid var(--border);margin-top:2rem}
 @media(max-width:768px){
 .container{padding:1rem}
+.header-content{justify-content:center;text-align:center}
 .fear-greed-container{flex-direction:column;text-align:center}
 .crypto-grid{grid-template-columns:repeat(2,1fr)}
-.liquidation-info{grid-template-columns:1fr}
+.futures-grid{grid-template-columns:1fr}
+.grid-2{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 <header class="header">
 <div class="header-content">
-<div class="logo">AI 마켓 대시보드</div>
-<div class="update-time"><span class="live-dot"></span>2026년 01월 29일 17:53 KST</div>
+<div class="logo">🚀 AI 마켓 대시보드</div>
+<div class="update-time"><span class="live-dot"></span>2026년 01월 29일 18:52 KST</div>
 </div>
 </header>
 
 <main class="container">
 
+<!-- 경제지표 일정 -->
+<section class="section" id="calendarSection">
+<div class="section-header" onclick="toggleSection('calendarSection')">
+<h2 class="section-title orange">📅 미국 경제지표 일정</h2>
+<span class="toggle-btn">▲</span>
+</div>
+<div class="section-content">
+<table class="calendar-table">
+<thead><tr><th>날짜</th><th>시간(KST)</th><th>이벤트</th><th>예측</th><th>이전</th></tr></thead>
+<tbody id="calendarBody"></tbody>
+</table>
+</div>
+</section>
+
+<!-- 글로벌 시장 -->
 <section class="section" id="chartSection">
 <div class="section-header" onclick="toggleSection('chartSection')">
-<h2 class="section-title">글로벌 시장</h2>
+<h2 class="section-title">📈 글로벌 시장</h2>
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
@@ -112,43 +142,83 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:va
 </div>
 </section>
 
+<!-- 선물 데이터 -->
+<section class="section" id="futuresSection">
+<div class="section-header" onclick="toggleSection('futuresSection')">
+<h2 class="section-title blue">⚡ BTC 선물 데이터</h2>
+<span class="toggle-btn">▲</span>
+</div>
+<div class="section-content">
+<div class="futures-grid">
+<div class="futures-card">
+<h5>롱/숏 비율</h5>
+<div class="value" id="lsRatio">-</div>
+<div class="sub" id="lsDetail">롱 -% / 숏 -%</div>
+</div>
+<div class="futures-card">
+<h5>펀딩비 (8H)</h5>
+<div class="value" id="fundingRate">-</div>
+<div class="sub" id="fundingDesc">-</div>
+</div>
+<div class="futures-card">
+<h5>미결제약정</h5>
+<div class="value" id="openInterest">-</div>
+<div class="sub">Open Interest</div>
+</div>
+</div>
+<div class="long-short-bar">
+<div class="long-bar" id="longBar" style="width:50%">롱 50%</div>
+<div class="short-bar" id="shortBar" style="width:50%">숏 50%</div>
+</div>
+<h4 style="margin-top:1.5rem;margin-bottom:0.5rem;font-size:0.95rem;">주요 코인 펀딩비</h4>
+<table class="funding-table" id="fundingTable"></table>
+</div>
+</section>
+
+<!-- AI 분석 -->
 <section class="section" id="analysisSection">
 <div class="section-header" onclick="toggleSection('analysisSection')">
-<h2 class="section-title">AI 시장 분석</h2>
+<h2 class="section-title green">🤖 AI 시장 분석</h2>
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
-<div class="analysis-content"><h3>최근 글로벌 이슈</h3>
-<p>현재 시장은 연방준비제도의 통화정책 불확실성과 지정학적 긴장감 속에서 혼조세를 보이고 있습니다. 암호화폐 시장의 공포탐욕지수가 26으로 극도의 공포 상태를 나타내고 있어, 투자자들의 리스크 회피 심리가 강화되고 있는 상황입니다. 특히 규제 당국의 디지털 자산에 대한 강화된 감독 방침과 기관투자자들의 포지션 조정이 시장 변동성을 증가시키는 주요 요인으로 작용하고 있습니다.</p>
+<div class="analysis-content">```html
+<h3>최근 글로벌 이슈</h3>
+<p>현재 암호화폐 시장은 공포탐욕지수 26을 기록하며 '극도의 공포' 구간에 진입했습니다. 이는 투자자들이 리스크 회피 성향을 보이고 있음을 시사합니다. 특히 연말 포지션 정리와 함께 기관투자자들의 수익실현 매물이 증가하고 있는 상황으로 분석됩니다. 반면 미국 주식시장은 상대적으로 안정세를 유지하며 암호화폐 대비 강한 회복력을 보여주고 있습니다.</p>
 
 <h3>전반적인 추세 분석</h3>
-<p>미국 주식시장은 상대적으로 안정적인 모습을 보이며, S&P 500과 다우존스가 보합권을 유지하고 있고, 나스닥이 소폭 상승하며 기술주에 대한 선별적 매수세가 나타나고 있습니다. VIX 지수의 하락(-1.59%)은 주식시장의 변동성 우려가 다소 완화되고 있음을 시사합니다. 반면, 암호화폐 시장은 전반적으로 하락세를 보이며, 솔라나(-2.74%)와 도지코인(-3.17%)이 상대적으로 큰 폭의 하락을 기록했습니다. BNB만이 유일하게 상승(+0.17%)하며 바이낸스 생태계의 견고함을 보여주고 있습니다.</p>
+<p>암호화폐 시장 전반에 걸쳐 하락세가 지배적입니다. 비트코인이 $87,824에서 -1.59% 하락했으며, 알트코인들은 더욱 큰 폭의 조정을 보이고 있습니다. 특히 도지코인(-3.95%)과 솔라나(-3.29%)의 하락폭이 두드러집니다. BNB만이 -0.25%로 상대적으로 선방하고 있어 바이낸스 생태계의 안정성을 보여줍니다. 미국 주식시장은 나스닥(+0.17%)이 소폭 상승하며 기술주 중심의 완만한 회복세를 나타내고 있습니다.</p>
 
 <h3>종합 견해</h3>
-<p>현재 시장은 전통 금융시장과 암호화폐 시장 간의 뚜렷한 온도 차이를 보이고 있습니다. 주식시장의 안정성 대비 암호화폐 시장의 약세는 디지털 자산에 대한 투자자들의 신중한 접근을 반영하고 있습니다. 단기적으로는 공포탐욕지수의 극도 공포 수준과 주요 암호화폐들의 동반 하락세가 지속될 가능성이 높으나, 이는 역설적으로 매력적인 진입 기회가 될 수 있습니다. 향후 연준의 금리 정책 방향성과 규제 환경의 명확화가 시장 회복의 핵심 변수가 될 것으로 판단됩니다. 투자자들은 포트폴리오 다변화를 통해 리스크를 관리하며, 기술적 지지선 근처에서의 점진적 매수 전략을 고려해볼 필요가 있습니다.</p></div>
+<p>현재 시장은 전형적인 리스크 자산 조정 국면에 있습니다. VIX 지수 16.08은 변동성이 낮은 수준이지만, 암호화폐의 공포지수 26은 디지털 자산에 대한 투자심리가 크게 위축되었음을 보여줍니다. 단기적으로는 추가 조정 가능성이 있으나, 비트코인이 $85,000 지지선을 유지한다면 하락 모멘텀이 둔화될 것으로 예상됩니다. 투자자들은 현재 구간에서 분할 매수 전략을 고려하되, 철저한 리스크 관리가 필요한 시점입니다.</p>
+```</div>
 </div>
 </section>
 
+<!-- AI 예측 -->
 <section class="section" id="predictionSection">
 <div class="section-header" onclick="toggleSection('predictionSection')">
-<h2 class="section-title">AI 예측</h2>
+<h2 class="section-title yellow">🔮 AI 예측</h2>
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
-<div class="analysis-content"><h3>비트코인 단기 전망</h3>
-<p>현재 비트코인은 $87,856에서 -1.22% 하락세를 보이며 고점 대비 조정 국면에 진입했습니다. 공포탐욕지수 26(극단적 공포)은 시장 심리가 극도로 위축된 상태를 나타내며, 이는 역설적으로 매수 기회 신호로 해석될 수 있습니다. 단기적으로는 $85,000 지지선 테스트가 예상되며, 이 구간에서의 반등 여부가 향후 방향성을 결정할 것으로 전망됩니다.</p>
+<div class="analysis-content">```html
+<h3>비트코인 단기 전망</h3>
+<p>현재 비트코인은 $87,824에서 -1.59% 하락세를 보이고 있으며, 공포탐욕지수 26은 극도의 공포 상태를 나타내고 있습니다. 이러한 지표는 시장 심리가 매우 부정적임을 시사하며, 단기적으로 추가 조정 가능성이 높은 상황입니다. 다만 과도한 공포 상태는 종종 반등의 신호가 될 수 있어 향후 1-2주간 면밀한 관찰이 필요합니다.</p>
 
 <h3>기술적 분석 근거</h3>
-<p>일봉 차트상 RSI 지표가 과매도 구간(30 이하) 근접하며 반등 가능성을 시사하고 있습니다. 20일 이동평균선($89,200) 하단에서 거래되고 있어 단기 하락 추세가 지속되고 있으나, 거래량 감소와 함께 매도 압력이 점차 완화되는 모습입니다. 피보나치 되돌림 기준 61.8% 구간인 $84,500이 핵심 지지선으로 작용할 것으로 분석되며, 이 구간 이탈 시 $80,000까지 추가 하락 가능성을 배제할 수 없습니다.</p>
+<p>$87,000-$88,000 구간은 중요한 기술적 저항선 역할을 하고 있으며, 현재가격에서의 거래량 분석이 향후 방향성을 결정할 것으로 보입니다. RSI가 과매도 구간에 근접하고 있어 단기 반등 가능성이 존재하나, $85,000 지지선 이탈 시 $80,000까지 추가 하락할 수 있습니다. 이동평균선들이 하향 정렬되어 있어 중기적으로는 약세 모멘텀이 지속되고 있는 상황입니다.</p>
 
 <h3>투자자 대응방안</h3>
-<p>현재 극단적 공포 심리 상황에서는 분할 매수 전략을 권장합니다. $85,000, $82,000, $80,000 구간에서 3단계 분할 매수를 통해 평균 단가를 낮추는 전략이 효과적일 것입니다. 기존 보유자는 손절 기준을 $79,000 이하로 설정하되, 급격한 변동성에 대비해 포지션 사이즈를 평소 대비 축소 운용하시기 바랍니다. 또한 미국 연준 정책 발표, 기관 투자자 동향 등 펀더멘털 변화 요인을 지속 모니터링하여 시장 반전 신호를 놓치지 않도록 주의해야 합니다.</p></div>
+<p>현재 극도의 공포 상태에서는 성급한 매수보다는 단계적 접근이 바람직합니다. $85,000, $82,000, $78,000 구간에서 분할 매수 전략을 고려하고, 기존 보유자는 $90,000 돌파 시까지 관망하는 것이 안전합니다. 공포탐욕지수가 30 이하에서는 역발상 투자 기회가 될 수 있으나, 리스크 관리를 위해 총 투자금의 20-30%씩 단계적으로 진입하는 것을 권장합니다.</p>
+```</div>
 </div>
 </section>
 
+<!-- 암호화폐 -->
 <section class="section" id="cryptoSection">
 <div class="section-header" onclick="toggleSection('cryptoSection')">
-<h2 class="section-title">암호화폐</h2>
+<h2 class="section-title">💰 암호화폐</h2>
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
@@ -164,35 +234,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:va
 </div>
 </section>
 
-<section class="section" id="liquidationSection">
-<div class="section-header" onclick="toggleSection('liquidationSection')">
-<h2 class="section-title">청산맵 (24H)</h2>
-<span class="toggle-btn">▲</span>
-</div>
-<div class="section-content">
-<div class="liquidation-section">
-<p style="color:var(--text-secondary);margin-bottom:1rem;">최근 24시간 비트코인 선물 청산 현황</p>
-<div class="liquidation-bar">
-<div class="liquidation-long" id="longBar">롱 청산</div>
-<div class="liquidation-short" id="shortBar">숏 청산</div>
-</div>
-<div class="liquidation-info">
-<div class="liquidation-card">
-<h5>롱 청산</h5>
-<div class="value long" id="longValue">$0M</div>
-</div>
-<div class="liquidation-card">
-<h5>숏 청산</h5>
-<div class="value short" id="shortValue">$0M</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-
+<!-- 국내 증시 -->
 <section class="section" id="krSection">
 <div class="section-header" onclick="toggleSection('krSection')">
-<h2 class="section-title">국내 증시</h2>
+<h2 class="section-title">🇰🇷 국내 증시</h2>
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
@@ -206,26 +251,80 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:va
 </main>
 
 <footer class="footer">
-<p>본 정보는 투자 권유가 아니며, 투자 판단의 책임은 본인에게 있습니다.</p>
+<p>⚠️ 본 정보는 투자 권유가 아니며, 투자 판단의 책임은 본인에게 있습니다.</p>
 <p style="margin-top:0.5rem">© 2026 AI 마켓 대시보드 · Powered by Claude AI</p>
 </footer>
 
 <script>
 const btcLabels = ["01/20", "01/21", "01/22", "01/23", "01/24", "01/25", "01/26", "01/27", "01/28", "01/29", "01/29"];
-const btcPrices = [92558.0, 88313.0, 89354.0, 89443.0, 89412.0, 89171.0, 86548.0, 88308.0, 89204.0, 89162.0, 87854.0];
-const cryptoData = [{"symbol": "BTC", "name": "비트코인", "price": 87856, "change": -1.22}, {"symbol": "ETH", "name": "이더리움", "price": 2946.42, "change": -1.49}, {"symbol": "XRP", "name": "리플", "price": 1.88, "change": -1.61}, {"symbol": "SOL", "name": "솔라나", "price": 123.17, "change": -2.74}, {"symbol": "BNB", "name": "BNB", "price": 903.22, "change": 0.17}, {"symbol": "DOGE", "name": "도지코인", "price": 0.12, "change": -3.17}];
-const usIndices = [{"key": "sp500", "name": "S&P 500", "price": 6978.03, "change": -0.01}, {"key": "dow", "name": "다우존스", "price": 49015.6, "change": 0.02}, {"key": "nasdaq", "name": "나스닥", "price": 23857.45, "change": 0.17}, {"key": "vix", "name": "VIX", "price": 16.09, "change": -1.59}];
-const krIndices = [{"key": "kospi", "name": "코스피", "price": 5221.25, "change": 0.98}, {"key": "kosdaq", "name": "코스닥", "price": 1164.41, "change": 7.56}];
+const btcPrices = [92558.0, 88313.0, 89354.0, 89443.0, 89412.0, 89171.0, 86548.0, 88308.0, 89204.0, 89162.0, 87824.0];
+const cryptoData = [{"symbol": "BTC", "name": "비트코인", "price": 87824, "change": -1.59}, {"symbol": "ETH", "name": "이더리움", "price": 2942.3, "change": -2.14}, {"symbol": "XRP", "name": "리플", "price": 1.87, "change": -2.61}, {"symbol": "SOL", "name": "솔라나", "price": 122.99, "change": -3.29}, {"symbol": "BNB", "name": "BNB", "price": 903.58, "change": -0.25}, {"symbol": "DOGE", "name": "도지코인", "price": 0.12, "change": -3.95}];
+const usIndices = [{"key": "sp500", "name": "S&P 500", "price": 6978.03, "change": -0.01}, {"key": "dow", "name": "다우존스", "price": 49015.6, "change": 0.02}, {"key": "nasdaq", "name": "나스닥", "price": 23857.45, "change": 0.17}, {"key": "vix", "name": "VIX", "price": 16.08, "change": -1.65}];
+const krIndices = [{"key": "kospi", "name": "코스피", "price": 5221.25, "change": 0.98}, {"key": "kosdaq", "name": "코스닥", "price": 1164.41, "change": 2.73}];
+const economicCalendar = [{"date": "1/29", "time": "22:30", "event": "GDP (4분기, 연율)", "forecast": "2.5%", "previous": "3.1%", "importance": 3}, {"date": "1/30", "time": "22:30", "event": "PCE 물가지수 (12월, 전년비)", "forecast": "2.6%", "previous": "2.4%", "importance": 3}, {"date": "1/30", "time": "22:30", "event": "PCE 물가지수 핵심 (12월, 전년비)", "forecast": "2.8%", "previous": "2.8%", "importance": 3}];
+const futuresData = {"long_short_ratio": null, "funding_rate": null, "open_interest": null, "funding_rates": []};
 const fgValue = 26;
 
 let currentChart = null;
-let currentTab = 'btc';
 
 function toggleSection(id) {
     const section = document.getElementById(id);
-    const btn = section.querySelector('.toggle-btn');
     section.classList.toggle('collapsed');
-    btn.textContent = section.classList.contains('collapsed') ? '▼' : '▲';
+}
+
+function renderCalendar() {
+    const tbody = document.getElementById('calendarBody');
+    if (!economicCalendar || economicCalendar.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-secondary)">경제지표 일정이 없습니다</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = economicCalendar.map(item => {
+        const stars = '⭐'.repeat(item.importance || 3);
+        return `<tr>
+            <td>${item.date}</td>
+            <td class="event-time">${item.time}</td>
+            <td>${item.event} <span class="importance">${stars}</span></td>
+            <td>${item.forecast || '-'}</td>
+            <td>${item.previous || '-'}</td>
+        </tr>`;
+    }).join('');
+}
+
+function renderFutures() {
+    // 롱/숏 비율
+    if (futuresData.long_short_ratio) {
+        const ls = futuresData.long_short_ratio;
+        document.getElementById('lsRatio').textContent = ls.ratio.toFixed(2);
+        document.getElementById('lsDetail').textContent = `롱 ${ls.long.toFixed(1)}% / 숏 ${ls.short.toFixed(1)}%`;
+        document.getElementById('longBar').style.width = ls.long + '%';
+        document.getElementById('longBar').textContent = '롱 ' + ls.long.toFixed(1) + '%';
+        document.getElementById('shortBar').style.width = ls.short + '%';
+        document.getElementById('shortBar').textContent = '숏 ' + ls.short.toFixed(1) + '%';
+    }
+    
+    // 펀딩비
+    if (futuresData.funding_rate !== null && futuresData.funding_rate !== undefined) {
+        const fr = futuresData.funding_rate;
+        document.getElementById('fundingRate').textContent = (fr >= 0 ? '+' : '') + fr.toFixed(4) + '%';
+        document.getElementById('fundingRate').style.color = fr >= 0 ? 'var(--green)' : 'var(--red)';
+        document.getElementById('fundingDesc').textContent = fr >= 0 ? '롱이 숏에게 지불' : '숏이 롱에게 지불';
+    }
+    
+    // 미결제약정
+    if (futuresData.open_interest) {
+        const oi = futuresData.open_interest;
+        document.getElementById('openInterest').textContent = oi.toLocaleString() + ' BTC';
+    }
+    
+    // 펀딩비 테이블
+    if (futuresData.funding_rates && futuresData.funding_rates.length > 0) {
+        const table = document.getElementById('fundingTable');
+        table.innerHTML = '<tr>' + futuresData.funding_rates.map(f => {
+            const color = f.rate >= 0 ? 'var(--green)' : 'var(--red)';
+            return `<td><div class="symbol">${f.symbol}</div><div style="color:${color}">${f.rate >= 0 ? '+' : ''}${f.rate.toFixed(4)}%</div></td>`;
+        }).join('') + '</tr>';
+    }
 }
 
 function renderChartTabs() {
@@ -245,11 +344,10 @@ function renderChartTabs() {
 function switchChart(type) {
     document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
     document.getElementById('tab-' + type)?.classList.add('active');
-    currentTab = type;
-    renderChart();
+    renderChart(type);
 }
 
-function renderChart() {
+function renderChart(type = 'btc') {
     const ctx = document.getElementById('mainChart').getContext('2d');
     if (currentChart) currentChart.destroy();
     
@@ -258,15 +356,15 @@ function renderChart() {
     let label = 'BTC/USD';
     let color = '#ffa502';
     
-    if (currentTab !== 'btc') {
-        const idx = usIndices.find(i => (i.key || i.name.toLowerCase().replace(' ', '')) === currentTab);
+    if (type !== 'btc') {
+        const idx = usIndices.find(i => (i.key || i.name.toLowerCase().replace(' ', '')) === type);
         if (idx) {
             label = idx.name;
             const base = idx.price;
             prices = btcLabels.map((_, i) => Math.round(base * (1 + (i - 5) * 0.003 + Math.random() * 0.002)));
-            color = currentTab.includes('nasdaq') || currentTab.includes('나스닥') ? '#3742fa' : 
-                    currentTab.includes('sp') || currentTab.includes('S&P') ? '#2ed573' : 
-                    currentTab.includes('dow') || currentTab.includes('다우') ? '#ff6b81' : '#ff4757';
+            color = type.includes('nasdaq') || type.includes('나스닥') ? '#3742fa' : 
+                    type.includes('sp') || type.includes('S&P') ? '#2ed573' : 
+                    type.includes('dow') || type.includes('다우') ? '#ff6b81' : '#ff4757';
         }
     }
     
@@ -361,42 +459,16 @@ function renderFearGreedGauge() {
     });
 }
 
-function renderLiquidation() {
-    // 청산 데이터 (실제로는 API에서 가져와야 함, 여기선 BTC 가격 변동 기반 추정)
-    const btc = cryptoData.find(c => c.symbol === 'BTC') || {change: 0};
-    const volatility = Math.abs(btc.change);
-    
-    // 가격이 하락하면 롱 청산이 많고, 상승하면 숏 청산이 많음
-    let longLiq, shortLiq;
-    if (btc.change < 0) {
-        longLiq = Math.round(50 + volatility * 15 + Math.random() * 30);
-        shortLiq = Math.round(20 + Math.random() * 20);
-    } else {
-        longLiq = Math.round(20 + Math.random() * 20);
-        shortLiq = Math.round(50 + volatility * 15 + Math.random() * 30);
-    }
-    
-    const total = longLiq + shortLiq;
-    const longPct = (longLiq / total * 100).toFixed(0);
-    const shortPct = (shortLiq / total * 100).toFixed(0);
-    
-    document.getElementById('longBar').style.width = longPct + '%';
-    document.getElementById('longBar').textContent = '롱 ' + longPct + '%';
-    document.getElementById('shortBar').style.width = shortPct + '%';
-    document.getElementById('shortBar').textContent = '숏 ' + shortPct + '%';
-    document.getElementById('longValue').textContent = '$' + longLiq + 'M';
-    document.getElementById('shortValue').textContent = '$' + shortLiq + 'M';
-}
-
 // 초기화
 document.addEventListener('DOMContentLoaded', function() {
+    renderCalendar();
+    renderFutures();
     renderChartTabs();
     renderChart();
     renderIndicesTable();
     renderCryptoGrid();
     renderKrTable();
     renderFearGreedGauge();
-    renderLiquidation();
 });
 </script>
 </body>
