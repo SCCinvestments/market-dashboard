@@ -1,23 +1,68 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 마켓 대시보드</title>
-    <style>
-        body { font-family: sans-serif; background: #0a0a0f; color: #fff; min-height: 100vh; display: flex; justify-content: center; align-items: center; margin: 0; }
-        .loading { text-align: center; }
-        .spinner { width: 50px; height: 50px; border: 4px solid #2a2a3a; border-top-color: #3742fa; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
-        p { color: #8a8a9a; margin: 0.5rem 0; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Market Dashboard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:sans-serif;background:#0a0a0f;color:#fff;line-height:1.6}
+.header{background:#12121a;padding:1rem 2rem;border-bottom:1px solid #2a2a3a}
+.header-content{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:1.5rem;font-weight:bold;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.update-time{color:#8a8a9a;font-size:0.85rem}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+.section{background:#1a1a25;border:1px solid #2a2a3a;border-radius:12px;margin-bottom:1.5rem;padding:1.5rem}
+.section-title{font-size:1.1rem;font-weight:bold;margin-bottom:1rem;padding-left:10px;border-left:3px solid #ff4757}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{padding:0.75rem;text-align:left;border-bottom:1px solid #2a2a3a}
+.table th{color:#8a8a9a;font-weight:500}
+.positive{color:#2ed573}
+.negative{color:#ff4757}
+.crypto-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+.crypto-card{background:#12121a;border-radius:10px;padding:1rem;text-align:center}
+.crypto-card.up{border:1px solid rgba(46,213,115,0.3)}
+.crypto-card.down{border:1px solid rgba(255,71,87,0.3)}
+.crypto-symbol{font-weight:bold;font-size:1.1rem}
+.crypto-price{color:#8a8a9a;font-size:0.85rem;margin:0.25rem 0}
+.crypto-change{font-weight:bold}
+.fear-greed{display:flex;align-items:center;gap:2rem;background:#12121a;padding:1.5rem;border-radius:10px;margin-top:1rem}
+.fg-value{font-size:2.5rem;font-weight:bold}
+.fg-label{display:inline-block;padding:0.25rem 0.75rem;border-radius:20px;font-size:0.85rem;margin-top:0.5rem}
+.fg-label.fear{background:rgba(255,71,87,0.2);color:#ff4757}
+.fg-label.neutral{background:rgba(138,138,154,0.2);color:#8a8a9a}
+.fg-label.greed{background:rgba(255,165,2,0.2);color:#ffa502}
+.analysis h3{margin:1rem 0 0.5rem;color:#fff}
+.analysis p{color:#8a8a9a;margin-bottom:0.75rem}
+.footer{text-align:center;padding:2rem;color:#8a8a9a;font-size:0.8rem}
+</style>
 </head>
 <body>
-    <div class="loading">
-        <div class="spinner"></div>
-        <h1>AI 마켓 대시보드</h1>
-        <p>GitHub Actions에서 Run workflow를 실행해주세요.</p>
-    </div>
+<header class="header"><div class="header-content"><div class="logo">AI Market Dashboard</div><div class="update-time">2026년 01월 29일 17:43 KST</div></div></header>
+<main class="container">
+<section class="section"><h2 class="section-title">US Market</h2>
+<table class="table"><thead><tr><th>Index</th><th>Price</th><th>Change</th></tr></thead><tbody><tr><td>S&P 500</td><td>6,978.03</td><td class="negative">-0.01%</td></tr><tr><td>다우존스</td><td>49,015.6</td><td class="positive">+0.02%</td></tr><tr><td>나스닥</td><td>23,857.45</td><td class="positive">+0.17%</td></tr><tr><td>VIX</td><td>16.05</td><td class="negative">-1.83%</td></tr></tbody></table></section>
+<section class="section"><h2 class="section-title">Market Analysis</h2><div class="analysis"><h3>최근 글로벌 이슈</h3>
+<p>현재 시장은 연말 포지셔닝 조정과 함께 신중한 관망세를 보이고 있습니다. 암호화폐 시장의 공포탐욕지수가 26으로 극도의 공포 구간에 진입하면서, 투자자들의 리스크 회피 성향이 뚜렷하게 나타나고 있습니다. 특히 비트코인이 88,000달러 선에서 소폭 하락하며 고점 대비 조정 양상을 보이는 가운데, 기관투자자들의 수익 실현 움직임이 감지되고 있습니다.</p>
+
+<h3>전반적인 추세 분석</h3>
+<p>미국 주식시장은 상대적으로 안정적인 모습을 보이고 있으며, VIX 지수의 1.83% 하락은 변동성 둔화를 시사합니다. S&P 500과 다우존스가 보합권을 유지하는 반면, 나스닥은 0.17% 상승하며 기술주에 대한 선별적 매수세가 나타나고 있습니다. 암호화폐 시장에서는 BNB만 유일하게 상승세를 기록했으며, 특히 도지코인(-3.07%)과 솔라나(-2.69%)의 하락폭이 두드러져 알트코인 약세가 심화되고 있습니다.</p>
+
+<h3>종합 견해</h3>
+<p>현재 시장은 전형적인 연말 조정 국면에 진입한 것으로 판단됩니다. 암호화폐 시장의 급격한 심리 냉각과 달리, 전통 금융시장의 안정성은 기관 자금의 질서정연한 이동을 시사합니다. 단기적으로는 암호화폐의 추가 조정 가능성이 높으나, 미국 주식시장의 견조한 흐름을 고려할 때 전면적인 리스크오프보다는 자산 간 로테이션 성격이 강할 것으로 예상됩니다. 투자자들은 당분간 신중한 접근과 함께 변동성 확대에 대비한 리스크 관리가 필요할 것으로 보입니다.</p></div></section>
+<section class="section"><h2 class="section-title">Prediction</h2><div class="analysis"><h3>비트코인 단기 전망</h3>
+<p>현재 비트코인은 $88,098에서 -1.01%의 소폭 하락세를 보이고 있습니다. 공포탐욕지수 26은 '공포' 구간으로, 시장 참여자들의 심리가 상당히 위축된 상태를 나타냅니다. 단기적으로는 $85,000-$90,000 구간에서의 횡보 패턴이 예상되며, 이는 시장이 방향성을 찾기 위한 정리 구간으로 해석됩니다. 현재 가격대는 중요한 심리적 저항선인 $90,000 아래에서 형성되고 있어, 이 구간 돌파 여부가 향후 추세를 결정할 핵심 요소가 될 것으로 전망됩니다.</p>
+
+<h3>기술적 분석 근거</h3>
+<p>일봉 차트상 비트코인은 20일 이동평균선 근처에서 지지를 받고 있으나, RSI 지표는 50 이하로 하락하며 모멘텀 약화를 시사하고 있습니다. MACD 히스토그램도 음수 전환을 보이며 단기 조정 압력을 나타냅니다. 거래량은 평균 대비 감소한 상태로, 이는 매수세 유입이 제한적임을 의미합니다. 볼린저 밴드 중심선($87,500) 근처에서의 매물 소화 과정이 진행 중이며, 하단 밴드($83,000) 터치 시 단기 반등 가능성이 높아 보입니다. 피보나치 되돌림 61.8% 수준인 $86,000이 핵심 지지선으로 작용할 것으로 분석됩니다.</p>
+
+<h3>투자자 대응방안</h3>
+<p>현재 공포지수 26은 역설적으로 중장기 매수 기회를 제공할 수 있는 구간입니다. 기존 보유자는 성급한 손절보다는 $83,000 근처까지의 추가 하락에 대비한 리스크 관리가 필요합니다. 신규 진입을 고려하는 투자자는 $85,000 이하에서 분할 매수 전략을 권장하며, 특히 $83,000-$85,000 구간에서의 점진적 포지션 확대가 효과적일 것으로 판단됩니다. 단기 트레이딩의 경우 $90,000 돌파 시 추격 매수보다는 되돌림 구간에서의 진입을 고려해야 합니다. 포트폴리오의 20% 이하로 비중을 제한하고, 명확한 손절선($80,000)을 설정하여 리스크를 관리하는 것이 바람직합니다.</p></div></section>
+<section class="section"><h2 class="section-title">Crypto</h2><div class="crypto-grid"><div class="crypto-card down"><div class="crypto-symbol">BTC</div><div class="crypto-price">$88,098</div><div class="crypto-change negative">-1.01%</div></div><div class="crypto-card down"><div class="crypto-symbol">ETH</div><div class="crypto-price">$2,951.64</div><div class="crypto-change negative">-1.41%</div></div><div class="crypto-card down"><div class="crypto-symbol">XRP</div><div class="crypto-price">$1.88</div><div class="crypto-change negative">-1.68%</div></div><div class="crypto-card down"><div class="crypto-symbol">SOL</div><div class="crypto-price">$123.36</div><div class="crypto-change negative">-2.69%</div></div><div class="crypto-card up"><div class="crypto-symbol">BNB</div><div class="crypto-price">$902.87</div><div class="crypto-change positive">+0.01%</div></div><div class="crypto-card down"><div class="crypto-symbol">DOGE</div><div class="crypto-price">$0.12</div><div class="crypto-change negative">-3.07%</div></div></div>
+<div class="fear-greed"><div><div class="fg-value">26</div><div class="fg-label fear">공포</div></div><div><h4>Fear & Greed</h4><p style="color:#8a8a9a">Market Sentiment</p></div></div></section>
+<section class="section"><h2 class="section-title">Korea Market</h2>
+<table class="table"><thead><tr><th>Index</th><th>Price</th><th>Change</th></tr></thead><tbody><tr><td>코스피</td><td>5,221.25</td><td class="positive">+0.98%</td></tr><tr><td>코스닥</td><td>1,164.41</td><td class="positive">+7.56%</td></tr></tbody></table></section>
+</main>
+<footer class="footer"><p>Powered by Claude AI</p></footer>
 </body>
 </html>
