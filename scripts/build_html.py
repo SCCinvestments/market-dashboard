@@ -145,17 +145,28 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 
 <main class="container">
 
-<!-- 경제지표 일정 (Investing.com 위젯) -->
+<!-- 경제지표 일정 (TradingView 위젯) -->
 <section class="section" id="calendarSection">
 <div class="section-header" onclick="toggleSection('calendarSection')">
 <h2 class="section-title orange">📅 경제지표 일정</h2>
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
-<div style="background:#fff;border-radius:8px;overflow:hidden;">
-<iframe src="https://sslecal2.investing.com?columns=exc_flags,exc_currency,exc_importance,exc_actual,exc_forecast,exc_previous&features=datepicker,timezone&countries=5&calType=week&timeZone=88&lang=18" width="100%" height="450" frameborder="0" allowtransparency="true" marginwidth="0" marginheight="0"></iframe>
+<div class="tradingview-widget-container">
+<div class="tradingview-widget-container__widget"></div>
+<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+{{
+  "colorTheme": "dark",
+  "isTransparent": true,
+  "width": "100%",
+  "height": "400",
+  "locale": "kr",
+  "importanceFilter": "2,3",
+  "countryFilter": "us"
+}}
+</script>
 </div>
-<p style="margin-top:0.75rem;font-size:0.75rem;color:var(--text-secondary);">데이터 제공: <a href="https://kr.investing.com/" target="_blank" style="color:var(--blue);">Investing.com</a></p>
+<p style="margin-top:0.75rem;font-size:0.75rem;color:var(--text-secondary);">데이터 제공: <a href="https://www.tradingview.com/" target="_blank" style="color:var(--blue);">TradingView</a></p>
 </div>
 </section>
 
