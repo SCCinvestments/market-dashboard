@@ -16,12 +16,34 @@ def main():
     fg_label = "극도의 공포" if fg_value <= 25 else "공포" if fg_value <= 45 else "중립" if fg_value <= 55 else "탐욕" if fg_value <= 75 else "극도의 탐욕"
     fg_class = "fear" if fg_value <= 45 else "neutral" if fg_value <= 55 else "greed"
     
+    us_rows = ""
+    for idx in us_indices:
+        change_class = "positive" if idx["change"] >= 0 else "negative"
+        sign = "+" if idx["change"] >= 0 else ""
+        us_rows += f'<tr><td>{idx["name"]}</td><td>{idx["price"]:,}</td><td class="{change_class}">{sign}{idx["change"]:.2f}%</td></tr>'
+    
+    crypto_cards = ""
+    for coin in crypto:
+        card_class = "up" if coin["change"] >= 0 else "down"
+        change_class = "positive" if coin["change"] >= 0 else "negative"
+        sign = "+" if coin["change"] >= 0 else ""
+        crypto_cards += f'<div class="crypto-card {card_class}"><div class="crypto-symbol">{coin["symbol"]}</div><div class="crypto-price">${coin["price"]:,}</div><div class="crypto-change {change_class}">{sign}{coin["change"]:.2f}%</div></div>'
+    
+    kr_rows = ""
+    for idx in kr_indices:
+        change_class = "positive" if idx["change"] >= 0 else "negative"
+        sign = "+" if idx["change"] >= 0 else ""
+        kr_rows += f'<tr><td>{idx["name"]}</td><td>{idx["price"]:,}</td><td class="{change_class}">{sign}{idx["change"]:.2f}%</td></tr>'
+    
+    global_analysis = analysis.get("global_analysis", "")
+    prediction_analysis = analysis.get("prediction_analysis", "")
+    
     html = f'''<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI 마켓 대시보드</title>
+<title>AI Market Dashboard</title>
 <style>
 *{{margin:0;padding:0;box-sizing:border-box}}
 body{{font-family:sans-serif;background:#0a0a0f;color:#fff;line-height:1.6}}
@@ -56,31 +78,24 @@ body{{font-family:sans-serif;background:#0a0a0f;color:#fff;line-height:1.6}}
 </style>
 </head>
 <body>
-<header class="header"><div class="header-content"><div class="logo">AI 마켓 대시보드</div><div class="update-time">{updated_at}</div></div></header>
+<header class="header"><div class="header-content"><div class="logo">AI Market Dashboard</div><div class="update-time">{updated_at}</div></div></header>
 <main class="container">
-<section class="section"><h2 class="section-title">국제 증시</h2>
-<table class="table"><thead><tr><th>종목</th><th>현재가</th><th>등락률</th></tr></thead><tbody>'''
+<section class="section"><h2 class="section-title">US Market</h2>
+<table class="table"><thead><tr><th>Index</th><th>Price</th><th>Change</th></tr></thead><tbody>{us_rows}</tbody></table></section>
+<section class="section"><h2 class="section-title">Market Analysis</h2><div class="analysis">{global_analysis}</div></section>
+<section class="section"><h2 class="section-title">Prediction</h2><div class="analysis">{prediction_analysis}</div></section>
+<section class="section"><h2 class="section-title">Crypto</h2><div class="crypto-grid">{crypto_cards}</div>
+<div class="fear-greed"><div><div class="fg-value">{fg_value}</div><div class="fg-label {fg_class}">{fg_label}</div></div><div><h4>Fear & Greed</h4><p style="color:#8a8a9a">Market Sentiment</p></div></div></section>
+<section class="section"><h2 class="section-title">Korea Market</h2>
+<table class="table"><thead><tr><th>Index</th><th>Price</th><th>Change</th></tr></thead><tbody>{kr_rows}</tbody></table></section>
+</main>
+<footer class="footer"><p>Powered by Claude AI</p></footer>
+</body>
+</html>'''
     
-    for idx in us_indices:
-        change_class = "positive" if idx["change"] >= 0 else "negative"
-        sign = "+" if idx["change"] >= 0 else ""
-        html += f'<tr><td>{idx["name"]}</td><td>{idx["price"]:,}</td><td class="{change_class}">{sign}{idx["change"]:.2f}%</td></tr>'
-    
-    html += f'''</tbody></table></section>
-<section class="section"><h2 class="section-title">국제 증시 종합분석</h2><div class="analysis">{analysis.get("global_analysis", "")}</div></section>
-<section class="section"><h2 class="section-title">시장 예측</h2><div class="analysis">{analysis.get("prediction_analysis", "")}</div></section>
-<section class="section"><h2 class="section-title">암호화폐</h2><div class="crypto-grid">'''
-    
-    for coin in crypto:
-        card_class = "up" if coin["change"] >= 0 else "down"
-        change_class = "positive" if coin["change"] >= 0 else "negative"
-        sign = "+" if coin["change"] >= 0 else ""
-        html += f'<div class="crypto-card {card_class}"><div class="crypto-symbol">{coin["symbol"]}</div><div class="crypto-price">${coin["price"]:,}</div><div class="crypto-change {change_class}">{sign}{coin["change"]:.2f}%</div></div>'
-    
-    html += f'''</div>
-<div class="fear-greed"><div><div class="fg-value">{fg_value}</div><div class="fg-label {fg_class}">{fg_label}</div></div><div><h4>공포 & 탐욕 지수</h4><p style="color:#8a8a9a">시장 심리 지표</p></div></div></section>
-<section class="section"><h2 class="section-title">국내 증시</h2>
-<table class="table"><thead><tr><th>지수</th><th>현재가</th><th>등락률</th></tr></thead><tbody>'''
-    
-    for idx in kr_indices:
-        cha
+    with open("index.html", "w", encoding="utf-8") as f:
+        f.write(html)
+    print("done")
+
+if __name__ == "__main__":
+    main()
