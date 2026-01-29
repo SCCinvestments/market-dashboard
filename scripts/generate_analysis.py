@@ -107,12 +107,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-```
-
-4. **"Commit changes"** 클릭
-
----
-
-그리고 **requirements.txt**도 수정:
-```
-requests==2.31.0
