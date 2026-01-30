@@ -551,6 +551,8 @@ def get_binance_futures_data():
     return futures_data
 
 def main():
+    import time
+    
     print("start analysis")
     market_data = load_market_data()
     if not market_data:
@@ -564,21 +566,26 @@ def main():
     futures_data = get_binance_futures_data()
     market_data["futures_data"] = futures_data
     
-    # V2 분석 생성
+    # V2 분석 생성 (Rate Limit 방지를 위해 60초 딜레이)
     print("  한줄 코멘트 생성 중...")
     one_liner = generate_one_liner(market_data)
+    time.sleep(60)  # 1분 대기
     
     print("  미국 증시 분석 중...")
     us_market = generate_us_market_analysis(market_data)
+    time.sleep(60)  # 1분 대기
     
     print("  암호화폐 분석 중...")
     crypto_analysis = generate_crypto_analysis(market_data)
+    time.sleep(60)  # 1분 대기
     
     print("  원자재 분석 중...")
     commodities = generate_commodities_analysis(market_data)
+    time.sleep(60)  # 1분 대기
     
     print("  국내 증시 분석 중...")
     korea_market = generate_korea_market_analysis(market_data)
+    time.sleep(60)  # 1분 대기
     
     print("  투자 전략 생성 중...")
     strategy = generate_investment_strategy(market_data)
