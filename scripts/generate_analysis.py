@@ -163,12 +163,12 @@ def generate_economic_calendar():
             else:
                 continue  # 제외
             
-            # 중요도 2, 3만 포함
+            # 중요도 3(별 3개)만 포함
             impact = event.get("impact", 1)
-            if impact < 2:
+            if impact != 3:
                 continue
             
-            importance = "high" if impact == 3 else "medium"
+            importance = "high"
             
             # 한국어 이벤트명 (없으면 영어)
             event_name = event.get("event_kor") or event.get("event", "")
