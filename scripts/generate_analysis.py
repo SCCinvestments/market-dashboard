@@ -177,9 +177,11 @@ def generate_economic_calendar():
                 "date": kst_time.strftime("%-m/%d"),
                 "time": kst_time.strftime("%H:%M"),
                 "event": event_name,
+                "event_eng": event.get("event", ""),
                 "forecast": event.get("eventForecast_value", "") or "-",
                 "previous": event.get("eventPrevious_value", "") or "-",
-                "importance": importance
+                "importance": importance,
+                "description": event.get("description_kor", "") or event.get("description", "") or ""
             })
         except Exception as e:
             continue
