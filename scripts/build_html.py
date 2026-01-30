@@ -113,8 +113,6 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 .calendar-table tbody tr{{cursor:pointer;transition:all 0.2s}}
 .calendar-table tbody tr:hover{{background:rgba(55,66,250,0.15);transform:scale(1.01)}}
 .calendar-table tbody tr:hover td{{color:var(--text)}}
-.calendar-table tbody tr:hover td:first-child::before{{content:'👉 ';}}
-.click-hint{{font-size:0.75rem;color:var(--text-secondary);margin-top:0.5rem;text-align:right}}
 .importance{{color:var(--yellow)}}
 .event-time{{color:var(--blue);font-weight:600}}
 .futures-grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}}
@@ -181,7 +179,6 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 <thead><tr><th>날짜</th><th>시간(KST)</th><th>이벤트</th><th>예측</th><th>이전</th><th>중요도</th></tr></thead>
 <tbody id="calendarBody"></tbody>
 </table>
-<p class="click-hint">💡 행을 클릭하면 상세 해설을 볼 수 있습니다</p>
 </div>
 </section>
 
