@@ -79,37 +79,66 @@ HTML 형식으로 h3과 p 태그만 사용:
 
     return call_claude(prompt)
 
-def generate_economic_calendar():
-    # 오늘 날짜 (KST)
-    kst = timezone(timedelta(hours=9))
-    today = datetime.now(kst)
-    today_str = today.strftime("%Y년 %m월 %d일")
-    weekday = ["월", "화", "수", "목", "금", "토", "일"][today.weekday()]
+def get_economic_calendar_from_finnhub():
+    """Finnhub에서 경제지표 일정 가져오기"""
+    api_key = os.environ.get("FINNHUB_API_KEY")
+    if not api_key:
+        print("FINNHUB_API_KEY 없음")
+        return []
     
-    prompt = f"""오늘은 {today_str} ({weekday}요일)입니다.
+    try:
+        # 오늘부터 3일간 데이터
+        kst = timezone(timedelta(hours=9))
+        today = datetime.now(kst)
+        from_date = today.strftime("%Y-%m-%d")
+        to_date = (today + timedelta(days=3)).strftime("%Y-%m-%d")
+        
+        url = "https://finnhub.io/api/v1/calendar/economic"
+        params = {
+            "from": from_date,
+            "to": to_date,
+            "token": api_key
+        }
+        
+        response = requests.get(url, params=params, timeout=15)
+        data = response.json()
+        
+        events = data.get("economicCalendar", [])
+        
+        # 미국 + 중요도 높음(high, medium) 필터링
+        us_events = []
+        for event in events:
+            if event.get("country") == "US" and event.get("impact") in ["high", "medium"]:
+                us_events.append(event)
+        
+        return us_events
+    except Exception as e:
+        print(f"Finnhub API 에러: {e}")
+        return []
 
-오늘과 내일 예정된 **미국(USD) 주요 경제지표**를 알려주세요.
-중요도가 높은 것(별 3개, ⭐⭐⭐ 수준)만 선별해주세요.
+def translate_economic_events(events):
+    """Claude로 경제지표 한국어 번역"""
+    if not events:
+        return []
+    
+    # 이벤트 정보 정리
+    events_text = ""
+    for e in events[:15]:  # 최대 15개
+        events_text += f"- {e.get('time', '')} | {e.get('event', '')} | forecast: {e.get('estimate', '-')} | previous: {e.get('prev', '-')} | impact: {e.get('impact', '')}\n"
+    
+    prompt = f"""다음 미국 경제지표 일정을 한국어로 번역해주세요.
+시간은 UTC 기준이니 한국시간(KST, +9시간)으로 변환해주세요.
 
-다음 JSON 형식으로만 응답하세요 (다른 텍스트 없이):
+{events_text}
+
+다음 JSON 형식으로만 응답하세요:
 [
-  {{"date": "1/29", "time": "04:00", "event": "FOMC 금리결정", "forecast": "3.75%", "previous": "3.75%", "importance": 3}},
-  {{"date": "1/29", "time": "22:30", "event": "GDP (4분기)", "forecast": "2.8%", "previous": "3.1%", "importance": 3}}
+  {{"date": "2/5", "time": "00:00", "event": "ISM 제조업 PMI", "forecast": "48.3", "previous": "47.9", "importance": "high"}}
 ]
 
-주요 경제지표 예시:
-- FOMC 금리결정, 기자회견
-- 비농업 고용지수 (NFP)
-- 실업률
-- CPI (소비자물가지수)
-- PPI (생산자물가지수)
-- GDP
-- PCE 물가지수
-- ISM 제조업/서비스업 PMI
-- 소매판매
-
-만약 오늘/내일 중요한 미국 경제지표가 없다면:
-[{{"date": "{today.strftime('%m/%d')}", "time": "-", "event": "오늘은 주요 경제지표 발표가 없습니다", "forecast": "-", "previous": "-", "importance": 0}}]
+- event는 한국어로 번역
+- time은 한국시간(KST)으로 변환
+- importance가 "high"면 ⭐⭐⭐, "medium"이면 ⭐⭐
 
 JSON만 출력하세요."""
 
@@ -117,8 +146,6 @@ JSON만 출력하세요."""
     
     if result:
         try:
-            # JSON 파싱 시도
-            # ```json 같은 마크다운 제거
             clean_result = result.strip()
             if clean_result.startswith("```"):
                 clean_result = clean_result.split("\n", 1)[1]
@@ -126,11 +153,24 @@ JSON만 출력하세요."""
                 clean_result = clean_result.rsplit("```", 1)[0]
             clean_result = clean_result.strip()
             
-            calendar = json.loads(clean_result)
-            return calendar
-        except json.JSONDecodeError:
-            print(f"JSON 파싱 실패: {result}")
-            return []
+            return json.loads(clean_result)
+        except:
+            pass
+    return []
+
+def generate_economic_calendar():
+    """경제지표 캘린더 생성 (Finnhub + Claude 번역)"""
+    print("  Finnhub에서 경제지표 수집 중...")
+    events = get_economic_calendar_from_finnhub()
+    
+    if events:
+        print(f"  {len(events)}개 이벤트 발견, 번역 중...")
+        translated = translate_economic_events(events)
+        if translated:
+            return translated
+    
+    # 실패 시 빈 배열 반환
+    print("  경제지표 수집 실패")
     return []
 
 def get_binance_futures_data():
