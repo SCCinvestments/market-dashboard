@@ -29,7 +29,6 @@ jobs:
       - name: Generate AI analysis
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
         run: python scripts/generate_analysis.py
 
       - name: Build HTML
