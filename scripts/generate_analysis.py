@@ -79,66 +79,92 @@ HTML 형식으로 h3과 p 태그만 사용:
 
     return call_claude(prompt)
 
-def get_economic_calendar_from_finnhub():
-    """Finnhub에서 경제지표 일정 가져오기"""
-    api_key = os.environ.get("FINNHUB_API_KEY")
+def search_economic_calendar():
+    """Tavily로 오늘의 미국 경제지표 검색"""
+    api_key = os.environ.get("TAVILY_API_KEY")
     if not api_key:
-        print("FINNHUB_API_KEY 없음")
-        return []
+        print("  TAVILY_API_KEY 없음")
+        return None
+    
+    kst = timezone(timedelta(hours=9))
+    today = datetime.now(kst)
+    today_str = today.strftime("%Y년 %m월 %d일")
     
     try:
-        # 오늘부터 3일간 데이터
-        kst = timezone(timedelta(hours=9))
-        today = datetime.now(kst)
-        from_date = today.strftime("%Y-%m-%d")
-        to_date = (today + timedelta(days=3)).strftime("%Y-%m-%d")
-        
-        url = "https://finnhub.io/api/v1/calendar/economic"
-        params = {
-            "from": from_date,
-            "to": to_date,
-            "token": api_key
-        }
-        
-        response = requests.get(url, params=params, timeout=15)
+        response = requests.post(
+            "https://api.tavily.com/search",
+            json={
+                "api_key": api_key,
+                "query": f"US economic calendar today {today.strftime('%B %d %Y')} important events",
+                "search_depth": "basic",
+                "max_results": 5
+            },
+            timeout=30
+        )
         data = response.json()
         
-        events = data.get("economicCalendar", [])
-        
-        # 미국 + 중요도 높음(high, medium) 필터링
-        us_events = []
-        for event in events:
-            if event.get("country") == "US" and event.get("impact") in ["high", "medium"]:
-                us_events.append(event)
-        
-        return us_events
+        results = data.get("results", [])
+        if results:
+            # 검색 결과 텍스트 합치기
+            search_content = ""
+            for r in results[:3]:
+                search_content += r.get("content", "") + "\n"
+            return search_content
+        return None
     except Exception as e:
-        print(f"Finnhub API 에러: {e}")
-        return []
+        print(f"  Tavily 검색 에러: {e}")
+        return None
 
-def translate_economic_events(events):
-    """Claude로 경제지표 한국어 번역"""
-    if not events:
-        return []
+def generate_economic_calendar():
+    """경제지표 캘린더 생성 (Tavily 검색 + Claude 정리)"""
+    print("  Tavily로 경제지표 검색 중...")
     
-    # 이벤트 정보 정리
-    events_text = ""
-    for e in events[:15]:  # 최대 15개
-        events_text += f"- {e.get('time', '')} | {e.get('event', '')} | forecast: {e.get('estimate', '-')} | previous: {e.get('prev', '-')} | impact: {e.get('impact', '')}\n"
+    kst = timezone(timedelta(hours=9))
+    today = datetime.now(kst)
+    today_str = today.strftime("%Y년 %m월 %d일")
+    weekday = ["월", "화", "수", "목", "금", "토", "일"][today.weekday()]
     
-    prompt = f"""다음 미국 경제지표 일정을 한국어로 번역해주세요.
-시간은 UTC 기준이니 한국시간(KST, +9시간)으로 변환해주세요.
+    # Tavily로 검색
+    search_result = search_economic_calendar()
+    
+    search_info = ""
+    if search_result:
+        search_info = f"""
+웹 검색 결과:
+{search_result}
+"""
+        print("  검색 결과 있음, Claude로 정리 중...")
+    else:
+        print("  검색 결과 없음, Claude 지식으로 생성...")
+    
+    prompt = f"""오늘은 {today_str} ({weekday}요일)입니다.
 
-{events_text}
+{search_info}
 
-다음 JSON 형식으로만 응답하세요:
+오늘과 내일 예정된 **미국(USD) 주요 경제지표**를 정리해주세요.
+중요도가 높은 것(⭐⭐⭐, ⭐⭐)만 선별해주세요.
+
+주요 경제지표 예시:
+- FOMC 금리결정, 기자회견
+- 비농업 고용지수 (NFP) - 매월 첫째 금요일
+- 신규 실업수당청구건수 - 매주 목요일 22:30 KST
+- CPI (소비자물가지수)
+- PPI (생산자물가지수)
+- GDP
+- PCE 물가지수
+- ISM 제조업/서비스업 PMI
+- 소매판매
+
+다음 JSON 형식으로만 응답하세요 (다른 텍스트 없이):
 [
-  {{"date": "2/5", "time": "00:00", "event": "ISM 제조업 PMI", "forecast": "48.3", "previous": "47.9", "importance": "high"}}
+  {{"date": "1/30", "time": "22:30", "event": "신규 실업수당청구건수", "forecast": "220K", "previous": "223K", "importance": "high"}}
 ]
 
-- event는 한국어로 번역
-- time은 한국시간(KST)으로 변환
-- importance가 "high"면 ⭐⭐⭐, "medium"이면 ⭐⭐
+규칙:
+- 시간은 한국시간(KST)
+- importance: "high" 또는 "medium"
+- 오늘이 목요일이면 신규 실업수당청구건수 반드시 포함
+- 예정된 지표가 없으면 빈 배열 []
 
 JSON만 출력하세요."""
 
@@ -153,24 +179,14 @@ JSON만 출력하세요."""
                 clean_result = clean_result.rsplit("```", 1)[0]
             clean_result = clean_result.strip()
             
-            return json.loads(clean_result)
-        except:
-            pass
-    return []
-
-def generate_economic_calendar():
-    """경제지표 캘린더 생성 (Finnhub + Claude 번역)"""
-    print("  Finnhub에서 경제지표 수집 중...")
-    events = get_economic_calendar_from_finnhub()
+            calendar = json.loads(clean_result)
+            print(f"  {len(calendar)}개 경제지표 생성 완료")
+            return calendar
+        except Exception as e:
+            print(f"  JSON 파싱 실패: {e}")
+            return []
     
-    if events:
-        print(f"  {len(events)}개 이벤트 발견, 번역 중...")
-        translated = translate_economic_events(events)
-        if translated:
-            return translated
-    
-    # 실패 시 빈 배열 반환
-    print("  경제지표 수집 실패")
+    print("  경제지표 생성 실패")
     return []
 
 def get_binance_futures_data():
