@@ -12,25 +12,44 @@
 [data-theme="light"]{--bg-primary:#f5f5f7;--bg-secondary:#ffffff;--bg-card:#ffffff;--border:#e0e0e0;--text:#1a1a2e;--text-secondary:#6b6b80}
 [data-theme="light"] .section{box-shadow:0 2px 12px rgba(0,0,0,0.08)}
 [data-theme="light"] .crypto-card{box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-[data-theme="light"] .futures-card{box-shadow:0 2px 8px rgba(0,0,0,0.06)}
 [data-theme="light"] .modal{box-shadow:0 4px 24px rgba(0,0,0,0.15)}
 body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:var(--text);line-height:1.6;transition:background 0.3s,color 0.3s}
-.header{background:var(--bg-secondary);padding:1rem 2rem;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;transition:background 0.3s}
+
+/* 로그인 화면 */
+.login-screen{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg-primary);display:none;justify-content:center;align-items:center;z-index:9999}
+.login-box{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:3rem;max-width:400px;width:90%;text-align:center}
+.login-logo{font-size:3rem;margin-bottom:1rem}
+.login-title{font-size:1.5rem;font-weight:700;margin-bottom:0.5rem}
+.login-subtitle{color:var(--text-secondary);margin-bottom:2rem;font-size:0.9rem}
+.login-input{width:100%;padding:1rem;font-size:1.1rem;background:var(--bg-secondary);border:2px solid var(--border);border-radius:12px;color:var(--text);text-align:center;letter-spacing:0.3rem;font-weight:700;margin-bottom:1rem}
+.login-input:focus{outline:none;border-color:var(--blue)}
+.login-input::placeholder{letter-spacing:normal;font-weight:400}
+.login-btn{width:100%;padding:1rem;font-size:1rem;font-weight:700;background:linear-gradient(135deg,#667eea,#764ba2);border:none;border-radius:12px;color:#fff;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 4px 15px rgba(102,126,234,0.4)}
+.login-error{color:var(--red);margin-top:1rem;font-size:0.9rem;display:none}
+
+/* 헤더 */
+.header{background:var(--bg-secondary);padding:1rem 2rem;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
 .header-content{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
 .header-left{display:flex;align-items:center;gap:1.5rem}
 .logo{font-size:1.5rem;font-weight:900;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .update-time{color:var(--text-secondary);font-size:0.85rem;display:flex;align-items:center;gap:0.5rem}
 .live-dot{width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
-.theme-toggle{background:var(--bg-card);border:1px solid var(--border);border-radius:50px;padding:0.4rem;display:flex;align-items:center;gap:0.25rem;cursor:pointer;transition:all 0.3s}
+.header-right{display:flex;align-items:center;gap:1rem}
+.theme-toggle{background:var(--bg-card);border:1px solid var(--border);border-radius:50px;padding:0.4rem;display:flex;align-items:center;gap:0.25rem;cursor:pointer}
 .theme-toggle span{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:1.1rem;transition:all 0.3s}
 .theme-toggle .sun{background:transparent}
 .theme-toggle .moon{background:var(--blue);box-shadow:0 2px 8px rgba(55,66,250,0.4)}
 [data-theme="light"] .theme-toggle .sun{background:var(--orange);box-shadow:0 2px 8px rgba(255,165,2,0.4)}
 [data-theme="light"] .theme-toggle .moon{background:transparent;box-shadow:none}
+.logout-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:0.5rem 1rem;color:var(--text-secondary);font-size:0.85rem;cursor:pointer;transition:all 0.2s}
+.logout-btn:hover{border-color:var(--red);color:var(--red)}
+
+/* 메인 콘텐츠 */
 .container{max-width:1400px;margin:0 auto;padding:2rem}
 .section{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;margin-bottom:1.5rem;overflow:hidden}
-.section-header{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 1.5rem;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.2s}
+.section-header{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 1.5rem;cursor:pointer;border-bottom:1px solid var(--border)}
 .section-header:hover{background:rgba(255,255,255,0.02)}
 .section-title{font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:0.75rem}
 .section-title::before{content:'';width:4px;height:20px;background:var(--red);border-radius:2px}
@@ -38,13 +57,46 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:va
 .section-title.green::before{background:var(--green)}
 .section-title.yellow::before{background:var(--yellow)}
 .section-title.orange::before{background:var(--orange)}
-.toggle-btn{color:var(--text-secondary);font-size:0.85rem;transition:transform 0.2s}
+.toggle-btn{color:var(--text-secondary);font-size:0.85rem}
 .section.collapsed .toggle-btn{transform:rotate(180deg)}
 .section-content{padding:1.5rem}
 .section.collapsed .section-content{display:none}
-.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+
+/* 테이블 */
+.table,.calendar-table{width:100%;border-collapse:collapse}
+.table th,.table td,.calendar-table th,.calendar-table td{padding:0.75rem 1rem;text-align:left;border-bottom:1px solid var(--border)}
+.table th,.calendar-table th{background:var(--bg-secondary);font-weight:600;font-size:0.85rem;color:var(--text-secondary)}
+.calendar-table tbody tr{cursor:pointer;transition:all 0.2s}
+.calendar-table tbody tr:hover{background:rgba(55,66,250,0.15);transform:scale(1.01)}
+.event-time{color:var(--blue);font-weight:600}
+.positive{color:var(--green)}
+.negative{color:var(--red)}
+
+/* 암호화폐 카드 */
+.crypto-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem}
+.crypto-card{padding:1.25rem;border-radius:12px;text-align:center}
+.crypto-card.up{background:linear-gradient(135deg,rgba(46,213,115,0.15),rgba(46,213,115,0.05));border:1px solid rgba(46,213,115,0.3)}
+.crypto-card.down{background:linear-gradient(135deg,rgba(255,71,87,0.15),rgba(255,71,87,0.05));border:1px solid rgba(255,71,87,0.3)}
+.crypto-symbol{font-size:1.25rem;font-weight:900}
+.crypto-name{font-size:0.75rem;color:var(--text-secondary)}
+.crypto-price{font-size:0.9rem;color:var(--text-secondary)}
+.crypto-change{font-weight:700;font-size:1.1rem}
+.crypto-card.up .crypto-change{color:var(--green)}
+.crypto-card.down .crypto-change{color:var(--red)}
+
+/* 공포탐욕 */
+.fear-greed-container{display:flex;align-items:center;gap:2rem;background:var(--bg-secondary);padding:1.5rem;border-radius:12px;margin-top:1.5rem}
+.fg-gauge{position:relative;width:140px;height:140px}
+.fg-value{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:2.5rem;font-weight:900}
+.fg-info h4{font-size:1.25rem;margin-bottom:0.5rem}
+.fg-label{display:inline-block;padding:0.35rem 1rem;border-radius:20px;font-size:0.85rem;font-weight:600;margin-top:0.75rem}
+.fg-label.fear{background:rgba(255,71,87,0.2);color:var(--red)}
+.fg-label.neutral{background:rgba(138,138,154,0.2);color:var(--text-secondary)}
+.fg-label.greed{background:rgba(255,165,2,0.2);color:var(--yellow)}
+
+/* 차트 */
 .chart-tabs{display:flex;gap:0.5rem;margin-bottom:1rem;flex-wrap:wrap}
-.chart-tab{padding:0.6rem 1.2rem;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-secondary);font-size:0.9rem;font-weight:500;cursor:pointer;transition:all 0.2s}
+.chart-tab{padding:0.6rem 1.2rem;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-secondary);font-size:0.9rem;font-weight:500;cursor:pointer}
 .chart-tab:hover{border-color:var(--blue);color:var(--text)}
 .chart-tab.active{background:var(--blue);border-color:var(--blue);color:#fff}
 .chart-tab .change{font-size:0.75rem;margin-left:0.5rem}
@@ -52,51 +104,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:va
 .chart-tab .change.negative{color:var(--red)}
 .chart-tab.active .change{color:rgba(255,255,255,0.9)}
 .chart-container{position:relative;height:350px;margin-bottom:1rem}
-.table{width:100%;border-collapse:collapse}
-.table th,.table td{padding:1rem;text-align:left;border-bottom:1px solid var(--border)}
-.table th{color:var(--text-secondary);font-weight:500;font-size:0.85rem}
-.table td{font-weight:500}
-.positive{color:var(--green)}
-.negative{color:var(--red)}
-.change-badge{padding:0.25rem 0.5rem;border-radius:4px;font-size:0.85rem}
-.change-badge.positive{background:rgba(46,213,115,0.1)}
-.change-badge.negative{background:rgba(255,71,87,0.1)}
-.crypto-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem}
-.crypto-card{padding:1.25rem;border-radius:12px;text-align:center;transition:transform 0.2s}
-.crypto-card:hover{transform:translateY(-2px)}
-.crypto-card.up{background:linear-gradient(135deg,rgba(46,213,115,0.15),rgba(46,213,115,0.05));border:1px solid rgba(46,213,115,0.3)}
-.crypto-card.down{background:linear-gradient(135deg,rgba(255,71,87,0.15),rgba(255,71,87,0.05));border:1px solid rgba(255,71,87,0.3)}
-.crypto-symbol{font-size:1.25rem;font-weight:900;margin-bottom:0.25rem}
-.crypto-name{font-size:0.75rem;color:var(--text-secondary);margin-bottom:0.5rem}
-.crypto-price{font-size:0.9rem;color:var(--text-secondary);margin-bottom:0.25rem}
-.crypto-change{font-weight:700;font-size:1.1rem}
-.crypto-card.up .crypto-change{color:var(--green)}
-.crypto-card.down .crypto-change{color:var(--red)}
-.fear-greed-container{display:flex;align-items:center;gap:2rem;background:var(--bg-secondary);padding:1.5rem;border-radius:12px;margin-top:1.5rem}
-.fg-gauge{position:relative;width:140px;height:140px}
-.fg-value{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:2.5rem;font-weight:900}
-.fg-info h4{font-size:1.25rem;margin-bottom:0.5rem}
-.fg-info p{color:var(--text-secondary);font-size:0.9rem}
-.fg-label{display:inline-block;padding:0.35rem 1rem;border-radius:20px;font-size:0.85rem;font-weight:600;margin-top:0.75rem}
-.fg-label.fear{background:rgba(255,71,87,0.2);color:var(--red)}
-.fg-label.neutral{background:rgba(138,138,154,0.2);color:var(--text-secondary)}
-.fg-label.greed{background:rgba(255,165,2,0.2);color:var(--yellow)}
-.analysis-content{color:var(--text-secondary);font-size:0.95rem}
-.analysis-content h3{color:var(--text);font-size:1rem;font-weight:700;margin:1.5rem 0 0.75rem;display:flex;align-items:center;gap:0.5rem}
-.analysis-content h3:first-child{margin-top:0}
-.analysis-content h3::before{content:'▸';color:var(--blue)}
-.analysis-content p{margin-bottom:1rem;line-height:1.8}
-.calendar-table{width:100%;border-collapse:collapse}
-.calendar-table th{background:var(--bg-secondary);padding:0.75rem 1rem;text-align:left;font-weight:600;font-size:0.85rem;color:var(--text-secondary)}
-.calendar-table td{padding:0.75rem 1rem;border-bottom:1px solid var(--border);font-size:0.9rem;transition:all 0.2s}
-.calendar-table tbody tr{cursor:pointer;transition:all 0.2s}
-.calendar-table tbody tr:hover{background:rgba(55,66,250,0.15);transform:scale(1.01)}
-.calendar-table tbody tr:hover td{color:var(--text)}
-.importance{color:var(--yellow)}
-.event-time{color:var(--blue);font-weight:600}
+
+/* 선물 */
 .futures-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
 .futures-card{background:var(--bg-secondary);border-radius:12px;padding:1.25rem;text-align:center}
-.futures-card h5{color:var(--text-secondary);font-size:0.8rem;margin-bottom:0.5rem;font-weight:500}
+.futures-card h5{color:var(--text-secondary);font-size:0.8rem;margin-bottom:0.5rem}
 .futures-card .value{font-size:1.5rem;font-weight:700}
 .futures-card .sub{font-size:0.8rem;color:var(--text-secondary);margin-top:0.25rem}
 .long-short-bar{display:flex;height:30px;border-radius:6px;overflow:hidden;margin:1rem 0}
@@ -105,17 +117,24 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:va
 .funding-table{width:100%;margin-top:1rem}
 .funding-table td{padding:0.5rem;text-align:center;border-bottom:1px solid var(--border)}
 .funding-table .symbol{font-weight:700}
-.footer{text-align:center;padding:2rem;color:var(--text-secondary);font-size:0.85rem;border-top:1px solid var(--border);margin-top:2rem}
+
+/* 분석 */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.analysis-content{color:var(--text-secondary);font-size:0.95rem}
+.analysis-content h3{color:var(--text);font-size:1rem;font-weight:700;margin:1.5rem 0 0.75rem;display:flex;align-items:center;gap:0.5rem}
+.analysis-content h3:first-child{margin-top:0}
+.analysis-content h3::before{content:'▸';color:var(--blue)}
+.analysis-content p{margin-bottom:1rem;line-height:1.8}
+
+/* 모달 */
 .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;z-index:1000;padding:1rem}
 .modal-overlay.active{display:flex}
 .modal{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;max-width:500px;width:100%;max-height:80vh;overflow-y:auto}
 .modal-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
 .modal-header h3{font-size:1.1rem;font-weight:700;color:var(--yellow)}
-.modal-close{background:none;border:none;color:var(--text-secondary);font-size:1.5rem;cursor:pointer;padding:0.5rem}
-.modal-close:hover{color:var(--text)}
+.modal-close{background:none;border:none;color:var(--text-secondary);font-size:1.5rem;cursor:pointer}
 .modal-body{padding:1.5rem}
 .modal-section{margin-bottom:1.25rem}
-.modal-section:last-child{margin-bottom:0}
 .modal-section h4{font-size:0.9rem;color:var(--blue);margin-bottom:0.5rem;font-weight:600}
 .modal-section p{color:var(--text-secondary);font-size:0.9rem;line-height:1.7}
 .modal-meta{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;padding:1rem;background:var(--bg-secondary);border-radius:8px}
@@ -126,7 +145,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:va
 .scenario-box.bullish{background:rgba(46,213,115,0.1);border-left:3px solid var(--green)}
 .scenario-box.bearish{background:rgba(255,71,87,0.1);border-left:3px solid var(--red)}
 .scenario-label{font-weight:600;margin-bottom:0.25rem}
-.calendar-table tr{cursor:pointer;transition:background 0.2s}
+
+.footer{text-align:center;padding:2rem;color:var(--text-secondary);font-size:0.85rem;border-top:1px solid var(--border);margin-top:2rem}
+
 @media(max-width:768px){
 .container{padding:1rem}
 .header-content{justify-content:center;text-align:center}
@@ -134,26 +155,44 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:va
 .crypto-grid{grid-template-columns:repeat(2,1fr)}
 .futures-grid{grid-template-columns:1fr}
 .grid-2{grid-template-columns:1fr}
+.login-box{padding:2rem}
 }
 </style>
 </head>
 <body>
+
+<!-- 로그인 화면 -->
+<div class="login-screen" id="loginScreen">
+<div class="login-box">
+<div class="login-logo">🔐</div>
+<h1 class="login-title">AI 마켓 대시보드</h1>
+<p class="login-subtitle">유료 회원 전용 서비스입니다</p>
+<input type="text" id="passwordInput" class="login-input" placeholder="오늘의 암호 입력" maxlength="6" autocomplete="off">
+<button class="login-btn" onclick="attemptLogin()">접속하기</button>
+<p class="login-error" id="loginError"></p>
+</div>
+</div>
+
+<!-- 대시보드 -->
+<div id="dashboard" style="display:none;">
 <header class="header">
 <div class="header-content">
 <div class="header-left">
 <div class="logo">🚀 AI 마켓 대시보드</div>
-<div class="update-time"><span class="live-dot"></span>2026년 01월 30일 14:43 KST</div>
+<div class="update-time"><span class="live-dot"></span>2026년 01월 30일 16:35 KST</div>
 </div>
+<div class="header-right">
 <div class="theme-toggle" onclick="toggleTheme()" title="테마 변경">
 <span class="sun">☀️</span>
 <span class="moon">🌙</span>
+</div>
+<button class="logout-btn" onclick="logout()">로그아웃</button>
 </div>
 </div>
 </header>
 
 <main class="container">
 
-<!-- 경제지표 일정 -->
 <section class="section" id="calendarSection">
 <div class="section-header" onclick="toggleSection('calendarSection')">
 <h2 class="section-title orange">📅 미국 경제지표 일정</h2>
@@ -167,7 +206,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:va
 </div>
 </section>
 
-<!-- 글로벌 시장 -->
 <section class="section" id="chartSection">
 <div class="section-header" onclick="toggleSection('chartSection')">
 <h2 class="section-title">📈 글로벌 시장</h2>
@@ -183,7 +221,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:va
 </div>
 </section>
 
-<!-- 선물 데이터 -->
 <section class="section" id="futuresSection">
 <div class="section-header" onclick="toggleSection('futuresSection')">
 <h2 class="section-title blue">⚡ BTC 선물 데이터</h2>
@@ -191,91 +228,46 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:va
 </div>
 <div class="section-content">
 <div class="futures-grid">
-<div class="futures-card">
-<h5>롱/숏 비율</h5>
-<div class="value" id="lsRatio">-</div>
-<div class="sub" id="lsDetail">롱 -% / 숏 -%</div>
+<div class="futures-card"><h5>롱/숏 비율</h5><div class="value" id="lsRatio">-</div><div class="sub" id="lsDetail">-</div></div>
+<div class="futures-card"><h5>펀딩비 (8H)</h5><div class="value" id="fundingRate">-</div><div class="sub" id="fundingDesc">-</div></div>
+<div class="futures-card"><h5>미결제약정</h5><div class="value" id="openInterest">-</div><div class="sub">Open Interest</div></div>
 </div>
-<div class="futures-card">
-<h5>펀딩비 (8H)</h5>
-<div class="value" id="fundingRate">-</div>
-<div class="sub" id="fundingDesc">-</div>
-</div>
-<div class="futures-card">
-<h5>미결제약정</h5>
-<div class="value" id="openInterest">-</div>
-<div class="sub">Open Interest</div>
-</div>
-</div>
-<div class="long-short-bar">
-<div class="long-bar" id="longBar" style="width:50%">롱 50%</div>
-<div class="short-bar" id="shortBar" style="width:50%">숏 50%</div>
-</div>
-<h4 style="margin-top:1.5rem;margin-bottom:0.5rem;font-size:0.95rem;">주요 코인 펀딩비</h4>
+<div class="long-short-bar"><div class="long-bar" id="longBar" style="width:50%">롱 50%</div><div class="short-bar" id="shortBar" style="width:50%">숏 50%</div></div>
 <table class="funding-table" id="fundingTable"></table>
 </div>
 </section>
 
-<!-- AI 분석 -->
 <section class="section" id="analysisSection">
 <div class="section-header" onclick="toggleSection('analysisSection')">
-<h2 class="section-title green">🤖 AI 시장 분석</h2>
+<h2 class="section-title yellow">🤖 AI 시장 분석</h2>
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
-<div class="analysis-content">```html
-<h3>최근 글로벌 이슈</h3>
-<p>현재 암호화폐 시장은 극도의 공포 상황(공포탐욕지수 16)에 처해 있으며, 이는 투자자들의 심리가 매우 위축된 상태임을 나타냅니다. 비트코인이 $83,001에서 -5.88% 급락하며 주요 암호화폐들이 일제히 5-7% 하락세를 보이고 있습니다. 반면 전통 금융시장은 상대적으로 안정적인 모습을 보여주고 있어, 리스크 자산에서 안전자산으로의 자금 이동이 관찰되고 있습니다.</p>
-
-<h3>전반적인 추세 분석</h3>
-<p>암호화폐 시장과 전통 주식시장 간의 디커플링 현상이 뚜렷하게 나타나고 있습니다. 비트코인(-5.88%), 이더리움(-6.97%), 솔라나(-6.35%) 등 주요 디지털 자산들이 모두 5% 이상의 큰 폭 하락을 기록한 반면, S&P 500은 -0.13%, 다우존스는 +0.11%로 상대적 안정세를 유지하고 있습니다. VIX 지수의 3.24% 상승은 시장 변동성 증가에 대한 우려를 반영하고 있으나, 16.88 수준은 여전히 낮은 편입니다.</p>
-
-<h3>종합 견해</h3>
-<p>현재 시장 상황은 암호화폐 섹터의 단기적 조정 국면으로 판단됩니다. 공포탐욕지수 16은 과매도 신호로 해석될 수 있으며, 역설적으로 중장기적 매수 기회를 제시할 가능성이 있습니다. 전통 주식시장의 상대적 안정성은 경제 펀더멘털이 견고함을 시사하며, 암호화폐 시장의 현재 하락은 섹터별 특수 요인에 기인한 것으로 분석됩니다. 투자자들은 단기적 변동성에 과도하게 반응하기보다는 장기적 관점에서 포트폴리오 리밸런싱을 고려해야 할 시점입니다.</p>
-```</div>
+<div class="grid-2">
+<div class="analysis-content" id="globalAnalysis"></div>
+<div class="analysis-content" id="predictionAnalysis"></div>
+</div>
 </div>
 </section>
 
-<!-- AI 예측 -->
-<section class="section" id="predictionSection">
-<div class="section-header" onclick="toggleSection('predictionSection')">
-<h2 class="section-title yellow">🔮 AI 예측</h2>
-<span class="toggle-btn">▲</span>
-</div>
-<div class="section-content">
-<div class="analysis-content">```html
-<h3>비트코인 단기 전망</h3>
-<p>비트코인이 $83,001에서 5.88% 하락하며 단기 조정 국면에 진입했습니다. 공포탐욕지수 16은 극도의 공포 상태를 나타내며, 시장 참여자들의 극도로 위축된 심리를 보여줍니다. 향후 1-2주간 $80,000 근처에서 지지선 테스트가 예상되며, 이 구간에서의 매수 압력 여부가 단기 방향성을 결정할 것으로 전망됩니다.</p>
-
-<h3>기술적 분석 근거</h3>
-<p>일봉 차트상 RSI가 과매도 구간인 30 근처까지 하락하며 단기 반등 신호를 보이고 있습니다. 50일 이동평균선인 $79,500가 핵심 지지선으로 작용할 것으로 예상되며, 거래량 감소와 함께 나타나는 하락은 공급 압력의 소진을 시사합니다. MACD 히스토그램의 다이버전스 패턴이 관찰되어 추가 하락보다는 횡보 또는 반등 가능성이 높아 보입니다.</p>
-
-<h3>투자자 대응방안</h3>
-<p>현재의 극도 공포 상황은 역설적으로 중장기 매수 기회로 해석될 수 있습니다. 분할매수를 통해 $79,000-$81,000 구간에서 점진적 포지션 구축을 권장하며, 손절선은 $76,000로 설정하는 것이 적절합니다. 레버리지 거래는 피하고 현물 매수에 집중하되, 전체 투자 자금의 30% 이하로 노출을 제한하여 리스크 관리에 중점을 두시기 바랍니다.</p>
-```</div>
-</div>
-</section>
-
-<!-- 암호화폐 -->
 <section class="section" id="cryptoSection">
 <div class="section-header" onclick="toggleSection('cryptoSection')">
-<h2 class="section-title">💰 암호화폐</h2>
+<h2 class="section-title green">💰 암호화폐</h2>
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
 <div class="crypto-grid" id="cryptoGrid"></div>
 <div class="fear-greed-container">
-<div class="fg-gauge"><canvas id="fgGauge"></canvas><div class="fg-value">16</div></div>
+<div class="fg-gauge"><canvas id="fgGauge"></canvas><div class="fg-value" id="fgValue">50</div></div>
 <div class="fg-info">
 <h4>공포 & 탐욕 지수</h4>
 <p>시장 심리를 나타내는 종합 지표</p>
-<span class="fg-label fear">극도의 공포</span>
+<span class="fg-label" id="fgLabel">중립</span>
 </div>
 </div>
 </div>
 </section>
 
-<!-- 국내 증시 -->
 <section class="section" id="krSection">
 <div class="section-header" onclick="toggleSection('krSection')">
 <h2 class="section-title">🇰🇷 국내 증시</h2>
@@ -295,8 +287,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:va
 <p>⚠️ 본 정보는 투자 권유가 아니며, 투자 판단의 책임은 본인에게 있습니다.</p>
 <p style="margin-top:0.5rem">© 2026 AI 마켓 대시보드 · Powered by Claude AI</p>
 </footer>
+</div>
 
-<!-- 경제지표 모달 -->
+<!-- 모달 -->
 <div class="modal-overlay" id="calendarModal">
 <div class="modal">
 <div class="modal-header">
@@ -309,427 +302,18 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:va
 <div class="modal-meta-item"><span>예측</span><strong id="modalForecast">-</strong></div>
 <div class="modal-meta-item"><span>이전</span><strong id="modalPrevious">-</strong></div>
 </div>
-<div class="modal-section">
-<h4>📊 지표 설명</h4>
-<p id="modalDesc">-</p>
-</div>
-<div class="modal-section">
-<h4>🎯 예측치 해석</h4>
-<p id="modalInterpret">-</p>
-</div>
+<div class="modal-section"><h4>📊 지표 설명</h4><p id="modalDesc">-</p></div>
+<div class="modal-section"><h4>🎯 예측치 해석</h4><p id="modalInterpret">-</p></div>
 <div class="modal-section">
 <h4>📈 시나리오 분석</h4>
-<div class="scenario-box bullish">
-<div class="scenario-label">🟢 예측치 상회 시</div>
-<div id="modalBullish">-</div>
+<div class="scenario-box bullish"><div class="scenario-label">🟢 예측치 상회 시</div><div id="modalBullish">-</div></div>
+<div class="scenario-box bearish"><div class="scenario-label">🔴 예측치 하회 시</div><div id="modalBearish">-</div></div>
 </div>
-<div class="scenario-box bearish">
-<div class="scenario-label">🔴 예측치 하회 시</div>
-<div id="modalBearish">-</div>
-</div>
-</div>
-<div class="modal-section">
-<h4>⭐ 중요도가 높은 이유</h4>
-<p id="modalWhy">-</p>
-</div>
+<div class="modal-section"><h4>⭐ 중요도가 높은 이유</h4><p id="modalWhy">-</p></div>
 </div>
 </div>
 </div>
 
-<script>
-const btcLabels = ["01/21", "01/22", "01/23", "01/24", "01/25", "01/26", "01/27", "01/28", "01/29", "01/30", "01/30"];
-const btcPrices = [88313.0, 89354.0, 89443.0, 89412.0, 89171.0, 86548.0, 88308.0, 89204.0, 89162.0, 84570.0, 83000.0];
-const cryptoData = [{"symbol": "BTC", "name": "비트코인", "price": 83001, "change": -5.88}, {"symbol": "ETH", "name": "이더리움", "price": 2749.14, "change": -6.97}, {"symbol": "XRP", "name": "리플", "price": 1.76, "change": -6.17}, {"symbol": "SOL", "name": "솔라나", "price": 115.65, "change": -6.35}, {"symbol": "BNB", "name": "BNB", "price": 848.17, "change": -5.52}, {"symbol": "DOGE", "name": "도지코인", "price": 0.11, "change": -5.79}];
-const usIndices = [{"key": "sp500", "name": "S&P 500", "price": 6969.01, "change": -0.13}, {"key": "dow", "name": "다우존스", "price": 49071.56, "change": 0.11}, {"key": "nasdaq", "name": "나스닥", "price": 23685.12, "change": -0.72}, {"key": "vix", "name": "VIX", "price": 16.88, "change": 3.24}];
-const krIndices = [{"key": "kospi", "name": "코스피", "price": 5269.44, "change": 0.92}, {"key": "kosdaq", "name": "코스닥", "price": 1166.85, "change": 2.94}];
-const economicCalendar = [{"date": "1/30", "time": "22:30", "event": "PPI상승률(전월비)", "event_eng": "PPI (MoM)  (Dec)", "forecast": "0.2%", "previous": "0.2%", "importance": "high", "description": "PPI상승률(전월비)은 제조업체가 판매하는 상품의 가격 변동을 측정하는 지표로, 미국 노동부 - 노동통계국에서 발표한다. 이는 소비자 가격 인플레이션의 주요 선행 지표로, 전체 인플레이션의 대부분을 차지한다. 예상보다 높은 발표치는 USD의 가치에 긍정적인 영향을 미치며 예상보다 낮은 발표치는 USD의 가치에 부정적이다. 이 데이터는 통계 결과를 통해 USD의 부상과 하락을 예측하는 데 도움이 된다."}, {"date": "1/30", "time": "23:45", "event": "시카고연은 PMI", "event_eng": "Chicago PMI  (Jan)", "forecast": "43.5", "previous": "43.5", "importance": "high", "description": "시카고연은 PMI는 ISM-Chicago, Inc에 의해 발표되며 시카고 지역의 제조업 부문의 경제 건강을 결정한다. 발표치가 50 이상이면 제조업 분야가 확장되고 있음을, 50 미만이면 축소되고 있음을 나타낸다. 시카고 PMI는 ISM 제조업 PMI를 예측하는데 일부 도움이 될 수 있다. 기대보다 높은 발표치는 USD의 가치에 긍정적이며 기대보다 낮은 발표치는 부정적이다."}];
-const futuresData = {"long_short_ratio": null, "funding_rate": null, "open_interest": null, "funding_rates": []};
-const fgValue = 16;
-
-let currentChart = null;
-
-// 테마 토글
-function toggleTheme() {
-    const body = document.body;
-    const currentTheme = body.getAttribute('data-theme');
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    
-    if (newTheme === 'light') {
-        body.setAttribute('data-theme', 'light');
-    } else {
-        body.removeAttribute('data-theme');
-    }
-    
-    localStorage.setItem('theme', newTheme);
-    
-    // 차트 색상 업데이트
-    if (currentChart) {
-        updateChartColors();
-    }
-}
-
-// 저장된 테마 불러오기
-function loadTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    if (savedTheme === 'light') {
-        document.body.setAttribute('data-theme', 'light');
-    }
-}
-
-// 차트 색상 업데이트
-function updateChartColors() {
-    const isLight = document.body.getAttribute('data-theme') === 'light';
-    const textColor = isLight ? '#1a1a2e' : '#fff';
-    const gridColor = isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)';
-    
-    if (currentChart) {
-        currentChart.options.scales.x.ticks.color = textColor;
-        currentChart.options.scales.y.ticks.color = textColor;
-        currentChart.options.scales.x.grid.color = gridColor;
-        currentChart.options.scales.y.grid.color = gridColor;
-        currentChart.update();
-    }
-}
-
-// 페이지 로드 시 테마 적용
-loadTheme();
-
-function toggleSection(id) {
-    const section = document.getElementById(id);
-    section.classList.toggle('collapsed');
-}
-
-function renderCalendar() {
-    const tbody = document.getElementById('calendarBody');
-    if (!economicCalendar || economicCalendar.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-secondary);padding:2rem;">예정된 주요 경제지표가 없습니다</td></tr>';
-        return;
-    }
-    
-    // 오늘 날짜 구하기 (KST)
-    const now = new Date();
-    const kstOffset = 9 * 60;
-    const kstTime = new Date(now.getTime() + (kstOffset + now.getTimezoneOffset()) * 60000);
-    const todayStr = (kstTime.getMonth() + 1) + '/' + kstTime.getDate();
-    
-    tbody.innerHTML = economicCalendar.map((item, idx) => {
-        const importance = item.importance === 'high' ? '⭐⭐⭐' : item.importance === 'medium' ? '⭐⭐' : '⭐';
-        const impClass = item.importance === 'high' ? 'color:var(--yellow)' : 'color:var(--text-secondary)';
-        const isNextDay = item.date !== todayStr;
-        const rowStyle = isNextDay ? 'background:rgba(255,255,255,0.03);' : '';
-        return `<tr style="${rowStyle}" onclick="openCalendarModal(${idx})" title="클릭하여 상세 정보 보기">
-            <td>${item.date || '-'}</td>
-            <td class="event-time">${item.time || '-'}</td>
-            <td>${item.event || '-'}</td>
-            <td>${item.forecast || '-'}</td>
-            <td>${item.previous || '-'}</td>
-            <td style="${impClass}">${importance}</td>
-        </tr>`;
-    }).join('');
-}
-
-// 경제지표 해설 데이터
-const indicatorInfo = {
-    'PPI': {
-        desc: '생산자물가지수(PPI)는 생산자가 판매하는 상품과 서비스의 가격 변동을 측정합니다. 인플레이션의 선행지표로 소비자물가(CPI)보다 먼저 가격 압력을 감지할 수 있습니다.',
-        why: '연준(Fed)의 금리 결정에 직접적 영향을 미치며, 기업 수익성과 향후 소비자물가 방향을 예측하는 핵심 지표입니다.',
-        bullish: '달러 강세, 금리 인상 기대감 상승, 주식시장 단기 하락 가능, 크립토 약세',
-        bearish: '달러 약세, 금리 인하 기대감 상승, 주식시장 호재, 크립토 강세'
-    },
-    'PMI': {
-        desc: '구매관리자지수(PMI)는 제조업/서비스업의 경기 상황을 나타내는 선행지표입니다. 50 이상이면 경기 확장, 50 미만이면 경기 수축을 의미합니다.',
-        why: '경기 흐름을 가장 빠르게 반영하는 지표로, GDP 성장률을 예측하는 데 핵심적인 역할을 합니다.',
-        bullish: '경제 성장 기대, 위험자산 선호, 주식/크립토 강세',
-        bearish: '경기 침체 우려, 안전자산 선호, 달러/금/채권 강세'
-    },
-    'CPI': {
-        desc: '소비자물가지수(CPI)는 가계가 구매하는 상품과 서비스의 가격 변동을 측정합니다. 인플레이션을 가장 직접적으로 나타내는 핵심 지표입니다.',
-        why: '연준의 통화정책 결정에 가장 중요한 지표이며, 금리와 모든 자산 가격에 직접적 영향을 미칩니다.',
-        bullish: '금리 인상 → 달러 강세, 주식/크립토 약세',
-        bearish: '금리 인하 기대 → 달러 약세, 주식/크립토 강세'
-    },
-    '고용': {
-        desc: '비농업 고용지표(NFP)는 미국 노동시장의 건강 상태를 나타내며, 농업을 제외한 신규 일자리 수를 측정합니다.',
-        why: '연준의 두 가지 목표 중 하나인 "완전고용"을 직접 측정하는 지표로, 금리 결정에 핵심적입니다.',
-        bullish: '경제 강세 신호, 금리 인상 가능성, 달러 강세',
-        bearish: '경기 둔화 우려, 금리 인하 기대, 위험자산 약세'
-    },
-    'GDP': {
-        desc: '국내총생산(GDP)은 한 나라의 경제 활동을 종합적으로 측정하는 가장 중요한 경제지표입니다.',
-        why: '경제 전체의 건강 상태를 보여주며, 모든 자산 가격과 정책 결정의 기반이 됩니다.',
-        bullish: '경제 성장 확인, 위험자산 강세, 달러 강세',
-        bearish: '경기 침체 우려, 안전자산 선호, 채권 강세'
-    },
-    'FOMC': {
-        desc: 'FOMC(연방공개시장위원회)는 미국의 기준금리와 통화정책을 결정하는 연준의 핵심 의사결정 기구입니다.',
-        why: '전 세계 금융시장의 방향을 결정짓는 가장 중요한 이벤트입니다. 금리, 양적완화, 경제 전망 등을 발표합니다.',
-        bullish: '금리 인상/매파적 발언 → 달러 강세, 주식/크립토 약세',
-        bearish: '금리 인하/비둘기파적 발언 → 달러 약세, 주식/크립토 강세'
-    },
-    '소매': {
-        desc: '소매판매는 소비자 지출 동향을 측정하며, 미국 GDP의 약 70%를 차지하는 소비를 직접 반영합니다.',
-        why: '소비자 신뢰와 경제 활력을 나타내는 핵심 지표로, 경기 방향을 예측하는 데 중요합니다.',
-        bullish: '소비 증가 → 경제 성장 기대, 위험자산 강세',
-        bearish: '소비 감소 → 경기 둔화 우려, 방어적 포지션'
-    },
-    '실업': {
-        desc: '실업률과 실업수당 청구건수는 노동시장의 건강 상태를 실시간으로 보여주는 지표입니다.',
-        why: '연준의 고용 목표 달성 여부를 판단하는 핵심 지표이며, 소비력과 직결됩니다.',
-        bullish: '실업 감소 → 경제 강세, 금리 인상 가능',
-        bearish: '실업 증가 → 경기 둔화, 금리 인하 기대'
-    }
-};
-
-function getIndicatorInfo(eventName) {
-    const keywords = Object.keys(indicatorInfo);
-    for (const kw of keywords) {
-        if (eventName.includes(kw)) {
-            return indicatorInfo[kw];
-        }
-    }
-    // 기본 정보
-    return {
-        desc: '이 지표는 미국 경제의 특정 부문을 측정하는 중요한 경제 데이터입니다.',
-        why: '시장 참여자들이 주목하는 핵심 지표로, 연준의 통화정책과 자산 가격에 영향을 미칩니다.',
-        bullish: '예상보다 강한 수치 → 경제 낙관론, 해당 섹터 관련 자산 영향',
-        bearish: '예상보다 약한 수치 → 경제 비관론, 시장 변동성 확대 가능'
-    };
-}
-
-function openCalendarModal(idx) {
-    const item = economicCalendar[idx];
-    if (!item) return;
-    
-    const info = getIndicatorInfo(item.event);
-    
-    document.getElementById('modalTitle').textContent = '⭐⭐⭐ ' + item.event;
-    document.getElementById('modalTime').textContent = item.date + ' ' + item.time;
-    document.getElementById('modalForecast').textContent = item.forecast || '-';
-    document.getElementById('modalPrevious').textContent = item.previous || '-';
-    document.getElementById('modalDesc').textContent = item.description || info.desc;
-    
-    // 예측치 해석
-    let interpret = '';
-    if (item.forecast && item.forecast !== '-' && item.previous && item.previous !== '-') {
-        const forecastNum = parseFloat(item.forecast.replace(/[^0-9.-]/g, ''));
-        const prevNum = parseFloat(item.previous.replace(/[^0-9.-]/g, ''));
-        if (!isNaN(forecastNum) && !isNaN(prevNum)) {
-            if (forecastNum > prevNum) {
-                interpret = `예측치(${item.forecast})가 이전치(${item.previous})보다 높습니다. 시장은 이 지표의 상승을 예상하고 있습니다.`;
-            } else if (forecastNum < prevNum) {
-                interpret = `예측치(${item.forecast})가 이전치(${item.previous})보다 낮습니다. 시장은 이 지표의 하락을 예상하고 있습니다.`;
-            } else {
-                interpret = `예측치(${item.forecast})가 이전치와 동일합니다. 시장은 현 수준 유지를 예상합니다.`;
-            }
-        } else {
-            interpret = `예측: ${item.forecast} / 이전: ${item.previous}`;
-        }
-    } else {
-        interpret = '예측치 또는 이전치 데이터가 아직 발표되지 않았습니다.';
-    }
-    document.getElementById('modalInterpret').textContent = interpret;
-    
-    document.getElementById('modalBullish').textContent = info.bullish;
-    document.getElementById('modalBearish').textContent = info.bearish;
-    document.getElementById('modalWhy').textContent = info.why;
-    
-    document.getElementById('calendarModal').classList.add('active');
-}
-
-function closeModal() {
-    document.getElementById('calendarModal').classList.remove('active');
-}
-
-// ESC 키로 모달 닫기
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeModal();
-});
-
-// 모달 바깥 클릭 시 닫기
-document.getElementById('calendarModal').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
-});
-
-
-function renderFutures() {
-    // 롱/숏 비율
-    if (futuresData.long_short_ratio) {
-        const ls = futuresData.long_short_ratio;
-        document.getElementById('lsRatio').textContent = ls.ratio.toFixed(2);
-        document.getElementById('lsDetail').textContent = `롱 ${ls.long.toFixed(1)}% / 숏 ${ls.short.toFixed(1)}%`;
-        document.getElementById('longBar').style.width = ls.long + '%';
-        document.getElementById('longBar').textContent = '롱 ' + ls.long.toFixed(1) + '%';
-        document.getElementById('shortBar').style.width = ls.short + '%';
-        document.getElementById('shortBar').textContent = '숏 ' + ls.short.toFixed(1) + '%';
-    }
-    
-    // 펀딩비
-    if (futuresData.funding_rate !== null && futuresData.funding_rate !== undefined) {
-        const fr = futuresData.funding_rate;
-        document.getElementById('fundingRate').textContent = (fr >= 0 ? '+' : '') + fr.toFixed(4) + '%';
-        document.getElementById('fundingRate').style.color = fr >= 0 ? 'var(--green)' : 'var(--red)';
-        document.getElementById('fundingDesc').textContent = fr >= 0 ? '롱이 숏에게 지불' : '숏이 롱에게 지불';
-    }
-    
-    // 미결제약정
-    if (futuresData.open_interest) {
-        const oi = futuresData.open_interest;
-        document.getElementById('openInterest').textContent = oi.toLocaleString() + ' BTC';
-    }
-    
-    // 펀딩비 테이블
-    if (futuresData.funding_rates && futuresData.funding_rates.length > 0) {
-        const table = document.getElementById('fundingTable');
-        table.innerHTML = '<tr>' + futuresData.funding_rates.map(f => {
-            const color = f.rate >= 0 ? 'var(--green)' : 'var(--red)';
-            return `<td><div class="symbol">${f.symbol}</div><div style="color:${color}">${f.rate >= 0 ? '+' : ''}${f.rate.toFixed(4)}%</div></td>`;
-        }).join('') + '</tr>';
-    }
-}
-
-function renderChartTabs() {
-    const tabs = document.getElementById('chartTabs');
-    const btc = cryptoData.find(c => c.symbol === 'BTC') || {change: 0};
-    
-    let tabsHtml = `<button class="chart-tab active" onclick="switchChart('btc')" id="tab-btc">비트코인 <span class="change ${btc.change >= 0 ? 'positive' : 'negative'}">${btc.change >= 0 ? '+' : ''}${btc.change.toFixed(2)}%</span></button>`;
-    
-    usIndices.forEach(idx => {
-        const key = idx.key || idx.name.toLowerCase().replace(' ', '');
-        tabsHtml += `<button class="chart-tab" onclick="switchChart('${key}')" id="tab-${key}">${idx.name} <span class="change ${idx.change >= 0 ? 'positive' : 'negative'}">${idx.change >= 0 ? '+' : ''}${idx.change.toFixed(2)}%</span></button>`;
-    });
-    
-    tabs.innerHTML = tabsHtml;
-}
-
-function switchChart(type) {
-    document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('tab-' + type)?.classList.add('active');
-    renderChart(type);
-}
-
-function renderChart(type = 'btc') {
-    const ctx = document.getElementById('mainChart').getContext('2d');
-    if (currentChart) currentChart.destroy();
-    
-    let labels = btcLabels;
-    let prices = btcPrices;
-    let label = 'BTC/USD';
-    let color = '#ffa502';
-    
-    if (type !== 'btc') {
-        const idx = usIndices.find(i => (i.key || i.name.toLowerCase().replace(' ', '')) === type);
-        if (idx) {
-            label = idx.name;
-            const base = idx.price;
-            prices = btcLabels.map((_, i) => Math.round(base * (1 + (i - 5) * 0.003 + Math.random() * 0.002)));
-            color = type.includes('nasdaq') || type.includes('나스닥') ? '#3742fa' : 
-                    type.includes('sp') || type.includes('S&P') ? '#2ed573' : 
-                    type.includes('dow') || type.includes('다우') ? '#ff6b81' : '#ff4757';
-        }
-    }
-    
-    currentChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: label,
-                data: prices,
-                borderColor: color,
-                backgroundColor: color + '20',
-                borderWidth: 2.5,
-                fill: true,
-                tension: 0.4,
-                pointRadius: 3,
-                pointHoverRadius: 6
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: true, position: 'top', labels: { color: '#8a8a9a', font: { size: 12 } } }
-            },
-            scales: {
-                x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8a8a9a' } },
-                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8a8a9a', callback: v => '$' + v.toLocaleString() } }
-            }
-        }
-    });
-}
-
-function renderIndicesTable() {
-    const tbody = document.getElementById('indicesTable');
-    const btc = cryptoData.find(c => c.symbol === 'BTC');
-    
-    let html = '';
-    if (btc) {
-        html += `<tr><td><strong>비트코인 (BTC)</strong></td><td>$${btc.price.toLocaleString()}</td><td><span class="change-badge ${btc.change >= 0 ? 'positive' : 'negative'}">${btc.change >= 0 ? '+' : ''}${btc.change.toFixed(2)}%</span></td></tr>`;
-    }
-    
-    usIndices.forEach(idx => {
-        html += `<tr><td><strong>${idx.name}</strong></td><td>${idx.price.toLocaleString()}</td><td><span class="change-badge ${idx.change >= 0 ? 'positive' : 'negative'}">${idx.change >= 0 ? '+' : ''}${idx.change.toFixed(2)}%</span></td></tr>`;
-    });
-    
-    tbody.innerHTML = html;
-}
-
-function renderCryptoGrid() {
-    const grid = document.getElementById('cryptoGrid');
-    grid.innerHTML = cryptoData.map(coin => `
-        <div class="crypto-card ${coin.change >= 0 ? 'up' : 'down'}">
-            <div class="crypto-symbol">${coin.symbol}</div>
-            <div class="crypto-name">${coin.name}</div>
-            <div class="crypto-price">$${coin.price.toLocaleString()}</div>
-            <div class="crypto-change">${coin.change >= 0 ? '+' : ''}${coin.change.toFixed(2)}%</div>
-        </div>
-    `).join('');
-}
-
-function renderKrTable() {
-    const tbody = document.getElementById('krTable');
-    tbody.innerHTML = krIndices.map(idx => `
-        <tr>
-            <td><strong>${idx.name}</strong></td>
-            <td>${idx.price.toLocaleString()}</td>
-            <td><span class="change-badge ${idx.change >= 0 ? 'positive' : 'negative'}">${idx.change >= 0 ? '+' : ''}${idx.change.toFixed(2)}%</span></td>
-        </tr>
-    `).join('');
-}
-
-function renderFearGreedGauge() {
-    const ctx = document.getElementById('fgGauge').getContext('2d');
-    const color = fgValue <= 45 ? '#ff4757' : fgValue <= 55 ? '#8a8a9a' : '#ffa502';
-    
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            datasets: [{
-                data: [fgValue, 100 - fgValue],
-                backgroundColor: [color, 'rgba(255,255,255,0.1)'],
-                borderWidth: 0
-            }]
-        },
-        options: {
-            cutout: '75%',
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: { legend: { display: false }, tooltip: { enabled: false } }
-        }
-    });
-}
-
-// 초기화
-document.addEventListener('DOMContentLoaded', function() {
-    renderCalendar();
-    renderFutures();
-    renderChartTabs();
-    renderChart();
-    renderIndicesTable();
-    renderCryptoGrid();
-    renderKrTable();
-    renderFearGreedGauge();
-});
-</script>
+<script>eval(atob("CmNvbnN0IEVOQ1JZUFRFRF9EQVRBID0gIk9oRk1TRjBuTlZaZFoxZ3lZd2taR2d0MmN3WHJoYjBZQ1hmc21wVVRDZ2pzbllWbWNBVURDd3htQ21CdEdoVm1ZMUJMUVVreUxoRURHR0k5WTBCQVZWc3BMUkVER0JzRUZYQWJGQmxrTDFKVVhSdDhZUkhydWIzdGlvRHN2YTNzbkw1akh4a2FTVFFvVUZ3YUEyWjVBUXdOREdwaEVWcFFXQ2dtVmhzQ0dXdDNIUW9BUkdwaFNCdExRQ3NqWEZVYUEyWmpkbTF3RzJwaEVWZFpWQ05qQ1JrYTdKMk42NHlTNjZldDdKdXpHeFFaWkRGQlVGdGNaSHNUQ3c4S2QyOEZBQlFaWkNKYldGWmVJMk1KR1JVT2FIUUdSQlFaUFdOQVFGVmJLUzBSQXhnYkhoTmpHeFFaWkM5U1ZGMGJmR0VSNjZhVjdaUzBHMnBoRVVsS1VDVWtFUU1ZQ0doMkJoVVlHeVVwVWxkZlhHUjdFeFFQRjNkNVRoVVlRbVF5U2xSYVZpcGpDUmthYWdrTkVSVVlHeWdnWGx3YUEyWmo3SWFuNjUyRjY0S2dHMnBoRVVsS1VDVWtFUU1ZQ0hkMEhRb05GV1pqVUZGWlZ5RWtFUU1ZRkhCdkJBdEZGV1k2RVVwQlZDUXVYeHNDR1dRRGZYc2FGV1pqWFZoVlhHUjdFeHQ2ZHdSakh4a2FTVFFvVUZ3YUEyWjVCd29XREhWdEV4dGJVU2N2VkZ3YUEyWnNCUmNQRFR0dEUwSWFTajhzVVZaVUczeGhFWDEzZmdOakh4a2FWeWNzVmhzQ0dXVHJqb1hzcDdQc3ZhM3NuWUFiYW1FUlNVcFFKU1FSQXhnSmFIQUNGUmdiSlNsU1YxOWNaSHNURkE0WGRYUk9aQlFaWkNkV1dFcG1JVE5XWEZ3YmZHRklHMDVZS2pSV0d3SVpkM2NmR1JwVkp5TldWUm9EWm1OMlFVeExJeXhXR1g1Y0p6TVJSQlFaWkRSQVpsRlhJaWhRWEVzYmZHRm9RaHBTSXpnUkF4Z2JOVEVHQ1FnYmFtRVJWMWxVSTJNSkdScHFZQkVUREFnSlpHMFRHMGhMTHlKV0d3SVpjSGdGQUJZSmQyMFRHMXRSSnk5VVhCb0RabXdERndrS08yMFRRaHBTSXpnUkF4Z2JJaTVFR3hRWlpDOVNWRjBiZkdFUjY0dWQ3SnFJN0tHTjdJdWlZeDhaR2trMEtGQmNHZ05tZFFvSkR3aG9kQVVWR0JzbEtWSlhYMXhrZXhNSkZnaDNQQjhaUXhzdEpFb2JBaGxrTDFKS1hGZzNZeDhaR2xjbkxGWWJBaGxrNjRPWjdJcVg2NHVjR2hWbVkwTkxVVm9qWXdrWkNncHdlUVlYQ1F0cVlSRmFVRmdvSmxZYkFobHJjUjBPQ2tScVlVZ2JVMXcvWXdrWkdrOHZPUkVWR0Jzb0lGNWNHZ05tWTJWd1lCdHFZUkZKU2xBbEpCRURHQWh3YndzQkZCbGtJbHRZVmw0all3a1pDeGQwZFU1a0ZCbGtLa0ZtVVZjaUtGQmNTeHQ4WVdoQ0dsSWpPQkVER0JzdExrQkpVUnRxWVJGWFdWUWpZd2taR3V5OXJleUxvdTJWdlJFVkdCczJNMXBhWFJ0OFlRWUxDZzFvY2dVVkdCc2xLVkpYWDF4a2V4TUpGZ2x3UEI4WlF4c3RKRW9iQWhsa0tseEtYRmczWXg4WkdsY25MRlliQWhsazdMeVY3SXFYNjR1Y0doVm1ZME5MVVZvall3a1pDUWh5ZUIwTkRCVm1ZMUJSV1ZjaEpCRURHQWhvZFU1a0ZCbGtJMGRhWjFFdk1rZFdTa0JrZXhOQ0dsVW5JMVpWU3h0OFlXZ2JDQWhwY3dJYkZCbGtjUUlXQ2d0a2JSTWJDQWhwY3dBYkZCbGtjUUlXQ2cxa2JSTWJDQWhwY3dZYkZCbGtjUUlXQ2c5a2JSTWJDQWhwY3dRYkZCbGtjUUlXQ2dGa2JSTWJDQWhwY3dvYkZCbGtjUUlXQ3dsa2JSTWJDQWhwY2dNYlpSVm1ZME5MVVZvak1oRURHR0orZVFBSUN4ZDJiUk1CQVFwemRSMEpGQmwrZUFjTkN4ZDJiUk1CQVExM2N4MEpGQmwrZUFJT0NSZDJiUk1CRGd4eWVSMEpGQmwrZVFBSkFCZDJiUk1CQVF0MmRSMEpGQmwrZUFJUENoZDJiUk1CREF4eGNSMEpGQmwrY3dZSURoZDJIRTRWR0JzbkwxSlZRVW92TWhFREdFSmtKbDlXV2xncUhsSlhXVlUvTWxwS0dnTm1ZMU5aV0ZFeUxGOWxWZ1V1Y2czc3RhWHF0NFFaNnJtRzY2Q2Q2N0svR2V5ZGpPeUtzWHB1V3dvR1pTaDlRd2ZzbGF6dG1JSHRtSkx0anBFVDdJdWw3SjZkN0oyTlp1eWhoZXV3cSt5Z3VPeWNoT3VocFdaM0hnNGQ2NHk1N0p5ZVllcTR1dXF5a08yVnBCbnRsSjdybkx6c2hJdnJwWVVZNjdPTjdKeXk2Nml4RSsySWxleWVxT3llcWV1U291eWNtUlBzbW9ucm9KenFzTGxtN1ppVTdJS0Q2NUNoNnJPWUdleWZqdXlMdE91THUrdUxuUllaNnJLejdZNnQ3WU9qN0pxczdLZTQ3SWloNnJHR1lRSVA3SnlFNjZHbFp1cTJ1T3VMbSt5Z3VPeWRnQm5xc3JQdGpxMFQ3SU80N1lPazdKZXBadXltaGV5ZXR1MlZwUmpxc3Jyc25JWmg3SXV2N0o2Y0dPeUxsZXVucXVxeGdSUHRnWlhxc3JRWjdKMkM3TGVVNjVDcjdKZXg3SjIwN0oyOVp1eUtuZXlDbisyVmtPdUxzT3VMbldoaDdKMkg2NHF0R095MXBlcTJ1bUhycjR2cXRaVHNuYUFaN1llejdaaVY3S0NtN0xHOEdPdTJzZTJZayt5S3BleUVndXF6aFJqcXQ2WHNvWnBoNnJDbTdabXRHT3lhaWV1aG9tMFQ2cmVCNjZhVTZyT1padXE1Z2V1aHIrdXl0Umpxc29Uc29acGg2NUduN1ptdEdPeUxtZTJadnVxeGdSUHJzNHp0bFpIc29ManNuYnJyb0owVDdKNm83SnFSN1pXbFp1cXpzZXF6ait1aHBSanJ0cjNzaFp2cmthanJpN3ZyaTUwV0JXa3hEV1ZXWlNoOVd3b0c3S0M5NjdHZTdLR0E3SjJMR2V5MnJPeUVnV2JydDRYc2hLNEZGMUYxZjI5WEJFbDQ2NjY1NnJXZUdleWpoT3lMcE95S211eWZwT3lkc3huc2xhenRtSUh0bUpMdGpwRVQ2NHk1NjdtOEdleUNoK3VOZ2V5Z3N1eWNoZXVocEJuc2xJN3NvWlRzb0xMc25ZRVk2NnFSN0l1ejdKeUZFK3V6amV5ZGpPcXptV2JzbjRuc2lvYnJpN0hyaTV3WFp1dUtwZXlhZyt5aGpleUtuT3VLcldic2g0M3RqNTRaN0lPNTdJcUFibW9ERndrSVkyanRsYXZycVlrWTY3Q1E3SmV5N0tHQUUreUVpT3F5a2V5ZHZXYnNuYUhzcDdQdGxySHNuSVRyZ3FGcVllcTRnK3lJbWV5amhCbnNwWmZzaXEzc25hc1o2NEtnN0lxZDY0cWo3SnlCRXhRSUYzRnpGaG50bGFEcm5ZVHRsNDdzaTdUcmk3dnJpNTBXR1JBSWF4bnNwN2pzaUtIcXNZWmhBZzhXQVg3cm9KMFRDaFlMY21RVDdJTzQ3SXFCN1pXbFp1cXpndXlkc3huc2k2VHNucHhtNjdLQjY0K3E3SVNJN0plb0dldU5odTJVblJQc21vbnJvSnpxc0xsbTdLZWM2ckN6N1pXaDZyT1lHZXlmanV5Y2pleWR0eG5yczR6c2w1WHNwWXZyaW9ucmk1Y1hHT3U1dmUyTHZ1eThsZXlkaSt5ZGpSZ2Rmbk1mREEwTVp1eUptZXlrcyt5WHFleUVwQm5zcG9ic3BvSHJwWThaNjdDajZyT1padXlmaWV1S3B4bnFzTGpzbW8zcmpMWnRFK3lqaGV5YXJCbnNsSXJ0aTduc3ZhZnNuWUhyazV6cmo3MW03SjJoN0lLZjdaV2xHTzJWb2V1Y3UrMk9yT3lkdHhucXVJanJvYVR0bEo3cnFMRVQ3S0M5N0xLTTdLQzQ3SnkrWWV1bW4reUtuZTJCbE95WW5lMlZnbUhycXB2cms2WHFzTGdaN0thRzdJZU02NUNyNnJPWkdPeWVzZXlMcyt1S2lldUxseGNFRmpaL2IxZGtWM29wQUFmc29yM3RsWkJtNnJPdDdaV0hCUmRSZFg5dlZ3UkplTzJaaGV5ZW54bnNpNlRzbnB6c25JWmg2NHViNnJpSjdLQzVHZXlndHV5aGxCUHF0WlRycVl6c2w2bG03S2FGN0o2MjdaV2xHT3F5dXV5ZHV1dWduUlB0aktucmk1RHJrSkRyaW83cmlxVWRHZXlWck8yWWdlMllrdTJPa2V5ZHF4bnF1TEhxc3BEdGxKcGg3WldyNjUyRTZyT0VHZXEydit1T2hleWRxeG5xczQzdGo1Vm03SXF0NjZhZjY0cXRHT3F6aGV1bW91dU9oUlBzZzdqdG1aSHNuYjFtN0lxZDdJS2Y3WldoNjZtSUZXYnNuTFhyaXFjWjdaYWQ3WnU5WnV1eG1ldVRnaG5xc0xqcmlwenNoYmZzbklVVDY0S043WStVN1pXaDZyS21ZZXlldSt5S2pPdUxzT3VMbldoaDZyZUw2NStWNjRLZ0dleWhndTJIdEJQcXVMSHNuSTNzaTZYc242UHNuSmtUNjdPNTY0K2g3SVNJWnUyWWxPdU1zK3ladVJqdGxaSHF1cDVoN0l1VDdLU283WldrR2V5aGwrcTJ2ZXlkaHhudGxienNtcTN0bEpwaDdJdXY3S0NwN0o2OTY0dXg2NHFpYnhQdGlKWHNucWpzbnFucmtxTHNuSUVUNjR1QTY3YTg2ckM5WnUyWmhlcTR1eG5ydWJ6c3BLanNuSUpoNjRxcjY2YVY2ck9ZR2V5aGx1eW1oZXlnc2hucnA1enNpS0ZtN0tHRjY1Nkc3SjI5R09xem1ldWhvdTJVbWV1S3B4bnFzcnZzblkxbTY3R1Y2NTYvN0tlNDdaV2c2Nm1KYW1IdGlvcnRuckVZSFg1eEh3a0lDV2JzaVpuc3BMUHNuYUVZNjdtOTdZdSs3THlWN0oyTEdleW51T3ludWV5RnBtSHNuWWZ0ZzdFWTdKZVY2N2VHNjZTOUUreWpoZXlkb0JucXVJenFzNDBUNjZxUjY0dXc3WVNKNjZhSDdaUzE3SldQR2UyVm1CbnFzNFhzbmIzcm9hOFo2N09NN0o2ODY0cU82NHFsSFFVWFNYZ2RYVmxZV1dSdEV4dElTeU1sV2xwTVVDa3ZiRmhXV0NvNFFGQkxHM3hoRVZsWVdTNDFYbFZrVjNvcEFBZnJ1Ynp0aW9Ic3ZKTHNuTGtUNjR1UjZyaUlHZXloZ3V1bW5BOFdVQXA0SFYwRlNBZnRtWUxzbjYwVDY3bTk3WXFBN0wydDdKeSs3SnlCRXgwQUMycDBCZ3dZN0lpaDdLV0c3SmFSN0lTdkdRNFhkWGtXN0oyaEdPMlZvZXVjdSt5RnVldWxqeG5yczR6c25ZM3JxTFpoN0tHRDdLQ3NHT3ExbE91b3N1eVdrUlBzcDczc25yM3RsckhzaTdQcmlvbnJpNWNYR09xempPMk9xdTJDa2V5YXB1eW51ZXlJb0JsM2QreWRzeGtmNnJlQTY0NkM3SnlaRStxempPMlBsQjVtNjRxcDZyTzM2NkdsRkJuc2lwcnNuNlFUN0l1VjY2YVU2ckM1WnVxMnVPdVB0K3VocFJqc2xienRtSkxya1owVDdJTzQ3Wm1SN0o2ODY0cU82NHFsSFJucmk1RHF1SW5zb1lmc25iM3JvYS9yaXEwWTdMYXQ2ckdHWWUyVnErdWRoQmpzbGF6cm9hUHNuTFVUN0tlNTdJYTE2NUNaWnVxeGdldUtsdXlFaU95ZGpCbnJoNVRzbmIzcnFZTVZHQjF4ZEI4SkNBbHJaUXNKRkFsMmNSUHF0Wlhxc0x6c2w2bnNoWnBoN0tlejdLZTU3SVNZN0oyOVp1eXh2K3lkdHhucXNydnNuSVhyb0pwaDdKaTc3SU80NjVDUjY0dXg2NHFpYnhQcmk1M3JwN1FaN0p5eTY1NnQ3Wld2R2VxM2dldVB2ZXljbm1IcXM0YnRqNVVZN0lPNDdaaXY3SnlCRSt5aXZPeWl2Um5yc1o3cmtyRHNuYXNaN0l1WTdaaUI2ckdHWWV1UXErcTRpZXVQdkJudGxLL3Jpb25yaTVjWEJCWTJmMjlYWkZkNktRQUg2cmlJN0lpWjdLR0hZZXUydCt5RXBCanF0NFhxc0xaOUhGRUxCeG92RDBrRzdKMkY2N1dQWWV5d20rMktnZXlYcU95RXBXYnNvcjNzbXFjWjdKMk02NCtnN1k2UDZyYWg3SVNUN0oyOUdPMlZvZTJYbzJIc25ZZnRnN0h0bGFEcnFZbG03SlM4N0lTTEdleUxtTzJZZ2VxeGhtSHFzS2J0bWEzcmtLRHNsN0hzaTdQcmlvbnJpNWNYR0dzVkNPdUtweGtMQ1dic25MWHRsYXZyb2FVWTZyT0Y2NmFpNjQ2RkUrcTFsZXF3dk95WHFXYnNwb1hzbnJidGxySHNuSVRycVlscVllcXhnK3Vlb2V1ZnNSbnNwNXZxc1lIc21iTVo3WldRNnJ1aFp1MlVtZXVkanUyVm9ldUtyQm50amE3dGhiWHNuYmNaNjdPTTdKMk42ckttWWV5ZXUreVdqUmpycDUzcmpvSmg3SldtNjZDYzdKMk1HZXlDaCt1S3VPMlZtK3lkdlJqc2k2WHNnNnJ0bEtqcmk3dnJpNTBXR2V1eXV1dW5zZXlnc3hucnNJenJrNlZtN1pTWjY0dWI3SVNaR09xM2hleXpudXlXa2V5RXJ4bnFzWWpybnFIcmtaN3FzcUVUN0o2eDdKYU1HZXVLcnVxNXNSUHJzS0hyazRrWjZyR0c2NHVrN0lTQzY0KzlHT3V3aWV5aG11MlVvUlBzaUtFWTdKZS83SXV6NjRxSjY0dVhGeGp0bFl6c2lxcGg3S2V6N0tlNTdJU1k3SjJCWm1VRUFSUUpkbkVUN0lpaDdLUzQ3SjJoWnV1eHFPeVdoeG5zbDVUcnRybnFzWVpoN0tTaTdKcXQ3WldrR2V1eWh1cXlvT3lnbyt5ZGpSanJrSmxtNnJPQzdKNjI2NHV4NjR1Y0YzcHVRd2RrVnhvdkQxRUxCKzJKcXV5ZmtleWVveG5yakxqc25hanJzYS9zbElrUEZsQUtlQjFkQlVnSDdabUM3Sit0RSt5RHVPMlprZXlYcWV5Rm11dUxsUlByckkzcnBwVHRsYVZtN0thRjdKNjI2N09ONjR1Y0dlcTFodXVtbk95ZGh4bnJzS3pybnJYc3BvZnRsS2pyaTd2cmk1MFdHZXE1dHV5Z3RSUHJzNDNzbkpqc25xbnJpNUpoN0lhajdLQ3g2NmVjR2VxNXR1eWxnZXlnb3hFY0RuTnRBd2tJRU95Y2dtSHNoSmZzb0t6dGxhRHFzNWxtNjZldDdJcVg3WUdWR09xMHVldW5xdXlXa1JQc3A2anNwS250bFkzc2xMcGg3WldhNjR1eDY0dWNGMmJzaXFIcXQ2OFo3WWlVN0o2cDdKK1c3SnlaRStxeWhPeWFpQm5ydDRMdGxLRVQ2NmVkN0lpZ0dleWhndXVmdE95ZHR4bnRtYVRzbXBEdGxKN3NscTBUSFE4QmFuRURDUlFaWW5ZR0ZRZ0pkbTBUSFE4SmFuRURDUmpxdFpYcXNZTHNscEhzaEs4WjdLQ283S2U5N0tHSFlleW50K3lldk95ZHZCbnFzcWJyb2FYdGxaTVo3SWlnR2V5Zmp1eUx0T3VMdSt1TG5SWVo2cmEvNjQ2RjdKMnJHZXF6amUyUGxXYnNnb0R0bVpyc25ZM3JyN2pyb2FWbTdKK2s2cmlER2VxMHVPeWdxZXlXbHV5Rm5SUHNtb25ybjdFWjdZNnE3S2FCN0lXckdlMlpyZXV6aldicXViSHRtci9yb2FVWTdabWw3SnV2N1pTWjY1Q3JGUmpzb0wzc3M3Smg3WStmN1lxQjdZK002NmFWN0ptaVlldU1zK3U1dlJqc29ManNvWk5oNjdtMzdLU283SjI4R2V5ZHB1eW1nZTJWcSt1S3JSanFzcnJzbkxKaDdLU2k3SnF0N1pXUjY0dXg2NHFpYnc4V1NBY2FMMU5aV0JzN2JSTWJYVm9wTDF4VVVWb1pJbEpWWFZjaUlFRWJBaGtkT2hGZFdVMGpZd2taR2docGNnTWJGQmxrTlZwVVhSdDhZUkVMQ2dOMWNSRVZHQnNqTjFaWFRCdDhZUkZwYUhEc2dvZnNpN2pycFpNUjdLQzg3SnV0NjdpQ2FCRVZHQnNqTjFaWFRHWWpMMVFiQWhsa0VXTndHQkVMTG40UUdCbHVCVlphRVJ0cVlSRmZWMHNqSWxKS1RCdDhZUkVKRmd0all4OFpHa2swSkVWUVYwdzFZd2taR2dsb2N4WWJGQmxrS0Y1SlYwc3lJRjFhWFJ0OFlSRlJVVjR1WXg4WkdsMGpNbEJMVVVreUtGeFhHZ05tWTJOcGNleUR1T3lMdit1a29SdnNvTDNzbTZ6cnViMXY3SnlCRSt5Z3BleWhpT3lYdk95enN1cXhnUlB0aktucnA1enRsYUhyaTVKaDdJT3k3Wkt4N0oyZ0dlcXhodXF6cUJQcnM3bnJqNkhzbmIxbTdMbWc3S0NtN1pXaDY0cXNHZXltaHUyUW5ldWhyeFVZNjYrQjZyU3JZZXVGaSt1UG9PdTJ1QmxyWWV1RmkrdVBvTzJHamVxenZlcTBxK3lXa2V5RXJ4bnJzS1R0a2FYdGxKcnJpcVVkR2V5ZGpPdUtyV2JzaDQzcnViZnNucWtZNnJDNTZyT3ZZZXlkaSsyVXRldWdzT3lkamV5RW51eWNtUlBzbzRYc21xd1o3SVdtN1plSUUreW51ZTJScE91aHBXcGg3S0MzN0xLTkdPeWRnZTJWaXV1aGlleWRoK3lGb2V5ZG9CbnJqWWJydDRIcnRyZnNuYjBZN0xDUjdLYUc3WlNkNjR1WEZ4anNtTEhzZ29mcnNyWHJpNWNaNjRhcTdKMjVadXV4bmUyUnIreTVvZXVLckJrVEVuZnNuYUVZNnJDNTdMaWU3SmFSRStxNHRPeWdyZXlndU95Y3ZtSHNtTEx0bHB6c25id1o2NjYrN0xpWjY2bURHZXlZc095RHVPdXlzdXVLcFJQcmdwZnNuYmdaNjdHYTdaQ2Q3TG1yNjRxdEdHd1ZCZXlkcXhucXNManN1YUhzbHBaaDY3YXo3S0NzN0tDNTdKMk42NHFpYnhQc25ZMFk2NDJKN0p5eTdZV3g2NHFuR2UyR2plcXp2V2JxczdIcXM0L3JwWVVZN1lhTTdaU3lZV1pxZk95ZG9XYnJ0NEhzZzdMcXM0VVk3WldoNjV5NzdKeUZFK3lZc2V5NG1lMlZvZXVMa21IcmpZTVo2NCs4N0p1NTdKeXlZZXVRcit1TG5SWWJPMjBUUWhwZEp6VldHd0laWkhBY0NnZ2JhbUVSVFZGVUkyTUpHUm9MZFhzSERCb1ZabU5XVDExWE1tTUpHUnJzaTZYc3VMTHFzcUhzbDRQc25ia1lhUXNJRVJVWUd5TTNWbGRNWmlNdlZCc0NHV1FDVzFCYldDRXVFMmwxY0daaEczTlpWMjlqSHhrYVh5a3pWbHBaU2pKakNSa2FEWFZ2QmhzVUdXUXhRVnhPVUNrMFFCc0NHV1IxQUJjTkcycGhFVkJWU1NrelIxaFdXaU5qQ1JrYVVTOG1XeHNVR1dRbFZrcGJTeTh4UjFCWFYyUjdFeHZzaTZUc3VZM3FzcWJzbHJIc25iTVphSFFQNjR1VkUzQnJkR3NDVzFCYldDRXVIeGx4VnlYc2xwRVQ3SjJoN1pXTUdldXhtdTJRbmV1UXErdXBpUmpzaTZYc3VMTHFzcUVUN0tlNTdKZVY3SjJoWnV5aG5leWhnK3lYdkJqcnRybnJyYjdzbkprVDZyS0U3S0NrR2Vxd3N1cXhsT3lkdHhucXNvanNvS3p0bEpycmlxVWRHZXV3cE8yUnBleTRudXF4Z1JNTUNCbnNuTExzZ29Ec25ZZnJxWTBZN0tDbDdLQzI3SmFFRSt1MnZleVZoT3F3dVdidG1KVHNucGJya0tIcXM1Z1o3SitPN0p5TjdKMjNGUmdNZG1IcnI0dnJwN1hzbll6cnFZMW03TGVVN0lhLzY1Q2g2ck9ZR2V5Zmp1eWNqZXlkdHhucmdxRHRnN25yZzc3cmlxVWRHZXlMcE95NWplcXlwbUZqZEhIcmlxMW1DR0IwR095Z3BleWd0dXlXaEJOcGRYRHJwTHBoN0ppNzdMaVk3WldnNjRxdDY0eTJZZXlkait1MnVSanJqNzNzbW9ic25MVVQ2NUNaR095SW9XYnNuNG5yaTVjWEdPcTRpZXVOaHV1eXRldUxseG5yaHFyc25ibG02N0dkN1pHdjdMbWg2NHFzR1JNU2QreWRvUmpxc0xuc3VKN3NscEVUNnJpMDdLQ3Q3S0M0N0p5eTY2aXhFK3E0aWV1TXVPdXpqZXVLb21IcmdwM3NuYmtZNjdDbDdaQ2E3TGlaNjRxbkdldTJ1T3lnck95aGgreWN0ZXVMbHhjYVJCdHRFeHRlVERJMFFWeExaaUlnUjFnYUEyWTZFVlZYVnlFZVFGRlhTekllUVZoTVVDbGpDUmxXVENvdEh4a2FYek12VjFCV1hoa3pVazFkRzN4aFhVeFVWV3BoRVZaSVhDZ2VXbGRNWERRa1FFMGFBMll2UmxWVUZXWmpWVXhXWFM4dlZHWktXRElrUUJzQ0dSMGNUa1E9IjsKCmxldCBkZWNyeXB0ZWREYXRhID0gbnVsbDsKbGV0IGN1cnJlbnRDaGFydCA9IG51bGw7CgpmdW5jdGlvbiBkZWNyeXB0KGVuY3J5cHRlZCwgcGFzc3dvcmQpIHsKICAgIHRyeSB7CiAgICAgICAgY29uc3QgZGVjb2RlZCA9IGF0b2IoZW5jcnlwdGVkKTsKICAgICAgICBjb25zdCBrZXkgPSBwYXNzd29yZC5yZXBlYXQoTWF0aC5jZWlsKGRlY29kZWQubGVuZ3RoIC8gcGFzc3dvcmQubGVuZ3RoKSkuc2xpY2UoMCwgZGVjb2RlZC5sZW5ndGgpOwogICAgICAgIGxldCBkZWNyeXB0ZWQgPSAnJzsKICAgICAgICBmb3IgKGxldCBpID0gMDsgaSA8IGRlY29kZWQubGVuZ3RoOyBpKyspIHsKICAgICAgICAgICAgZGVjcnlwdGVkICs9IFN0cmluZy5mcm9tQ2hhckNvZGUoZGVjb2RlZC5jaGFyQ29kZUF0KGkpIF4ga2V5LmNoYXJDb2RlQXQoaSkpOwogICAgICAgIH0KICAgICAgICByZXR1cm4gSlNPTi5wYXJzZShkZWNyeXB0ZWQpOwogICAgfSBjYXRjaCAoZSkgewogICAgICAgIHJldHVybiBudWxsOwogICAgfQp9CgpmdW5jdGlvbiBhdHRlbXB0TG9naW4oKSB7CiAgICBjb25zdCBwYXNzd29yZCA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdwYXNzd29yZElucHV0JykudmFsdWUudG9VcHBlckNhc2UoKTsKICAgIGNvbnN0IGVycm9yRWwgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbG9naW5FcnJvcicpOwogICAgCiAgICBpZiAoIXBhc3N3b3JkKSB7CiAgICAgICAgZXJyb3JFbC50ZXh0Q29udGVudCA9ICfslZTtmLjrpbwg7J6F66Cl7ZW07KO87IS47JqUJzsKICAgICAgICBlcnJvckVsLnN0eWxlLmRpc3BsYXkgPSAnYmxvY2snOwogICAgICAgIHJldHVybjsKICAgIH0KICAgIAogICAgY29uc3QgZGF0YSA9IGRlY3J5cHQoRU5DUllQVEVEX0RBVEEsIHBhc3N3b3JkKTsKICAgIAogICAgaWYgKGRhdGEgJiYgZGF0YS5jcnlwdG8pIHsKICAgICAgICBkZWNyeXB0ZWREYXRhID0gZGF0YTsKICAgICAgICBzZXNzaW9uU3RvcmFnZS5zZXRJdGVtKCdkYXNoYm9hcmRBdXRoJywgcGFzc3dvcmQpOwogICAgICAgIHNob3dEYXNoYm9hcmQoKTsKICAgIH0gZWxzZSB7CiAgICAgICAgZXJyb3JFbC50ZXh0Q29udGVudCA9ICfslZTtmLjqsIAg7Jis67CU66W07KeAIOyViuyKteuLiOuLpCc7CiAgICAgICAgZXJyb3JFbC5zdHlsZS5kaXNwbGF5ID0gJ2Jsb2NrJzsKICAgICAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgncGFzc3dvcmRJbnB1dCcpLnZhbHVlID0gJyc7CiAgICAgICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3Bhc3N3b3JkSW5wdXQnKS5mb2N1cygpOwogICAgfQp9CgpmdW5jdGlvbiBjaGVja1NhdmVkQXV0aCgpIHsKICAgIGNvbnN0IHNhdmVkID0gc2Vzc2lvblN0b3JhZ2UuZ2V0SXRlbSgnZGFzaGJvYXJkQXV0aCcpOwogICAgaWYgKHNhdmVkKSB7CiAgICAgICAgY29uc3QgZGF0YSA9IGRlY3J5cHQoRU5DUllQVEVEX0RBVEEsIHNhdmVkKTsKICAgICAgICBpZiAoZGF0YSAmJiBkYXRhLmNyeXB0bykgewogICAgICAgICAgICBkZWNyeXB0ZWREYXRhID0gZGF0YTsKICAgICAgICAgICAgc2hvd0Rhc2hib2FyZCgpOwogICAgICAgICAgICByZXR1cm4gdHJ1ZTsKICAgICAgICB9CiAgICB9CiAgICByZXR1cm4gZmFsc2U7Cn0KCmZ1bmN0aW9uIGxvZ291dCgpIHsKICAgIHNlc3Npb25TdG9yYWdlLnJlbW92ZUl0ZW0oJ2Rhc2hib2FyZEF1dGgnKTsKICAgIGRlY3J5cHRlZERhdGEgPSBudWxsOwogICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2xvZ2luU2NyZWVuJykuc3R5bGUuZGlzcGxheSA9ICdmbGV4JzsKICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdkYXNoYm9hcmQnKS5zdHlsZS5kaXNwbGF5ID0gJ25vbmUnOwp9CgpmdW5jdGlvbiBzaG93RGFzaGJvYXJkKCkgewogICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2xvZ2luU2NyZWVuJykuc3R5bGUuZGlzcGxheSA9ICdub25lJzsKICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdkYXNoYm9hcmQnKS5zdHlsZS5kaXNwbGF5ID0gJ2Jsb2NrJzsKICAgIHJlbmRlckFsbCgpOwp9CgpmdW5jdGlvbiB0b2dnbGVUaGVtZSgpIHsKICAgIGNvbnN0IGJvZHkgPSBkb2N1bWVudC5ib2R5OwogICAgY29uc3QgY3VycmVudFRoZW1lID0gYm9keS5nZXRBdHRyaWJ1dGUoJ2RhdGEtdGhlbWUnKTsKICAgIGlmIChjdXJyZW50VGhlbWUgPT09ICdsaWdodCcpIHsKICAgICAgICBib2R5LnJlbW92ZUF0dHJpYnV0ZSgnZGF0YS10aGVtZScpOwogICAgICAgIGxvY2FsU3RvcmFnZS5zZXRJdGVtKCd0aGVtZScsICdkYXJrJyk7CiAgICB9IGVsc2UgewogICAgICAgIGJvZHkuc2V0QXR0cmlidXRlKCdkYXRhLXRoZW1lJywgJ2xpZ2h0Jyk7CiAgICAgICAgbG9jYWxTdG9yYWdlLnNldEl0ZW0oJ3RoZW1lJywgJ2xpZ2h0Jyk7CiAgICB9CiAgICBpZiAoY3VycmVudENoYXJ0KSB1cGRhdGVDaGFydENvbG9ycygpOwp9CgpmdW5jdGlvbiBsb2FkVGhlbWUoKSB7CiAgICBjb25zdCBzYXZlZCA9IGxvY2FsU3RvcmFnZS5nZXRJdGVtKCd0aGVtZScpIHx8ICdkYXJrJzsKICAgIGlmIChzYXZlZCA9PT0gJ2xpZ2h0JykgZG9jdW1lbnQuYm9keS5zZXRBdHRyaWJ1dGUoJ2RhdGEtdGhlbWUnLCAnbGlnaHQnKTsKfQoKZnVuY3Rpb24gdXBkYXRlQ2hhcnRDb2xvcnMoKSB7CiAgICBjb25zdCBpc0xpZ2h0ID0gZG9jdW1lbnQuYm9keS5nZXRBdHRyaWJ1dGUoJ2RhdGEtdGhlbWUnKSA9PT0gJ2xpZ2h0JzsKICAgIGNvbnN0IHRleHRDb2xvciA9IGlzTGlnaHQgPyAnIzFhMWEyZScgOiAnI2ZmZic7CiAgICBjb25zdCBncmlkQ29sb3IgPSBpc0xpZ2h0ID8gJ3JnYmEoMCwwLDAsMC4xKScgOiAncmdiYSgyNTUsMjU1LDI1NSwwLjEpJzsKICAgIGlmIChjdXJyZW50Q2hhcnQpIHsKICAgICAgICBjdXJyZW50Q2hhcnQub3B0aW9ucy5zY2FsZXMueC50aWNrcy5jb2xvciA9IHRleHRDb2xvcjsKICAgICAgICBjdXJyZW50Q2hhcnQub3B0aW9ucy5zY2FsZXMueS50aWNrcy5jb2xvciA9IHRleHRDb2xvcjsKICAgICAgICBjdXJyZW50Q2hhcnQub3B0aW9ucy5zY2FsZXMueC5ncmlkLmNvbG9yID0gZ3JpZENvbG9yOwogICAgICAgIGN1cnJlbnRDaGFydC5vcHRpb25zLnNjYWxlcy55LmdyaWQuY29sb3IgPSBncmlkQ29sb3I7CiAgICAgICAgY3VycmVudENoYXJ0LnVwZGF0ZSgpOwogICAgfQp9CgpmdW5jdGlvbiB0b2dnbGVTZWN0aW9uKGlkKSB7CiAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChpZCkuY2xhc3NMaXN0LnRvZ2dsZSgnY29sbGFwc2VkJyk7Cn0KCmZ1bmN0aW9uIHJlbmRlckFsbCgpIHsKICAgIGlmICghZGVjcnlwdGVkRGF0YSkgcmV0dXJuOwogICAgcmVuZGVyQ2FsZW5kYXIoKTsKICAgIHJlbmRlckZ1dHVyZXMoKTsKICAgIHJlbmRlckNoYXJ0VGFicygpOwogICAgcmVuZGVyQ3J5cHRvKCk7CiAgICByZW5kZXJJbmRpY2VzKCk7CiAgICByZW5kZXJGZWFyR3JlZWQoKTsKICAgIHJlbmRlckFuYWx5c2lzKCk7Cn0KCmNvbnN0IGluZGljYXRvckluZm8gPSB7CiAgICAnUFBJJzogewogICAgICAgIGRlc2M6ICfsg53sgrDsnpDrrLzqsIDsp4DsiJgoUFBJKeuKlCDsg53sgrDsnpDqsIAg7YyQ66ek7ZWY64qUIOyDge2SiOqzvCDshJzruYTsiqTsnZgg6rCA6rKpIOuzgOuPmeydhCDsuKHsoJXtlanri4jri6QuJywKICAgICAgICB3aHk6ICfsl7DspIAoRmVkKeydmCDquIjrpqwg6rKw7KCV7JeQIOyngeygkeyggSDsmIHtlqXsnYQg66+47LmY66mwLCDquLDsl4Ug7IiY7J217ISx6rO8IO2Wpe2bhCDshozruYTsnpDrrLzqsIAg67Cp7Zal7J2EIOyYiOy4oe2VmOuKlCDtlbXsi6wg7KeA7ZGc7J6F64uI64ukLicsCiAgICAgICAgYnVsbGlzaDogJ+uLrOufrCDqsJXshLgsIOq4iOumrCDsnbjsg4Eg6riw64yA6rCQIOyDgeyKuSwg7KO87Iud7Iuc7J6lIOuLqOq4sCDtlZjrnb0g6rCA64qlLCDtgazrpr3thqAg7JW97IS4JywKICAgICAgICBiZWFyaXNoOiAn64us65+sIOyVveyEuCwg6riI66asIOyduO2VmCDquLDrjIDqsJAg7IOB7Iq5LCDso7zsi53si5zsnqUg7Zi47J6sLCDtgazrpr3thqAg6rCV7IS4JwogICAgfSwKICAgICdQTUknOiB7CiAgICAgICAgZGVzYzogJ+q1rOunpOq0gOumrOyekOyngOyImChQTUkp64qUIOygnOyhsOyXhS/shJzruYTsiqTsl4XsnZgg6rK96riwIOyDge2ZqeydhCDrgpjtg4DrgrTripQg7ISg7ZaJ7KeA7ZGc7J6F64uI64ukLiA1MCDsnbTsg4HsnbTrqbQg6rK96riwIO2ZleyepSwgNTAg66+466eM7J2066m0IOqyveq4sCDsiJjstpXsnYQg7J2Y66+47ZWp64uI64ukLicsCiAgICAgICAgd2h5OiAn6rK96riwIO2dkOumhOydhCDqsIDsnqUg67mg66W06rKMIOuwmOyYge2VmOuKlCDsp4DtkZzroZwsIEdEUCDshLHsnqXrpaDsnYQg7JiI7Lih7ZWY64qUIOuNsCDtlbXsi6zsoIHsnbgg7Jet7ZWg7J2EIO2VqeuLiOuLpC4nLAogICAgICAgIGJ1bGxpc2g6ICfqsr3soJwg7ISx7J6lIOq4sOuMgCwg7JyE7ZeY7J6Q7IKwIOyEoO2YuCwg7KO87IudL+2BrOumve2GoCDqsJXshLgnLAogICAgICAgIGJlYXJpc2g6ICfqsr3quLAg7Lmo7LK0IOyasOugpCwg7JWI7KCE7J6Q7IKwIOyEoO2YuCwg64us65+sL+q4iC/ssYTqtowg6rCV7IS4JwogICAgfSwKICAgICdDUEknOiB7CiAgICAgICAgZGVzYzogJ+yGjOu5hOyekOusvOqwgOyngOyImChDUEkp64qUIOqwgOqzhOqwgCDqtazrp6TtlZjripQg7IOB7ZKI6rO8IOyEnOu5hOyKpOydmCDqsIDqsqkg67OA64+Z7J2EIOy4oeygle2VqeuLiOuLpC4nLAogICAgICAgIHdoeTogJ+yXsOykgOydmCDthrXtmZTsoJXssYUg6rKw7KCV7JeQIOqwgOyepSDspJHsmpTtlZwg7KeA7ZGc7J2066mwLCDquIjrpqzsmYAg66qo65OgIOyekOyCsCDqsIDqsqnsl5Ag7KeB7KCR7KCBIOyYge2WpeydhCDrr7jsuanri4jri6QuJywKICAgICAgICBidWxsaXNoOiAn6riI66asIOyduOyDgSDihpIg64us65+sIOqwleyEuCwg7KO87IudL+2BrOumve2GoCDslb3shLgnLAogICAgICAgIGJlYXJpc2g6ICfquIjrpqwg7J247ZWYIOq4sOuMgCDihpIg64us65+sIOyVveyEuCwg7KO87IudL+2BrOumve2GoCDqsJXshLgnCiAgICB9LAogICAgJ+qzoOyaqSc6IHsKICAgICAgICBkZXNjOiAn67mE64aN7JeFIOqzoOyaqeyngO2RnChORlAp64qUIOuvuOq1rSDrhbjrj5nsi5zsnqXsnZgg6rG06rCVIOyDge2DnOulvCDrgpjtg4Drg4Xri4jri6QuJywKICAgICAgICB3aHk6ICfsl7DspIDsnZgg65GQIOqwgOyngCDrqqntkZwg7KSRIO2VmOuCmOyduCDsmYTsoITqs6DsmqnsnYQg7KeB7KCRIOy4oeygle2VmOuKlCDsp4DtkZzsnoXri4jri6QuJywKICAgICAgICBidWxsaXNoOiAn6rK97KCcIOqwleyEuCDsi6DtmLgsIOq4iOumrCDsnbjsg4Eg6rCA64ql7ISxLCDri6zrn6wg6rCV7IS4JywKICAgICAgICBiZWFyaXNoOiAn6rK96riwIOuRlO2ZlCDsmrDroKQsIOq4iOumrCDsnbjtlZgg6riw64yALCDsnITtl5jsnpDsgrAg7JW97IS4JwogICAgfSwKICAgICdGT01DJzogewogICAgICAgIGRlc2M6ICdGT01D64qUIOuvuOq1reydmCDquLDspIDquIjrpqzsmYAg7Ya17ZmU7KCV7LGF7J2EIOqysOygle2VmOuKlCDsl7DspIDsnZgg7ZW17IusIOydmOyCrOqysOyglSDquLDqtazsnoXri4jri6QuJywKICAgICAgICB3aHk6ICfsoIQg7IS46rOEIOq4iOycteyLnOyepeydmCDrsKntlqXsnYQg6rKw7KCV7KeT64qUIOqwgOyepSDspJHsmpTtlZwg7J2067Kk7Yq47J6F64uI64ukLicsCiAgICAgICAgYnVsbGlzaDogJ+q4iOumrCDsnbjsg4Ev66ek7YyM7KCBIOuwnOyWuCDihpIg64us65+sIOqwleyEuCwg7KO87IudL+2BrOumve2GoCDslb3shLgnLAogICAgICAgIGJlYXJpc2g6ICfquIjrpqwg7J247ZWYL+u5hOuRmOq4sO2MjOyggSDrsJzslrgg4oaSIOuLrOufrCDslb3shLgsIOyjvOyLnS/tgazrpr3thqAg6rCV7IS4JwogICAgfQp9OwoKZnVuY3Rpb24gZ2V0SW5kaWNhdG9ySW5mbyhuYW1lKSB7CiAgICBmb3IgKGNvbnN0IGt3IG9mIE9iamVjdC5rZXlzKGluZGljYXRvckluZm8pKSB7CiAgICAgICAgaWYgKG5hbWUuaW5jbHVkZXMoa3cpKSByZXR1cm4gaW5kaWNhdG9ySW5mb1trd107CiAgICB9CiAgICByZXR1cm4gewogICAgICAgIGRlc2M6ICfsnbQg7KeA7ZGc64qUIOuvuOq1rSDqsr3soJzsnZgg7Yq57KCVIOu2gOusuOydhCDsuKHsoJXtlZjripQg7KSR7JqU7ZWcIOqyveygnCDrjbDsnbTthLDsnoXri4jri6QuJywKICAgICAgICB3aHk6ICfsi5zsnqUg7LC47Jes7J6Q65Ok7J20IOyjvOuqqe2VmOuKlCDtlbXsi6wg7KeA7ZGc66GcLCDsl7DspIDsnZgg7Ya17ZmU7KCV7LGF6rO8IOyekOyCsCDqsIDqsqnsl5Ag7JiB7Zal7J2EIOuvuOy5qeuLiOuLpC4nLAogICAgICAgIGJ1bGxpc2g6ICfsmIjsg4Hrs7Tri6Qg6rCV7ZWcIOyImOy5mCDihpIg6rK97KCcIOuCmeq0gOuhoCcsCiAgICAgICAgYmVhcmlzaDogJ+yYiOyDgeuztOuLpCDslb3tlZwg7IiY7LmYIOKGkiDqsr3soJwg67mE6rSA66GgJwogICAgfTsKfQoKZnVuY3Rpb24gb3BlbkNhbGVuZGFyTW9kYWwoaWR4KSB7CiAgICBjb25zdCBpdGVtID0gZGVjcnlwdGVkRGF0YS5lY29ub21pY19jYWxlbmRhcltpZHhdOwogICAgaWYgKCFpdGVtKSByZXR1cm47CiAgICBjb25zdCBpbmZvID0gZ2V0SW5kaWNhdG9ySW5mbyhpdGVtLmV2ZW50KTsKICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdtb2RhbFRpdGxlJykudGV4dENvbnRlbnQgPSAn4q2Q4q2Q4q2QICcgKyBpdGVtLmV2ZW50OwogICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ21vZGFsVGltZScpLnRleHRDb250ZW50ID0gaXRlbS5kYXRlICsgJyAnICsgaXRlbS50aW1lOwogICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ21vZGFsRm9yZWNhc3QnKS50ZXh0Q29udGVudCA9IGl0ZW0uZm9yZWNhc3QgfHwgJy0nOwogICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ21vZGFsUHJldmlvdXMnKS50ZXh0Q29udGVudCA9IGl0ZW0ucHJldmlvdXMgfHwgJy0nOwogICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ21vZGFsRGVzYycpLnRleHRDb250ZW50ID0gaXRlbS5kZXNjcmlwdGlvbiB8fCBpbmZvLmRlc2M7CiAgICBsZXQgaW50ZXJwcmV0ID0gJyc7CiAgICBpZiAoaXRlbS5mb3JlY2FzdCAmJiBpdGVtLmZvcmVjYXN0ICE9PSAnLScgJiYgaXRlbS5wcmV2aW91cyAmJiBpdGVtLnByZXZpb3VzICE9PSAnLScpIHsKICAgICAgICBjb25zdCBmID0gcGFyc2VGbG9hdChpdGVtLmZvcmVjYXN0LnJlcGxhY2UoL1teMC05Li1dL2csICcnKSk7CiAgICAgICAgY29uc3QgcCA9IHBhcnNlRmxvYXQoaXRlbS5wcmV2aW91cy5yZXBsYWNlKC9bXjAtOS4tXS9nLCAnJykpOwogICAgICAgIGlmICghaXNOYU4oZikgJiYgIWlzTmFOKHApKSB7CiAgICAgICAgICAgIGludGVycHJldCA9IGYgPiBwID8gJ+yYiOy4oey5mOqwgCDsnbTsoITsuZjrs7Tri6Qg64aS7Iq164uI64ukLicgOiBmIDwgcCA/ICfsmIjsuKHsuZjqsIAg7J207KCE7LmY67O064ukIOuCruyKteuLiOuLpC4nIDogJ+yYiOy4oey5mOqwgCDsnbTsoITsuZjsmYAg64+Z7J287ZWp64uI64ukLic7CiAgICAgICAgfQogICAgfQogICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ21vZGFsSW50ZXJwcmV0JykudGV4dENvbnRlbnQgPSBpbnRlcnByZXQgfHwgJ+uNsOydtO2EsCDtmZXsnbgg7KSRJzsKICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdtb2RhbEJ1bGxpc2gnKS50ZXh0Q29udGVudCA9IGluZm8uYnVsbGlzaDsKICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdtb2RhbEJlYXJpc2gnKS50ZXh0Q29udGVudCA9IGluZm8uYmVhcmlzaDsKICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdtb2RhbFdoeScpLnRleHRDb250ZW50ID0gaW5mby53aHk7CiAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnY2FsZW5kYXJNb2RhbCcpLmNsYXNzTGlzdC5hZGQoJ2FjdGl2ZScpOwp9CgpmdW5jdGlvbiBjbG9zZU1vZGFsKCkgewogICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2NhbGVuZGFyTW9kYWwnKS5jbGFzc0xpc3QucmVtb3ZlKCdhY3RpdmUnKTsKfQoKZnVuY3Rpb24gcmVuZGVyQ2FsZW5kYXIoKSB7CiAgICBjb25zdCBjYWwgPSBkZWNyeXB0ZWREYXRhLmVjb25vbWljX2NhbGVuZGFyIHx8IFtdOwogICAgY29uc3QgdGJvZHkgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnY2FsZW5kYXJCb2R5Jyk7CiAgICBpZiAoIWNhbC5sZW5ndGgpIHsKICAgICAgICB0Ym9keS5pbm5lckhUTUwgPSAnPHRyPjx0ZCBjb2xzcGFuPSI2IiBzdHlsZT0idGV4dC1hbGlnbjpjZW50ZXI7cGFkZGluZzoycmVtOyI+7JiI7KCV65CcIOqyveygnOyngO2RnOqwgCDsl4bsirXri4jri6Q8L3RkPjwvdHI+JzsKICAgICAgICByZXR1cm47CiAgICB9CiAgICBjb25zdCBub3cgPSBuZXcgRGF0ZSgpOwogICAgY29uc3Qga3N0ID0gbmV3IERhdGUobm93LmdldFRpbWUoKSArIDkqNjAqNjAwMDApOwogICAgY29uc3QgdG9kYXlTdHIgPSAoa3N0LmdldE1vbnRoKCkrMSkgKyAnLycgKyBrc3QuZ2V0RGF0ZSgpOwogICAgdGJvZHkuaW5uZXJIVE1MID0gY2FsLm1hcCgoaXRlbSwgaWR4KSA9PiB7CiAgICAgICAgY29uc3QgaW1wID0gaXRlbS5pbXBvcnRhbmNlID09PSAnaGlnaCcgPyAn4q2Q4q2Q4q2QJyA6ICfirZDirZAnOwogICAgICAgIGNvbnN0IGlzTmV4dCA9IGl0ZW0uZGF0ZSAhPT0gdG9kYXlTdHI7CiAgICAgICAgY29uc3QgYmcgPSBpc05leHQgPyAnYmFja2dyb3VuZDpyZ2JhKDI1NSwyNTUsMjU1LDAuMDMpOycgOiAnJzsKICAgICAgICByZXR1cm4gJzx0ciBzdHlsZT0iJytiZysnIiBvbmNsaWNrPSJvcGVuQ2FsZW5kYXJNb2RhbCgnK2lkeCsnKSI+PHRkPicraXRlbS5kYXRlKyc8L3RkPjx0ZCBjbGFzcz0iZXZlbnQtdGltZSI+JytpdGVtLnRpbWUrJzwvdGQ+PHRkPicraXRlbS5ldmVudCsnPC90ZD48dGQ+JysoaXRlbS5mb3JlY2FzdHx8Jy0nKSsnPC90ZD48dGQ+JysoaXRlbS5wcmV2aW91c3x8Jy0nKSsnPC90ZD48dGQgc3R5bGU9ImNvbG9yOnZhcigtLXllbGxvdykiPicraW1wKyc8L3RkPjwvdHI+JzsKICAgIH0pLmpvaW4oJycpOwp9CgpmdW5jdGlvbiByZW5kZXJGdXR1cmVzKCkgewogICAgY29uc3QgZiA9IGRlY3J5cHRlZERhdGEuZnV0dXJlc19kYXRhIHx8IHt9OwogICAgaWYgKGYubG9uZ19zaG9ydF9yYXRpbykgewogICAgICAgIGNvbnN0IGxzID0gZi5sb25nX3Nob3J0X3JhdGlvOwogICAgICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdsc1JhdGlvJykudGV4dENvbnRlbnQgPSBscy5yYXRpby50b0ZpeGVkKDIpOwogICAgICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdsc0RldGFpbCcpLnRleHRDb250ZW50ID0gJ+uhsSAnK2xzLmxvbmcudG9GaXhlZCgxKSsnJSAvIOyIjyAnK2xzLnNob3J0LnRvRml4ZWQoMSkrJyUnOwogICAgICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdsb25nQmFyJykuc3R5bGUud2lkdGggPSBscy5sb25nKyclJzsKICAgICAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbG9uZ0JhcicpLnRleHRDb250ZW50ID0gJ+uhsSAnK2xzLmxvbmcudG9GaXhlZCgxKSsnJSc7CiAgICAgICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3Nob3J0QmFyJykuc3R5bGUud2lkdGggPSBscy5zaG9ydCsnJSc7CiAgICAgICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3Nob3J0QmFyJykudGV4dENvbnRlbnQgPSAn7IiPICcrbHMuc2hvcnQudG9GaXhlZCgxKSsnJSc7CiAgICB9CiAgICBpZiAoZi5mdW5kaW5nX3JhdGUgIT09IG51bGwgJiYgZi5mdW5kaW5nX3JhdGUgIT09IHVuZGVmaW5lZCkgewogICAgICAgIGNvbnN0IGZyID0gZi5mdW5kaW5nX3JhdGU7CiAgICAgICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2Z1bmRpbmdSYXRlJykudGV4dENvbnRlbnQgPSAoZnI+PTA/JysnOicnKStmci50b0ZpeGVkKDQpKyclJzsKICAgICAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZnVuZGluZ1JhdGUnKS5zdHlsZS5jb2xvciA9IGZyPj0wPyd2YXIoLS1ncmVlbiknOid2YXIoLS1yZWQpJzsKICAgICAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZnVuZGluZ0Rlc2MnKS50ZXh0Q29udGVudCA9IGZyPj0wPyfrobHsnbQg7IiP7JeQ6rKMIOyngOu2iCc6J+yIj+ydtCDrobHsl5Dqsowg7KeA67aIJzsKICAgIH0KICAgIGlmIChmLm9wZW5faW50ZXJlc3QpIHsKICAgICAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnb3BlbkludGVyZXN0JykudGV4dENvbnRlbnQgPSBmLm9wZW5faW50ZXJlc3QudG9Mb2NhbGVTdHJpbmcoKSsnIEJUQyc7CiAgICB9CiAgICBpZiAoZi5mdW5kaW5nX3JhdGVzICYmIGYuZnVuZGluZ19yYXRlcy5sZW5ndGgpIHsKICAgICAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZnVuZGluZ1RhYmxlJykuaW5uZXJIVE1MID0gJzx0cj4nK2YuZnVuZGluZ19yYXRlcy5tYXAoeCA9PiB7CiAgICAgICAgICAgIGNvbnN0IGMgPSB4LnJhdGU+PTA/J3ZhcigtLWdyZWVuKSc6J3ZhcigtLXJlZCknOwogICAgICAgICAgICByZXR1cm4gJzx0ZD48ZGl2IGNsYXNzPSJzeW1ib2wiPicreC5zeW1ib2wrJzwvZGl2PjxkaXYgc3R5bGU9ImNvbG9yOicrYysnIj4nKyh4LnJhdGU+PTA/JysnOicnKSt4LnJhdGUudG9GaXhlZCg0KSsnJTwvZGl2PjwvdGQ+JzsKICAgICAgICB9KS5qb2luKCcnKSsnPC90cj4nOwogICAgfQp9CgpmdW5jdGlvbiByZW5kZXJDaGFydFRhYnMoKSB7CiAgICBjb25zdCBjcnlwdG8gPSBkZWNyeXB0ZWREYXRhLmNyeXB0byB8fCBbXTsKICAgIGNvbnN0IHRhYnMgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnY2hhcnRUYWJzJyk7CiAgICBjb25zdCBidGMgPSBjcnlwdG8uZmluZChjID0+IGMuc3ltYm9sID09PSAnQlRDJykgfHwge2NoYW5nZTogMH07CiAgICB0YWJzLmlubmVySFRNTCA9IGNyeXB0by5zbGljZSgwLDUpLm1hcCgoYyxpKSA9PiB7CiAgICAgICAgY29uc3QgY2xzID0gaT09PTA/J2NoYXJ0LXRhYiBhY3RpdmUnOidjaGFydC10YWInOwogICAgICAgIGNvbnN0IGNoZyA9IGMuY2hhbmdlPj0wPydwb3NpdGl2ZSc6J25lZ2F0aXZlJzsKICAgICAgICByZXR1cm4gJzxidXR0b24gY2xhc3M9IicrY2xzKyciIG9uY2xpY2s9InNlbGVjdENoYXJ0KFwnJytjLnN5bWJvbCsnXCcpIj4nK2Muc3ltYm9sKyc8c3BhbiBjbGFzcz0iY2hhbmdlICcrY2hnKyciPicrKGMuY2hhbmdlPj0wPycrJzonJykrYy5jaGFuZ2UudG9GaXhlZCgyKSsnJTwvc3Bhbj48L2J1dHRvbj4nOwogICAgfSkuam9pbignJyk7CiAgICBkcmF3Q2hhcnQoJ0JUQycpOwp9CgpmdW5jdGlvbiBzZWxlY3RDaGFydChzeW1ib2wpIHsKICAgIGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoJy5jaGFydC10YWInKS5mb3JFYWNoKHQgPT4gdC5jbGFzc0xpc3QucmVtb3ZlKCdhY3RpdmUnKSk7CiAgICBldmVudC50YXJnZXQuY2xvc2VzdCgnLmNoYXJ0LXRhYicpLmNsYXNzTGlzdC5hZGQoJ2FjdGl2ZScpOwogICAgZHJhd0NoYXJ0KHN5bWJvbCk7Cn0KCmZ1bmN0aW9uIGRyYXdDaGFydChzeW1ib2wpIHsKICAgIGNvbnN0IGhpc3RvcnkgPSBkZWNyeXB0ZWREYXRhLmJ0Y19oaXN0b3J5IHx8IHtsYWJlbHM6W10scHJpY2VzOltdfTsKICAgIGNvbnN0IGN0eCA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdtYWluQ2hhcnQnKS5nZXRDb250ZXh0KCcyZCcpOwogICAgY29uc3QgaXNMaWdodCA9IGRvY3VtZW50LmJvZHkuZ2V0QXR0cmlidXRlKCdkYXRhLXRoZW1lJykgPT09ICdsaWdodCc7CiAgICBjb25zdCB0ZXh0Q29sb3IgPSBpc0xpZ2h0ID8gJyMxYTFhMmUnIDogJyNmZmYnOwogICAgY29uc3QgZ3JpZENvbG9yID0gaXNMaWdodCA/ICdyZ2JhKDAsMCwwLDAuMSknIDogJ3JnYmEoMjU1LDI1NSwyNTUsMC4xKSc7CiAgICBpZiAoY3VycmVudENoYXJ0KSBjdXJyZW50Q2hhcnQuZGVzdHJveSgpOwogICAgY29uc3QgY3J5cHRvID0gZGVjcnlwdGVkRGF0YS5jcnlwdG8uZmluZChjID0+IGMuc3ltYm9sID09PSBzeW1ib2wpOwogICAgY29uc3QgY29sb3IgPSBjcnlwdG8gJiYgY3J5cHRvLmNoYW5nZSA+PSAwID8gJyMyZWQ1NzMnIDogJyNmZjQ3NTcnOwogICAgY3VycmVudENoYXJ0ID0gbmV3IENoYXJ0KGN0eCwgewogICAgICAgIHR5cGU6ICdsaW5lJywKICAgICAgICBkYXRhOiB7CiAgICAgICAgICAgIGxhYmVsczogaGlzdG9yeS5sYWJlbHMsCiAgICAgICAgICAgIGRhdGFzZXRzOiBbewogICAgICAgICAgICAgICAgbGFiZWw6IHN5bWJvbCArICcg6rCA6rKpJywKICAgICAgICAgICAgICAgIGRhdGE6IGhpc3RvcnkucHJpY2VzLAogICAgICAgICAgICAgICAgYm9yZGVyQ29sb3I6IGNvbG9yLAogICAgICAgICAgICAgICAgYmFja2dyb3VuZENvbG9yOiBjb2xvciArICcyMCcsCiAgICAgICAgICAgICAgICBmaWxsOiB0cnVlLAogICAgICAgICAgICAgICAgdGVuc2lvbjogMC40CiAgICAgICAgICAgIH1dCiAgICAgICAgfSwKICAgICAgICBvcHRpb25zOiB7CiAgICAgICAgICAgIHJlc3BvbnNpdmU6IHRydWUsCiAgICAgICAgICAgIG1haW50YWluQXNwZWN0UmF0aW86IGZhbHNlLAogICAgICAgICAgICBwbHVnaW5zOiB7bGVnZW5kOntkaXNwbGF5OmZhbHNlfX0sCiAgICAgICAgICAgIHNjYWxlczogewogICAgICAgICAgICAgICAgeDoge3RpY2tzOntjb2xvcjp0ZXh0Q29sb3IsbWF4VGlja3NMaW1pdDo2fSxncmlkOntjb2xvcjpncmlkQ29sb3J9fSwKICAgICAgICAgICAgICAgIHk6IHt0aWNrczp7Y29sb3I6dGV4dENvbG9yfSxncmlkOntjb2xvcjpncmlkQ29sb3J9fQogICAgICAgICAgICB9CiAgICAgICAgfQogICAgfSk7Cn0KCmZ1bmN0aW9uIHJlbmRlckNyeXB0bygpIHsKICAgIGNvbnN0IGNyeXB0byA9IGRlY3J5cHRlZERhdGEuY3J5cHRvIHx8IFtdOwogICAgY29uc3QgZ3JpZCA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdjcnlwdG9HcmlkJyk7CiAgICBncmlkLmlubmVySFRNTCA9IGNyeXB0by5tYXAoYyA9PiB7CiAgICAgICAgY29uc3QgY2xzID0gYy5jaGFuZ2UgPj0gMCA/ICd1cCcgOiAnZG93bic7CiAgICAgICAgcmV0dXJuICc8ZGl2IGNsYXNzPSJjcnlwdG8tY2FyZCAnK2NscysnIj48ZGl2IGNsYXNzPSJjcnlwdG8tc3ltYm9sIj4nK2Muc3ltYm9sKyc8L2Rpdj48ZGl2IGNsYXNzPSJjcnlwdG8tbmFtZSI+JytjLm5hbWUrJzwvZGl2PjxkaXYgY2xhc3M9ImNyeXB0by1wcmljZSI+JCcrYy5wcmljZS50b0xvY2FsZVN0cmluZygpKyc8L2Rpdj48ZGl2IGNsYXNzPSJjcnlwdG8tY2hhbmdlIj4nKyhjLmNoYW5nZT49MD8nKyc6JycpK2MuY2hhbmdlLnRvRml4ZWQoMikrJyU8L2Rpdj48L2Rpdj4nOwogICAgfSkuam9pbignJyk7Cn0KCmZ1bmN0aW9uIHJlbmRlckluZGljZXMoKSB7CiAgICBjb25zdCB1cyA9IGRlY3J5cHRlZERhdGEudXNfaW5kaWNlcyB8fCBbXTsKICAgIGNvbnN0IGtyID0gZGVjcnlwdGVkRGF0YS5rcl9pbmRpY2VzIHx8IFtdOwogICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2luZGljZXNUYWJsZScpLmlubmVySFRNTCA9IHVzLm1hcChpID0+IHsKICAgICAgICBjb25zdCBjbHMgPSBpLmNoYW5nZSA+PSAwID8gJ3Bvc2l0aXZlJyA6ICduZWdhdGl2ZSc7CiAgICAgICAgcmV0dXJuICc8dHI+PHRkPicraS5uYW1lKyc8L3RkPjx0ZD4nK2kucHJpY2UudG9Mb2NhbGVTdHJpbmcoKSsnPC90ZD48dGQgY2xhc3M9IicrY2xzKyciPicrKGkuY2hhbmdlPj0wPycrJzonJykraS5jaGFuZ2UudG9GaXhlZCgyKSsnJTwvdGQ+PC90cj4nOwogICAgfSkuam9pbignJyk7CiAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgna3JUYWJsZScpLmlubmVySFRNTCA9IGtyLm1hcChpID0+IHsKICAgICAgICBjb25zdCBjbHMgPSBpLmNoYW5nZSA+PSAwID8gJ3Bvc2l0aXZlJyA6ICduZWdhdGl2ZSc7CiAgICAgICAgcmV0dXJuICc8dHI+PHRkPicraS5uYW1lKyc8L3RkPjx0ZD4nK2kucHJpY2UudG9Mb2NhbGVTdHJpbmcoKSsnPC90ZD48dGQgY2xhc3M9IicrY2xzKyciPicrKGkuY2hhbmdlPj0wPycrJzonJykraS5jaGFuZ2UudG9GaXhlZCgyKSsnJTwvdGQ+PC90cj4nOwogICAgfSkuam9pbignJyk7Cn0KCmZ1bmN0aW9uIHJlbmRlckZlYXJHcmVlZCgpIHsKICAgIGNvbnN0IGZnID0gZGVjcnlwdGVkRGF0YS5mZWFyX2dyZWVkIHx8IHt2YWx1ZTogNTB9OwogICAgY29uc3QgdmFsID0gZmcudmFsdWU7CiAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZmdWYWx1ZScpLnRleHRDb250ZW50ID0gdmFsOwogICAgY29uc3QgbGFiZWwgPSB2YWwgPD0gMjUgPyAn6re564+E7J2YIOqzte2PrCcgOiB2YWwgPD0gNDUgPyAn6rO17Y+sJyA6IHZhbCA8PSA1NSA/ICfspJHrpr0nIDogdmFsIDw9IDc1ID8gJ+2DkOyalScgOiAn6re564+E7J2YIO2DkOyalSc7CiAgICBjb25zdCBjbHMgPSB2YWwgPD0gNDUgPyAnZmVhcicgOiB2YWwgPD0gNTUgPyAnbmV1dHJhbCcgOiAnZ3JlZWQnOwogICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2ZnTGFiZWwnKS50ZXh0Q29udGVudCA9IGxhYmVsOwogICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2ZnTGFiZWwnKS5jbGFzc05hbWUgPSAnZmctbGFiZWwgJyArIGNsczsKICAgIAogICAgY29uc3QgY2FudmFzID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2ZnR2F1Z2UnKTsKICAgIGNvbnN0IGN0eCA9IGNhbnZhcy5nZXRDb250ZXh0KCcyZCcpOwogICAgY29uc3Qgc2l6ZSA9IDE0MDsKICAgIGNhbnZhcy53aWR0aCA9IHNpemU7CiAgICBjYW52YXMuaGVpZ2h0ID0gc2l6ZTsKICAgIGNvbnN0IGNlbnRlciA9IHNpemUgLyAyOwogICAgY29uc3QgcmFkaXVzID0gNTU7CiAgICBjdHguY2xlYXJSZWN0KDAsIDAsIHNpemUsIHNpemUpOwogICAgY3R4LmJlZ2luUGF0aCgpOwogICAgY3R4LmFyYyhjZW50ZXIsIGNlbnRlciwgcmFkaXVzLCAwLjc1ICogTWF0aC5QSSwgMC4yNSAqIE1hdGguUEkpOwogICAgY3R4LnN0cm9rZVN0eWxlID0gJyMyYTJhM2EnOwogICAgY3R4LmxpbmVXaWR0aCA9IDEyOwogICAgY3R4LmxpbmVDYXAgPSAncm91bmQnOwogICAgY3R4LnN0cm9rZSgpOwogICAgY29uc3QgZ3JhZGllbnQgPSBjdHguY3JlYXRlTGluZWFyR3JhZGllbnQoMCwgMCwgc2l6ZSwgMCk7CiAgICBncmFkaWVudC5hZGRDb2xvclN0b3AoMCwgJyNmZjQ3NTcnKTsKICAgIGdyYWRpZW50LmFkZENvbG9yU3RvcCgwLjUsICcjZmZhNTAyJyk7CiAgICBncmFkaWVudC5hZGRDb2xvclN0b3AoMSwgJyMyZWQ1NzMnKTsKICAgIGN0eC5iZWdpblBhdGgoKTsKICAgIGNvbnN0IGVuZEFuZ2xlID0gMC43NSAqIE1hdGguUEkgKyAodmFsIC8gMTAwKSAqIDEuNSAqIE1hdGguUEk7CiAgICBjdHguYXJjKGNlbnRlciwgY2VudGVyLCByYWRpdXMsIDAuNzUgKiBNYXRoLlBJLCBlbmRBbmdsZSk7CiAgICBjdHguc3Ryb2tlU3R5bGUgPSBncmFkaWVudDsKICAgIGN0eC5saW5lV2lkdGggPSAxMjsKICAgIGN0eC5saW5lQ2FwID0gJ3JvdW5kJzsKICAgIGN0eC5zdHJva2UoKTsKfQoKZnVuY3Rpb24gcmVuZGVyQW5hbHlzaXMoKSB7CiAgICBjb25zdCBhbmFseXNpcyA9IGRlY3J5cHRlZERhdGEuYW5hbHlzaXMgfHwge307CiAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZ2xvYmFsQW5hbHlzaXMnKS5pbm5lckhUTUwgPSBhbmFseXNpcy5nbG9iYWxfYW5hbHlzaXMgfHwgJzxwPuu2hOyEnSDrjbDsnbTthLAg7JeG7J2MPC9wPic7CiAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgncHJlZGljdGlvbkFuYWx5c2lzJykuaW5uZXJIVE1MID0gYW5hbHlzaXMucHJlZGljdGlvbl9hbmFseXNpcyB8fCAnPHA+67aE7ISdIOuNsOydtO2EsCDsl4bsnYw8L3A+JzsKfQoKZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcigna2V5ZG93bicsIGZ1bmN0aW9uKGUpIHsKICAgIGlmIChlLmtleSA9PT0gJ0VzY2FwZScpIGNsb3NlTW9kYWwoKTsKICAgIGlmIChlLmtleSA9PT0gJ0VudGVyJyAmJiBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbG9naW5TY3JlZW4nKS5zdHlsZS5kaXNwbGF5ICE9PSAnbm9uZScpIGF0dGVtcHRMb2dpbigpOwp9KTsKCmRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdjYWxlbmRhck1vZGFsJykuYWRkRXZlbnRMaXN0ZW5lcignY2xpY2snLCBmdW5jdGlvbihlKSB7CiAgICBpZiAoZS50YXJnZXQgPT09IHRoaXMpIGNsb3NlTW9kYWwoKTsKfSk7Cgpsb2FkVGhlbWUoKTsKaWYgKCFjaGVja1NhdmVkQXV0aCgpKSB7CiAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbG9naW5TY3JlZW4nKS5zdHlsZS5kaXNwbGF5ID0gJ2ZsZXgnOwp9Cg=="))</script>
 </body>
 </html>
