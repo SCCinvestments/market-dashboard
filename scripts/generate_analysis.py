@@ -25,15 +25,16 @@ def generate_daily_password():
     return password
 
 def encrypt_data(data, password):
-    """간단한 XOR 암호화 (Base64 인코딩)"""
+    """XOR 암호화 (바이트 단위)"""
     json_str = json.dumps(data, ensure_ascii=False)
+    json_bytes = json_str.encode('utf-8')
     
-    # XOR 암호화
-    key = (password * (len(json_str) // len(password) + 1))[:len(json_str)]
-    encrypted = ''.join(chr(ord(c) ^ ord(k)) for c, k in zip(json_str, key))
+    # 바이트 단위 XOR
+    key_bytes = (password * (len(json_bytes) // len(password) + 1))[:len(json_bytes)].encode('ascii')
+    encrypted_bytes = bytes([b ^ k for b, k in zip(json_bytes, key_bytes)])
     
     # Base64 인코딩
-    encoded = base64.b64encode(encrypted.encode('utf-8')).decode('utf-8')
+    encoded = base64.b64encode(encrypted_bytes).decode('ascii')
     return encoded
 
 def load_market_data():
