@@ -80,7 +80,7 @@ HTML 형식으로 h3과 p 태그만 사용:
     return call_claude(prompt)
 
 def search_economic_calendar():
-    """Tavily로 오늘의 미국 경제지표 검색"""
+    """Tavily로 오늘의 미국 경제지표 검색 (Investing.com 기준)"""
     api_key = os.environ.get("TAVILY_API_KEY")
     if not api_key:
         print("  TAVILY_API_KEY 없음")
@@ -88,16 +88,16 @@ def search_economic_calendar():
     
     kst = timezone(timedelta(hours=9))
     today = datetime.now(kst)
-    today_str = today.strftime("%Y년 %m월 %d일")
     
     try:
         response = requests.post(
             "https://api.tavily.com/search",
             json={
                 "api_key": api_key,
-                "query": f"US economic calendar today {today.strftime('%B %d %Y')} important events",
-                "search_depth": "basic",
-                "max_results": 5
+                "query": f"site:investing.com economic calendar USD today {today.strftime('%B %d %Y')}",
+                "search_depth": "advanced",
+                "max_results": 5,
+                "include_domains": ["investing.com", "kr.investing.com"]
             },
             timeout=30
         )
@@ -105,7 +105,6 @@ def search_economic_calendar():
         
         results = data.get("results", [])
         if results:
-            # 검색 결과 텍스트 합치기
             search_content = ""
             for r in results[:3]:
                 search_content += r.get("content", "") + "\n"
@@ -141,29 +140,23 @@ def generate_economic_calendar():
 
 {search_info}
 
-오늘과 내일 예정된 **미국(USD) 주요 경제지표**를 정리해주세요.
-중요도가 높은 것(⭐⭐⭐, ⭐⭐)만 선별해주세요.
+오늘 예정된 **미국(USD) 경제지표**를 Investing.com 경제캘린더 기준으로 정리해주세요.
 
-주요 경제지표 예시:
-- FOMC 금리결정, 기자회견
-- 비농업 고용지수 (NFP) - 매월 첫째 금요일
-- 신규 실업수당청구건수 - 매주 목요일 22:30 KST
-- CPI (소비자물가지수)
-- PPI (생산자물가지수)
-- GDP
-- PCE 물가지수
-- ISM 제조업/서비스업 PMI
-- 소매판매
+**포함 범위**: 오늘 {today_str} 00:00 KST ~ 내일 06:00 KST (새벽 발표분 포함)
+
+중요도 별 2개(⭐⭐) 이상만 선별해주세요.
 
 다음 JSON 형식으로만 응답하세요 (다른 텍스트 없이):
 [
-  {{"date": "1/30", "time": "22:30", "event": "신규 실업수당청구건수", "forecast": "220K", "previous": "223K", "importance": "high"}}
+  {{"date": "{today.strftime('%m/%d')}", "time": "22:30", "event": "생산자물가지수 (MoM) (12월)", "forecast": "0.2%", "previous": "0.2%", "importance": "medium"}},
+  {{"date": "{(today + timedelta(days=1)).strftime('%m/%d')}", "time": "00:00", "event": "미시건대 소비자심리지수(최종)", "forecast": "73.2", "previous": "73.2", "importance": "medium"}}
 ]
 
 규칙:
-- 시간은 한국시간(KST)
-- importance: "high" 또는 "medium"
-- 오늘이 목요일이면 신규 실업수당청구건수 반드시 포함
+- 시간은 한국시간(KST)으로 표시
+- importance: "high"(별3개) 또는 "medium"(별2개)
+- 이벤트명은 한국어로
+- 오늘 00:00 ~ 내일 06:00 KST 범위만 포함
 - 예정된 지표가 없으면 빈 배열 []
 
 JSON만 출력하세요."""
