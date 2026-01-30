@@ -42,13 +42,25 @@ def main():
 <style>
 *{{margin:0;padding:0;box-sizing:border-box}}
 :root{{--bg-primary:#0a0a0f;--bg-secondary:#12121a;--bg-card:#1a1a25;--border:#2a2a3a;--text:#fff;--text-secondary:#8a8a9a;--red:#ff4757;--green:#2ed573;--blue:#3742fa;--yellow:#ffa502;--orange:#ff9f43}}
-body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:var(--text);line-height:1.6}}
-.header{{background:var(--bg-secondary);padding:1rem 2rem;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}}
+[data-theme="light"]{{--bg-primary:#f5f5f7;--bg-secondary:#ffffff;--bg-card:#ffffff;--border:#e0e0e0;--text:#1a1a2e;--text-secondary:#6b6b80}}
+[data-theme="light"] .section{{box-shadow:0 2px 12px rgba(0,0,0,0.08)}}
+[data-theme="light"] .crypto-card{{box-shadow:0 2px 8px rgba(0,0,0,0.06)}}
+[data-theme="light"] .futures-card{{box-shadow:0 2px 8px rgba(0,0,0,0.06)}}
+[data-theme="light"] .modal{{box-shadow:0 4px 24px rgba(0,0,0,0.15)}}
+body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:var(--text);line-height:1.6;transition:background 0.3s,color 0.3s}}
+.header{{background:var(--bg-secondary);padding:1rem 2rem;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;transition:background 0.3s}}
 .header-content{{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}}
+.header-left{{display:flex;align-items:center;gap:1.5rem}}
 .logo{{font-size:1.5rem;font-weight:900;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}}
 .update-time{{color:var(--text-secondary);font-size:0.85rem;display:flex;align-items:center;gap:0.5rem}}
 .live-dot{{width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}}
 @keyframes pulse{{0%,100%{{opacity:1}}50%{{opacity:0.5}}}}
+.theme-toggle{{background:var(--bg-card);border:1px solid var(--border);border-radius:50px;padding:0.4rem;display:flex;align-items:center;gap:0.25rem;cursor:pointer;transition:all 0.3s}}
+.theme-toggle span{{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:1.1rem;transition:all 0.3s}}
+.theme-toggle .sun{{background:transparent}}
+.theme-toggle .moon{{background:var(--blue);box-shadow:0 2px 8px rgba(55,66,250,0.4)}}
+[data-theme="light"] .theme-toggle .sun{{background:var(--orange);box-shadow:0 2px 8px rgba(255,165,2,0.4)}}
+[data-theme="light"] .theme-toggle .moon{{background:transparent;box-shadow:none}}
 .container{{max-width:1400px;margin:0 auto;padding:2rem}}
 .section{{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;margin-bottom:1.5rem;overflow:hidden}}
 .section-header{{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 1.5rem;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.2s}}
@@ -161,8 +173,14 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 <body>
 <header class="header">
 <div class="header-content">
+<div class="header-left">
 <div class="logo">🚀 AI 마켓 대시보드</div>
 <div class="update-time"><span class="live-dot"></span>{updated_at}</div>
+</div>
+<div class="theme-toggle" onclick="toggleTheme()" title="테마 변경">
+<span class="sun">☀️</span>
+<span class="moon">🌙</span>
+</div>
 </div>
 </header>
 
@@ -344,6 +362,52 @@ const futuresData = {futures_data_json};
 const fgValue = {fg_value};
 
 let currentChart = null;
+
+// 테마 토글
+function toggleTheme() {{
+    const body = document.body;
+    const currentTheme = body.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    if (newTheme === 'light') {{
+        body.setAttribute('data-theme', 'light');
+    }} else {{
+        body.removeAttribute('data-theme');
+    }}
+    
+    localStorage.setItem('theme', newTheme);
+    
+    // 차트 색상 업데이트
+    if (currentChart) {{
+        updateChartColors();
+    }}
+}}
+
+// 저장된 테마 불러오기
+function loadTheme() {{
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    if (savedTheme === 'light') {{
+        document.body.setAttribute('data-theme', 'light');
+    }}
+}}
+
+// 차트 색상 업데이트
+function updateChartColors() {{
+    const isLight = document.body.getAttribute('data-theme') === 'light';
+    const textColor = isLight ? '#1a1a2e' : '#fff';
+    const gridColor = isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)';
+    
+    if (currentChart) {{
+        currentChart.options.scales.x.ticks.color = textColor;
+        currentChart.options.scales.y.ticks.color = textColor;
+        currentChart.options.scales.x.grid.color = gridColor;
+        currentChart.options.scales.y.grid.color = gridColor;
+        currentChart.update();
+    }}
+}}
+
+// 페이지 로드 시 테마 적용
+loadTheme();
 
 function toggleSection(id) {{
     const section = document.getElementById(id);
