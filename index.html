@@ -106,34 +106,24 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:va
 <header class="header">
 <div class="header-content">
 <div class="logo">🚀 AI 마켓 대시보드</div>
-<div class="update-time"><span class="live-dot"></span>2026년 01월 30일 08:51 KST</div>
+<div class="update-time"><span class="live-dot"></span>2026년 01월 30일 12:33 KST</div>
 </div>
 </header>
 
 <main class="container">
 
-<!-- 경제지표 일정 (TradingView 위젯) -->
+<!-- 경제지표 일정 -->
 <section class="section" id="calendarSection">
 <div class="section-header" onclick="toggleSection('calendarSection')">
-<h2 class="section-title orange">📅 경제지표 일정</h2>
+<h2 class="section-title orange">📅 미국 경제지표 일정</h2>
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
-<div class="tradingview-widget-container">
-<div class="tradingview-widget-container__widget"></div>
-<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
-{
-  "colorTheme": "dark",
-  "isTransparent": true,
-  "width": "100%",
-  "height": "400",
-  "locale": "ko_KR",
-  "importanceFilter": "2,3",
-  "countryFilter": "us"
-}
-</script>
-</div>
-<p style="margin-top:0.75rem;font-size:0.75rem;color:var(--text-secondary);">데이터 제공: <a href="https://www.tradingview.com/" target="_blank" style="color:var(--blue);">TradingView</a></p>
+<table class="calendar-table">
+<thead><tr><th>날짜</th><th>시간(KST)</th><th>이벤트</th><th>예측</th><th>이전</th><th>중요도</th></tr></thead>
+<tbody id="calendarBody"></tbody>
+</table>
+<p style="margin-top:0.75rem;font-size:0.75rem;color:var(--text-secondary);">데이터 제공: Finnhub | 🇺🇸 미국 | ⭐⭐ 이상</p>
 </div>
 </section>
 
@@ -195,13 +185,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:va
 <div class="section-content">
 <div class="analysis-content">```html
 <h3>최근 글로벌 이슈</h3>
-<p>현재 시장은 연말 차익실현 압력과 함께 글로벌 유동성 우려가 복합적으로 작용하고 있습니다. 특히 암호화폐 시장의 공포탐욕지수가 26으로 극도의 공포 상태를 보이며, 투자자들의 리스크 회피 심리가 강화되고 있는 상황입니다. 미국의 연말 세금 정산 시즌과 맞물려 디지털 자산에 대한 매도 압력이 지속되고 있으며, 전통 금융시장 대비 암호화폐의 변동성이 크게 확대되고 있습니다.</p>
+<p>암호화폐 시장이 전면적인 조정을 겪고 있으며, 공포탐욕지수 16으로 극도의 공포 상태에 진입했습니다. 이는 연방준비제도의 통화정책 불확실성과 기관투자자들의 리스크 회피 심리가 반영된 것으로 보입니다. 특히 이더리움의 7.15% 급락은 DeFi 생태계 전반의 유동성 우려를 시사하고 있습니다.</p>
 
 <h3>전반적인 추세 분석</h3>
-<p>암호화폐 시장은 전면적인 조정세를 보이고 있으며, 비트코인 84,569달러(-5.17%), 이더리움 2,820달러(-6.24%) 등 주요 코인들이 일제히 하락했습니다. 특히 알트코인의 낙폭이 더 크게 나타나며 시장 전반의 약세가 뚜렷합니다. 반면 전통 증시는 상대적으로 안정적인 모습을 보이고 있으나, 나스닥의 0.72% 하락과 VIX 지수의 3.24% 상승은 기술주에 대한 우려와 시장 변동성 증가를 시사합니다. S&P 500과 다우존스의 소폭 등락은 대형주 중심의 방어적 매매가 이루어지고 있음을 보여줍니다.</p>
+<p>전통 금융시장과 암호화폐 시장 간 디커플링 현상이 뚜렷하게 나타나고 있습니다. S&P 500과 다우존스가 소폭 조정에 그친 반면, 암호화폐는 전 종목 5-7% 대폭 하락했습니다. VIX 지수 상승(+3.24%)은 시장 변동성 확대를 예고하며, 나스닥의 상대적 약세(-0.72%)는 기술주 섹터의 압박을 반영합니다. 비트코인이 8만 달러 지지선을 위협받고 있어 추가 하락 가능성이 높습니다.</p>
 
 <h3>종합 견해</h3>
-<p>현재 시장은 단기적 조정 국면에 있으며, 암호화폐와 전통 자산 간의 디커플링 현상이 뚜렷하게 나타나고 있습니다. 암호화폐의 공포탐욕지수 26은 과매도 구간 진입을 의미하지만, 추가적인 하락 위험도 배제할 수 없는 상황입니다. 투자자들은 당분간 신중한 접근이 필요하며, 특히 레버리지 포지션에 대한 리스크 관리가 중요합니다. 전통 시장의 상대적 안정성을 고려할 때, 분산투자를 통한 포트폴리오 리밸런싱을 검토해볼 시점으로 판단됩니다.</p>
+<p>단기적으로는 암호화폐 시장의 추가 조정이 불가피해 보이며, 비트코인 7만8천 달러, 이더리움 2,500달러 수준까지 하락 테스트 가능성이 높습니다. 그러나 현재 공포지수가 극단적 수준에 도달한 만큼 역설적으로 중장기 매수 기회가 형성되고 있습니다. 전통시장의 상대적 안정성을 고려할 때, 포트폴리오 리밸런싱을 통한 점진적 진입 전략을 권장하며, 특히 펀더멘털이 견고한 대형 알트코인에 주목할 필요가 있습니다.</p>
 ```</div>
 </div>
 </section>
@@ -215,13 +205,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:va
 <div class="section-content">
 <div class="analysis-content">```html
 <h3>비트코인 단기 전망</h3>
-<p>현재 비트코인은 84,569달러에서 5.17% 하락하며 조정 국면에 진입했습니다. 공포탐욕지수 26은 극도의 공포 상태를 나타내며, 이는 과매도 구간 진입 가능성을 시사합니다. 단기적으로 80,000달러 심리적 지지선 테스트가 예상되며, 이 구간에서의 반등 여부가 향후 방향성을 결정할 것으로 전망됩니다.</p>
+<p>현재 비트코인은 $82,315에서 6.29% 급락하며 조정국면에 진입했습니다. 공포탐욕지수 16은 극도의 공포 상태를 나타내며, 이는 역설적으로 매수 기회가 접근하고 있음을 시사합니다. 단기적으로 $80,000 지지선 테스트가 예상되며, 이 구간에서의 반등 여부가 향후 추세를 결정할 것으로 전망됩니다. 과매도 상황에서 기술적 반등 가능성이 높아지고 있습니다.</p>
 
 <h3>기술적 분석 근거</h3>
-<p>일봉 차트에서 RSI가 과매도 구간 근처로 하락하며 매도 압력이 강화되고 있습니다. 거래량 증가와 함께 나타난 급락은 기관투자자들의 차익실현 매물로 분석됩니다. 피보나치 되돌림 기준 61.8% 구간인 78,000-80,000달러가 핵심 지지선으로 작용할 것으로 예상되며, 이 구간 이탈 시 72,000달러까지 추가 하락 가능성이 있습니다.</p>
+<p>RSI 지표가 30 이하로 하락하며 과매도 구간에 진입했고, 볼린저 밴드 하단을 이탈한 상태입니다. 거래량 급증과 함께 나타난 급락은 패닉 매도의 특징을 보이며, 이는 바닥 형성의 신호로 해석됩니다. 50일 이동평균선($78,500) 부근에서 강한 지지를 받을 것으로 예상되며, MACD 다이버전스 패턴이 나타나기 시작했습니다. 일봉 차트상 해머 캔들 형성 가능성이 높아지고 있습니다.</p>
 
 <h3>투자자 대응방안</h3>
-<p>현재 시점에서는 성급한 매수보다는 단계적 접근이 필요합니다. 80,000달러 지지선 테스트 구간에서 소량 분할매수를 고려하되, 손절라인을 명확히 설정해야 합니다. 공포지수가 극단적 수준에 도달한 상황에서 역발상 투자 기회가 될 수 있으나, 리스크 관리를 우선시하며 투자 포지션의 20% 이내에서만 접근하는 것을 권장합니다.</p>
+<p>현재 상황에서는 분할 매수 전략을 권장합니다. $80,000, $78,500, $75,000 구간에서 단계적 매수 진입을 고려하되, 전체 투자 자금의 30% 이하로 리스크를 제한해야 합니다. 기존 보유자는 손절매보다는 홀딩을 유지하되, 추가 하락에 대비한 현금 비중 확보가 필요합니다. 공포탐욕지수가 20 이상으로 회복될 때까지는 신중한 접근을 유지하고, 반등 시 단계적 이익실현 전략을 준비하시기 바랍니다.</p>
 ```</div>
 </div>
 </section>
@@ -235,11 +225,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:va
 <div class="section-content">
 <div class="crypto-grid" id="cryptoGrid"></div>
 <div class="fear-greed-container">
-<div class="fg-gauge"><canvas id="fgGauge"></canvas><div class="fg-value">26</div></div>
+<div class="fg-gauge"><canvas id="fgGauge"></canvas><div class="fg-value">16</div></div>
 <div class="fg-info">
 <h4>공포 & 탐욕 지수</h4>
 <p>시장 심리를 나타내는 종합 지표</p>
-<span class="fg-label fear">공포</span>
+<span class="fg-label fear">극도의 공포</span>
 </div>
 </div>
 </div>
@@ -267,14 +257,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:va
 </footer>
 
 <script>
-const btcLabels = ["01/20", "01/21", "01/22", "01/23", "01/24", "01/25", "01/26", "01/27", "01/28", "01/29", "01/29"];
-const btcPrices = [92558.0, 88313.0, 89354.0, 89443.0, 89412.0, 89171.0, 86548.0, 88308.0, 89204.0, 89162.0, 84569.0];
-const cryptoData = [{"symbol": "BTC", "name": "비트코인", "price": 84569, "change": -5.17}, {"symbol": "ETH", "name": "이더리움", "price": 2820.54, "change": -6.24}, {"symbol": "XRP", "name": "리플", "price": 1.8, "change": -5.37}, {"symbol": "SOL", "name": "솔라나", "price": 117.58, "change": -5.97}, {"symbol": "BNB", "name": "BNB", "price": 867.45, "change": -3.74}, {"symbol": "DOGE", "name": "도지코인", "price": 0.12, "change": -6.25}];
+const btcLabels = ["01/21", "01/22", "01/23", "01/24", "01/25", "01/26", "01/27", "01/28", "01/29", "01/30", "01/30"];
+const btcPrices = [88313.0, 89354.0, 89443.0, 89412.0, 89171.0, 86548.0, 88308.0, 89204.0, 89162.0, 84570.0, 82305.0];
+const cryptoData = [{"symbol": "BTC", "name": "비트코인", "price": 82315, "change": -6.29}, {"symbol": "ETH", "name": "이더리움", "price": 2736.27, "change": -7.15}, {"symbol": "XRP", "name": "리플", "price": 1.75, "change": -6.43}, {"symbol": "SOL", "name": "솔라나", "price": 114.12, "change": -7.04}, {"symbol": "BNB", "name": "BNB", "price": 844.55, "change": -5.72}, {"symbol": "DOGE", "name": "도지코인", "price": 0.11, "change": -6.13}];
 const usIndices = [{"key": "sp500", "name": "S&P 500", "price": 6969.01, "change": -0.13}, {"key": "dow", "name": "다우존스", "price": 49071.56, "change": 0.11}, {"key": "nasdaq", "name": "나스닥", "price": 23685.12, "change": -0.72}, {"key": "vix", "name": "VIX", "price": 16.88, "change": 3.24}];
-const krIndices = [{"key": "kospi", "name": "코스피", "price": 5221.25, "change": 0.98}, {"key": "kosdaq", "name": "코스닥", "price": 1164.41, "change": 7.56}];
-const economicCalendar = [{"date": "01/30", "time": "22:30", "event": "PCE 물가지수 (12월)", "forecast": "2.6%", "previous": "2.4%", "importance": 3}, {"date": "01/30", "time": "22:30", "event": "개인소득 (12월)", "forecast": "0.3%", "previous": "0.3%", "importance": 3}, {"date": "01/31", "time": "16:45", "event": "시카고 PMI (1월)", "forecast": "42.0", "previous": "36.9", "importance": 3}];
+const krIndices = [{"key": "kospi", "name": "코스피", "price": 5263.79, "change": 0.81}, {"key": "kosdaq", "name": "코스닥", "price": 1166.29, "change": 0.16}];
+const economicCalendar = [];
 const futuresData = {"long_short_ratio": null, "funding_rate": null, "open_interest": null, "funding_rates": []};
-const fgValue = 26;
+const fgValue = 16;
 
 let currentChart = null;
 
@@ -286,18 +276,20 @@ function toggleSection(id) {
 function renderCalendar() {
     const tbody = document.getElementById('calendarBody');
     if (!economicCalendar || economicCalendar.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-secondary)">경제지표 일정이 없습니다</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-secondary);padding:2rem;">예정된 주요 경제지표가 없습니다</td></tr>';
         return;
     }
     
     tbody.innerHTML = economicCalendar.map(item => {
-        const stars = '⭐'.repeat(item.importance || 3);
+        const importance = item.importance === 'high' ? '⭐⭐⭐' : item.importance === 'medium' ? '⭐⭐' : '⭐';
+        const impClass = item.importance === 'high' ? 'color:var(--yellow)' : 'color:var(--text-secondary)';
         return `<tr>
-            <td>${item.date}</td>
-            <td class="event-time">${item.time}</td>
-            <td>${item.event} <span class="importance">${stars}</span></td>
+            <td>${item.date || '-'}</td>
+            <td class="event-time">${item.time || '-'}</td>
+            <td>${item.event || '-'}</td>
             <td>${item.forecast || '-'}</td>
             <td>${item.previous || '-'}</td>
+            <td style="${impClass}">${importance}</td>
         </tr>`;
     }).join('');
 }
