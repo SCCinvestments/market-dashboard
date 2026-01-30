@@ -79,117 +79,102 @@ HTML 형식으로 h3과 p 태그만 사용:
 
     return call_claude(prompt)
 
-def search_economic_calendar():
-    """Tavily로 오늘의 미국 경제지표 검색 (Investing.com 기준)"""
-    api_key = os.environ.get("TAVILY_API_KEY")
-    if not api_key:
-        print("  TAVILY_API_KEY 없음")
-        return None
-    
+def get_economic_calendar_from_einfomax():
+    """einfomax API에서 경제지표 가져오기 (100% 정확)"""
     kst = timezone(timedelta(hours=9))
     today = datetime.now(kst)
+    tomorrow = today + timedelta(days=1)
     
-    # 미국 동부시간 기준 날짜 (KST - 14시간)
-    est = timezone(timedelta(hours=-5))
-    today_est = datetime.now(est)
+    calendar_data = []
     
-    try:
-        response = requests.post(
-            "https://api.tavily.com/search",
-            json={
-                "api_key": api_key,
-                "query": f"investing.com economic calendar {today_est.strftime('%B %d %Y')} USD United States",
-                "search_depth": "advanced",
-                "max_results": 5
-            },
-            timeout=30
-        )
-        data = response.json()
-        
-        results = data.get("results", [])
-        if results:
-            search_content = f"오늘 날짜 (미국시간): {today_est.strftime('%Y-%m-%d')}\n"
-            search_content += f"오늘 날짜 (한국시간): {today.strftime('%Y-%m-%d')}\n\n"
-            for r in results[:5]:
-                search_content += r.get("content", "") + "\n\n"
-            return search_content
-        return None
-    except Exception as e:
-        print(f"  Tavily 검색 에러: {e}")
-        return None
+    # 오늘 + 내일 데이터 가져오기 (새벽 포함)
+    for date in [today.strftime("%Y-%m-%d"), tomorrow.strftime("%Y-%m-%d")]:
+        try:
+            response = requests.post(
+                "https://kyobo.einfomax.co.kr/eco/master",
+                headers={
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                json={
+                    "date": date,
+                    "country": ["1"],  # 미국만
+                    "frequencyType": "today",
+                    "impact": ["2", "3"],  # 중요도 2, 3만
+                    "isAdmin": False,
+                    "paramCountry": None
+                },
+                timeout=30
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                events = data.get("data", [])
+                calendar_data.extend(events)
+                print(f"  {date}: {len(events)}개 지표 수신")
+        except Exception as e:
+            print(f"  einfomax API 에러 ({date}): {e}")
+    
+    return calendar_data
 
 def generate_economic_calendar():
-    """경제지표 캘린더 생성 (Tavily 검색 + Claude 정리)"""
-    print("  Tavily로 경제지표 검색 중...")
+    """경제지표 캘린더 생성 (einfomax API)"""
+    print("  einfomax API에서 경제지표 수집 중...")
     
     kst = timezone(timedelta(hours=9))
     today = datetime.now(kst)
-    today_str = today.strftime("%Y년 %m월 %d일")
-    weekday = ["월", "화", "수", "목", "금", "토", "일"][today.weekday()]
+    tomorrow = today + timedelta(days=1)
     
-    # Tavily로 검색
-    search_result = search_economic_calendar()
+    # einfomax에서 데이터 가져오기
+    events = get_economic_calendar_from_einfomax()
     
-    search_info = ""
-    if search_result:
-        search_info = f"""
-웹 검색 결과:
-{search_result}
-"""
-        print("  검색 결과 있음, Claude로 정리 중...")
-    else:
-        print("  검색 결과 없음, Claude 지식으로 생성...")
+    if not events:
+        print("  경제지표 수집 실패")
+        return []
     
-    # 미국 동부시간
-    est = timezone(timedelta(hours=-5))
-    today_est = datetime.now(est)
+    calendar = []
     
-    prompt = f"""현재 시간:
-- 한국시간(KST): {today_str} ({weekday}요일) {today.strftime('%H:%M')}
-- 미국동부시간(EST): {today_est.strftime('%Y년 %m월 %d일')} {today_est.strftime('%H:%M')}
-
-{search_info}
-
-**중요**: 위 검색 결과를 참고하여, 오늘 미국(USD) 경제지표를 Investing.com 기준으로 정리하세요.
-
-**포함 범위**: 한국시간 기준 오늘 00:00 ~ 내일 06:00
-
-중요도 별 2개(⭐⭐) 이상만 선별해주세요.
-
-다음 JSON 형식으로만 응답하세요:
-[
-  {{"date": "1/30", "time": "22:30", "event": "생산자물가지수 (MoM) (12월)", "forecast": "0.2%", "previous": "0.2%", "importance": "medium"}}
-]
-
-규칙:
-- 시간은 한국시간(KST)
-- importance: "high"(별3개) 또는 "medium"(별2개)  
-- 이벤트명은 한국어로
-- 검색 결과에 나온 실제 지표만 포함
-- 검색 결과가 없거나 불확실하면 빈 배열 []
-
-JSON만 출력하세요."""
-
-    result = call_claude(prompt)
-    
-    if result:
+    for event in events:
         try:
-            clean_result = result.strip()
-            if clean_result.startswith("```"):
-                clean_result = clean_result.split("\n", 1)[1]
-            if clean_result.endswith("```"):
-                clean_result = clean_result.rsplit("```", 1)[0]
-            clean_result = clean_result.strip()
+            # UTC -> KST 변환
+            timestamp = event.get("event_timestamp", "")
+            if not timestamp:
+                continue
             
-            calendar = json.loads(clean_result)
-            print(f"  {len(calendar)}개 경제지표 생성 완료")
-            return calendar
+            # 타임스탬프 파싱
+            utc_time = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+            kst_time = utc_time + timedelta(hours=9)
+            
+            # 오늘 00:00 ~ 내일 06:00 KST 범위만
+            today_start = today.replace(hour=0, minute=0, second=0, microsecond=0)
+            tomorrow_6am = tomorrow.replace(hour=6, minute=0, second=0, microsecond=0)
+            
+            if not (today_start <= kst_time <= tomorrow_6am):
+                continue
+            
+            # 중요도 변환
+            impact = event.get("impact", 1)
+            importance = "high" if impact == 3 else "medium"
+            
+            # 한국어 이벤트명 (없으면 영어)
+            event_name = event.get("event_kor") or event.get("event", "")
+            
+            calendar.append({
+                "date": kst_time.strftime("%-m/%d"),
+                "time": kst_time.strftime("%H:%M"),
+                "event": event_name,
+                "forecast": event.get("eventForecast_value", "") or "-",
+                "previous": event.get("eventPrevious_value", "") or "-",
+                "importance": importance
+            })
         except Exception as e:
-            print(f"  JSON 파싱 실패: {e}")
-            return []
+            continue
     
-    print("  경제지표 생성 실패")
-    return []
+    # 시간순 정렬
+    calendar.sort(key=lambda x: (x["date"], x["time"]))
+    
+    print(f"  {len(calendar)}개 경제지표 생성 완료")
+    return calendar
 
 def get_binance_futures_data():
     """Binance 선물 데이터 수집 (롱숏비율, 펀딩비, 미결제약정)"""
