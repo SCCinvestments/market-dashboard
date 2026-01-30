@@ -48,6 +48,7 @@ def call_claude(prompt, use_web_search=False):
     """Claude API 호출 (웹 검색 옵션)"""
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
+        print("    API 키 없음")
         return None
     
     try:
@@ -76,19 +77,34 @@ def call_claude(prompt, use_web_search=False):
             "https://api.anthropic.com/v1/messages",
             headers=headers,
             json=body,
-            timeout=180  # 웹 검색 시 더 긴 타임아웃
+            timeout=180
         )
+        
         data = response.json()
         
-        # 응답에서 텍스트 추출 (웹 검색 결과 포함)
+        # 에러 체크
+        if "error" in data:
+            print(f"    API 에러: {data['error']}")
+            return None
+        
+        # 응답에서 텍스트 추출
         result_text = ""
-        for block in data.get("content", []):
-            if block.get("type") == "text":
+        content = data.get("content", [])
+        
+        for block in content:
+            block_type = block.get("type", "")
+            if block_type == "text":
                 result_text += block.get("text", "")
         
+        if not result_text:
+            print(f"    응답 텍스트 없음. 전체 응답: {json.dumps(data, ensure_ascii=False)[:500]}")
+            return None
+            
+        print(f"    분석 생성 완료 ({len(result_text)}자)")
         return result_text
+        
     except Exception as e:
-        print(f"Claude API 에러: {e}")
+        print(f"    Claude API 에러: {e}")
         return None
 
 def generate_one_liner(market_data):
