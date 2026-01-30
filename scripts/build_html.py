@@ -156,7 +156,6 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 <thead><tr><th>날짜</th><th>시간(KST)</th><th>이벤트</th><th>예측</th><th>이전</th><th>중요도</th></tr></thead>
 <tbody id="calendarBody"></tbody>
 </table>
-<p style="margin-top:0.75rem;font-size:0.75rem;color:var(--text-secondary);">데이터 제공: Finnhub | 🇺🇸 미국 | ⭐⭐ 이상</p>
 </div>
 </section>
 
@@ -295,10 +294,18 @@ function renderCalendar() {{
         return;
     }}
     
+    // 오늘 날짜 구하기 (KST)
+    const now = new Date();
+    const kstOffset = 9 * 60;
+    const kstTime = new Date(now.getTime() + (kstOffset + now.getTimezoneOffset()) * 60000);
+    const todayStr = (kstTime.getMonth() + 1) + '/' + kstTime.getDate();
+    
     tbody.innerHTML = economicCalendar.map(item => {{
         const importance = item.importance === 'high' ? '⭐⭐⭐' : item.importance === 'medium' ? '⭐⭐' : '⭐';
         const impClass = item.importance === 'high' ? 'color:var(--yellow)' : 'color:var(--text-secondary)';
-        return `<tr>
+        const isNextDay = item.date !== todayStr;
+        const rowStyle = isNextDay ? 'background:rgba(255,255,255,0.03);' : '';
+        return `<tr style="${{rowStyle}}">
             <td>${{item.date || '-'}}</td>
             <td class="event-time">${{item.time || '-'}}</td>
             <td>${{item.event || '-'}}</td>
