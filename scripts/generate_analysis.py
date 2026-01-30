@@ -136,8 +136,8 @@ def generate_crypto_analysis(market_data):
     
     crypto_text = "\n".join([f"- {c['name']}({c['symbol']}): ${c['price']:,} ({c['change']:+.2f}%)" for c in crypto])
     
-    ls_ratio = futures.get("long_short_ratio", {})
-    funding = futures.get("funding_rate", 0)
+    ls_ratio = futures.get("long_short_ratio") or {}
+    funding = futures.get("funding_rate") or 0
     
     prompt = f"""당신은 크립토 전문 애널리스트입니다. 암호화폐 시장을 심층 분석해주세요.
 
@@ -146,7 +146,7 @@ def generate_crypto_analysis(market_data):
 
 시장 지표:
 - 공포탐욕지수: {fear_greed.get('value', 50)}
-- 롱/숏 비율: {ls_ratio.get('ratio', 'N/A')}
+- 롱/숏 비율: {ls_ratio.get('ratio', 'N/A') if ls_ratio else 'N/A'}
 - 펀딩비: {funding}%
 
 다음 형식으로 HTML 작성 (h4, p 태그만 사용):
