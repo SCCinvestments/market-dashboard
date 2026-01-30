@@ -266,7 +266,7 @@ const tvSymbols = {
     nasdaq: { symbol: 'FOREXCOM:NSXUSD', name: '나스닥100' },
     gold: { symbol: 'OANDA:XAUUSD', name: '골드' },
     btc: { symbol: 'BINANCE:BTCUSDT', name: '비트코인' },
-    kospi: { symbol: 'INDEX:KOSPI', name: '코스피' }
+    kospi: { symbol: 'TVC:KOSPI', name: '코스피' }
 };
 
 let currentTvChart = 'nasdaq';
