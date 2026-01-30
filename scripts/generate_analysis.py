@@ -1,7 +1,40 @@
 import os
 import json
 import requests
+import hashlib
+import base64
 from datetime import datetime, timezone, timedelta
+
+def generate_daily_password():
+    """매일 바뀌는 암호 생성"""
+    kst = timezone(timedelta(hours=9))
+    today = datetime.now(kst)
+    
+    # 비밀 시드 (GitHub Secrets에 저장 권장)
+    secret_seed = os.environ.get("PASSWORD_SEED", "SCC2026SECRET")
+    
+    # 날짜 + 시드로 해시 생성
+    date_str = today.strftime("%Y%m%d")
+    raw = f"{secret_seed}_{date_str}"
+    hash_obj = hashlib.sha256(raw.encode()).hexdigest()
+    
+    # 앞 6자리를 암호로 사용 (대문자 + 숫자)
+    password = hash_obj[:6].upper()
+    
+    print(f"  오늘의 암호: {password}")
+    return password
+
+def encrypt_data(data, password):
+    """간단한 XOR 암호화 (Base64 인코딩)"""
+    json_str = json.dumps(data, ensure_ascii=False)
+    
+    # XOR 암호화
+    key = (password * (len(json_str) // len(password) + 1))[:len(json_str)]
+    encrypted = ''.join(chr(ord(c) ^ ord(k)) for c, k in zip(json_str, key))
+    
+    # Base64 인코딩
+    encoded = base64.b64encode(encrypted.encode('utf-8')).decode('utf-8')
+    return encoded
 
 def load_market_data():
     try:
@@ -284,8 +317,22 @@ def main():
     market_data["economic_calendar"] = economic_calendar
     market_data["futures_data"] = futures_data
     
+    # 암호 생성
+    print("  암호 생성 중...")
+    password = generate_daily_password()
+    
+    # 데이터 암호화
+    print("  데이터 암호화 중...")
+    encrypted_data = encrypt_data(market_data, password)
+    
+    # 암호화된 데이터 저장
+    output = {
+        "encrypted": encrypted_data,
+        "updated_at": market_data.get("updated_at", "")
+    }
+    
     with open("data.json", "w", encoding="utf-8") as f:
-        json.dump(market_data, f, ensure_ascii=False, indent=2)
+        json.dump(output, f, ensure_ascii=False)
     print("done")
 
 if __name__ == "__main__":
