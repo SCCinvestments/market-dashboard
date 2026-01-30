@@ -266,7 +266,8 @@ const tvSymbols = {
     nasdaq: { symbol: 'FOREXCOM:NSXUSD', name: '나스닥100' },
     gold: { symbol: 'OANDA:XAUUSD', name: '골드' },
     btc: { symbol: 'BINANCE:BTCUSDT', name: '비트코인' },
-    kospi: { symbol: 'KRX:KOSPI', name: '코스피', iframe: true }
+    usdkrw: { symbol: 'FX_IDC:USDKRW', name: '원/달러' },
+    vix: { symbol: 'TVC:VIX', name: 'VIX' }
 };
 
 let currentTvChart = 'nasdaq';
@@ -283,12 +284,6 @@ function loadTradingViewChart(chartId) {
     const container = document.getElementById('tvChartContainer');
     const isLight = document.body.getAttribute('data-theme') === 'light';
     const theme = isLight ? 'light' : 'dark';
-    
-    // 코스피는 iframe 방식
-    if (info.iframe) {
-        container.innerHTML = '<iframe src="https://s.tradingview.com/embed-widget/advanced-chart/?locale=kr&symbol=' + info.symbol + '&interval=60&theme=' + theme + '&style=1&timezone=Asia/Seoul&hide_top_toolbar=0&hide_legend=0&save_image=0&hide_volume=1&allow_symbol_change=0" style="width:100%;height:400px;border:none;"></iframe>';
-        return;
-    }
     
     container.innerHTML = '<div id="tradingview_chart"></div>';
     
@@ -325,12 +320,19 @@ function renderCrypto() {
 }
 
 function renderIndices() {
-    const us = decryptedData.us_indices || [];
-    const kr = decryptedData.kr_indices || [];
-    document.getElementById('indicesTable').innerHTML = us.map(i => {
-        const cls = i.change >= 0 ? 'positive' : 'negative';
-        return '<tr><td>'+i.name+'</td><td>'+i.price.toLocaleString()+'</td><td class="'+cls+'">'+(i.change>=0?'+':'')+i.change.toFixed(2)+'%</td></tr>';
+    // 차트에 표시된 종목들 (TradingView에서 실시간으로 가져옴)
+    const chartItems = [
+        { name: '나스닥100', symbol: 'FOREXCOM:NSXUSD' },
+        { name: '골드', symbol: 'OANDA:XAUUSD' },
+        { name: '비트코인', symbol: 'BINANCE:BTCUSDT' },
+        { name: '원/달러', symbol: 'FX_IDC:USDKRW' },
+        { name: 'VIX (변동성)', symbol: 'TVC:VIX' }
+    ];
+    document.getElementById('indicesTable').innerHTML = chartItems.map(item => {
+        return '<tr><td>'+item.name+'</td><td colspan="2" style="color:var(--text-secondary);font-size:0.85rem;">차트에서 실시간 확인</td></tr>';
     }).join('');
+    
+    const kr = decryptedData.kr_indices || [];
     document.getElementById('krTable').innerHTML = kr.map(i => {
         const cls = i.change >= 0 ? 'positive' : 'negative';
         return '<tr><td>'+i.name+'</td><td>'+i.price.toLocaleString()+'</td><td class="'+cls+'">'+(i.change>=0?'+':'')+i.change.toFixed(2)+'%</td></tr>';
@@ -640,13 +642,14 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 <button class="chart-tab active" onclick="switchChart('nasdaq')">나스닥100</button>
 <button class="chart-tab" onclick="switchChart('gold')">골드</button>
 <button class="chart-tab" onclick="switchChart('btc')">비트코인</button>
-<button class="chart-tab" onclick="switchChart('kospi')">코스피</button>
+<button class="chart-tab" onclick="switchChart('usdkrw')">원/달러</button>
+<button class="chart-tab" onclick="switchChart('vix')">VIX (변동성)</button>
 </div>
 <div class="tv-chart-container" id="tvChartContainer">
 <div id="tradingview_chart"></div>
 </div>
 <table class="table">
-<thead><tr><th>지수</th><th>현재가</th><th>등락률</th></tr></thead>
+<thead><tr><th>종목</th><th>현재가</th><th>등락률</th></tr></thead>
 <tbody id="indicesTable"></tbody>
 </table>
 </div>
