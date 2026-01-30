@@ -381,6 +381,33 @@ function renderAnalysis() {
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeModal();
     if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') attemptLogin();
+    
+    // 개발자 도구 차단
+    if (e.key === 'F12') { e.preventDefault(); return false; }
+    if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) { e.preventDefault(); return false; }
+    if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j')) { e.preventDefault(); return false; }
+    if (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c')) { e.preventDefault(); return false; }
+    if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) { e.preventDefault(); return false; }
+});
+
+// 오른쪽 클릭 차단
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    return false;
+});
+
+// 텍스트 선택 차단
+document.addEventListener('selectstart', function(e) {
+    if (e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+        return false;
+    }
+});
+
+// 드래그 차단
+document.addEventListener('dragstart', function(e) {
+    e.preventDefault();
+    return false;
 });
 
 document.getElementById('calendarModal').addEventListener('click', function(e) {
