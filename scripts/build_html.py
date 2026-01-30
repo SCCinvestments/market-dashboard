@@ -262,56 +262,51 @@ function renderFutures() {
     }
 }
 
-function renderChartTabs() {
-    const crypto = decryptedData.crypto || [];
-    const tabs = document.getElementById('chartTabs');
-    const btc = crypto.find(c => c.symbol === 'BTC') || {change: 0};
-    tabs.innerHTML = crypto.slice(0,5).map((c,i) => {
-        const cls = i===0?'chart-tab active':'chart-tab';
-        const chg = c.change>=0?'positive':'negative';
-        return '<button class="'+cls+'" onclick="selectChart(\\''+c.symbol+'\\')">'+c.symbol+'<span class="change '+chg+'">'+(c.change>=0?'+':'')+c.change.toFixed(2)+'%</span></button>';
-    }).join('');
-    drawChart('BTC');
-}
+const tvSymbols = {
+    nasdaq: { symbol: 'NASDAQ:NDX', name: '나스닥100' },
+    gold: { symbol: 'TVC:GOLD', name: '골드' },
+    btc: { symbol: 'BITSTAMP:BTCUSD', name: '비트코인' },
+    kospi: { symbol: 'KRX:KOSPI', name: '코스피' }
+};
 
-function selectChart(symbol) {
+let currentTvChart = 'nasdaq';
+
+function switchChart(chartId) {
+    currentTvChart = chartId;
     document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
-    event.target.closest('.chart-tab').classList.add('active');
-    drawChart(symbol);
+    event.target.classList.add('active');
+    loadTradingViewChart(chartId);
 }
 
-function drawChart(symbol) {
-    const history = decryptedData.btc_history || {labels:[],prices:[]};
-    const ctx = document.getElementById('mainChart').getContext('2d');
+function loadTradingViewChart(chartId) {
+    const info = tvSymbols[chartId];
+    const container = document.getElementById('tvChartContainer');
     const isLight = document.body.getAttribute('data-theme') === 'light';
-    const textColor = isLight ? '#1a1a2e' : '#fff';
-    const gridColor = isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)';
-    if (currentChart) currentChart.destroy();
-    const crypto = decryptedData.crypto.find(c => c.symbol === symbol);
-    const color = crypto && crypto.change >= 0 ? '#2ed573' : '#ff4757';
-    currentChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: history.labels,
-            datasets: [{
-                label: symbol + ' 가격',
-                data: history.prices,
-                borderColor: color,
-                backgroundColor: color + '20',
-                fill: true,
-                tension: 0.4
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {legend:{display:false}},
-            scales: {
-                x: {ticks:{color:textColor,maxTicksLimit:6},grid:{color:gridColor}},
-                y: {ticks:{color:textColor},grid:{color:gridColor}}
-            }
-        }
+    const theme = isLight ? 'light' : 'dark';
+    
+    container.innerHTML = '<div id="tradingview_chart"></div>';
+    
+    new TradingView.widget({
+        "width": "100%",
+        "height": 400,
+        "symbol": info.symbol,
+        "interval": "60",
+        "timezone": "Asia/Seoul",
+        "theme": theme,
+        "style": "1",
+        "locale": "kr",
+        "toolbar_bg": "#f1f3f6",
+        "enable_publishing": false,
+        "hide_top_toolbar": false,
+        "hide_legend": false,
+        "save_image": false,
+        "container_id": "tradingview_chart",
+        "hide_volume": true
     });
+}
+
+function renderChartTabs() {
+    loadTradingViewChart('nasdaq');
 }
 
 function renderCrypto() {
@@ -427,6 +422,7 @@ if (!checkSavedAuth()) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI 마켓 대시보드</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://s3.tradingview.com/tv.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
 *{{margin:0;padding:0;box-sizing:border-box}}
@@ -526,6 +522,7 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 .chart-tab .change.negative{{color:var(--red)}}
 .chart-tab.active .change{{color:rgba(255,255,255,0.9)}}
 .chart-container{{position:relative;height:350px;margin-bottom:1rem}}
+.tv-chart-container{{position:relative;height:400px;margin-bottom:1rem;border-radius:8px;overflow:hidden}}
 
 /* 선물 */
 .futures-grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}}
@@ -608,7 +605,6 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 <span class="sun">☀️</span>
 <span class="moon">🌙</span>
 </div>
-<button class="logout-btn" onclick="logout()">로그아웃</button>
 </div>
 </div>
 </header>
@@ -634,8 +630,15 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
-<div class="chart-tabs" id="chartTabs"></div>
-<div class="chart-container"><canvas id="mainChart"></canvas></div>
+<div class="chart-tabs">
+<button class="chart-tab active" onclick="switchChart('nasdaq')">나스닥100</button>
+<button class="chart-tab" onclick="switchChart('gold')">골드</button>
+<button class="chart-tab" onclick="switchChart('btc')">비트코인</button>
+<button class="chart-tab" onclick="switchChart('kospi')">코스피</button>
+</div>
+<div class="tv-chart-container" id="tvChartContainer">
+<div id="tradingview_chart"></div>
+</div>
 <table class="table">
 <thead><tr><th>지수</th><th>현재가</th><th>등락률</th></tr></thead>
 <tbody id="indicesTable"></tbody>
