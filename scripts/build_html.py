@@ -284,7 +284,7 @@ function renderIndices() {
         { key: 'gold', name: '골드', tvSymbol: 'OANDA:XAUUSD' },
         { key: 'btc', name: '비트코인', tvSymbol: 'BINANCE:BTCUSDT' },
         { key: 'usdkrw', name: '원/달러', tvSymbol: 'FX_IDC:USDKRW' },
-        { key: 'vix', name: 'VIX (변동성)', tvSymbol: 'SP:VIX' }
+        { key: 'vix', name: 'VIX (변동성)', tvSymbol: 'PEPPERSTONE:VIX' }
     ];
     
     const us = decryptedData.us_indices || [];
