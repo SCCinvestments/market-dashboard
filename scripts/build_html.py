@@ -266,7 +266,7 @@ const tvSymbols = {
     nasdaq: { symbol: 'FOREXCOM:NSXUSD', name: '나스닥100' },
     gold: { symbol: 'OANDA:XAUUSD', name: '골드' },
     btc: { symbol: 'BINANCE:BTCUSDT', name: '비트코인' },
-    kospi: { symbol: 'TVC:KOSPI', name: '코스피' }
+    kospi: { symbol: 'KRX:KOSPI', name: '코스피', iframe: true }
 };
 
 let currentTvChart = 'nasdaq';
@@ -283,6 +283,12 @@ function loadTradingViewChart(chartId) {
     const container = document.getElementById('tvChartContainer');
     const isLight = document.body.getAttribute('data-theme') === 'light';
     const theme = isLight ? 'light' : 'dark';
+    
+    // 코스피는 iframe 방식
+    if (info.iframe) {
+        container.innerHTML = '<iframe src="https://s.tradingview.com/embed-widget/advanced-chart/?locale=kr&symbol=' + info.symbol + '&interval=60&theme=' + theme + '&style=1&timezone=Asia/Seoul&hide_top_toolbar=0&hide_legend=0&save_image=0&hide_volume=1&allow_symbol_change=0" style="width:100%;height:400px;border:none;"></iframe>';
+        return;
+    }
     
     container.innerHTML = '<div id="tradingview_chart"></div>';
     
