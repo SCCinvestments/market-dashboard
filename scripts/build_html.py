@@ -109,8 +109,12 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 .analysis-content p{{margin-bottom:1rem;line-height:1.8}}
 .calendar-table{{width:100%;border-collapse:collapse}}
 .calendar-table th{{background:var(--bg-secondary);padding:0.75rem 1rem;text-align:left;font-weight:600;font-size:0.85rem;color:var(--text-secondary)}}
-.calendar-table td{{padding:0.75rem 1rem;border-bottom:1px solid var(--border);font-size:0.9rem}}
-.calendar-table tr:hover{{background:rgba(255,255,255,0.02)}}
+.calendar-table td{{padding:0.75rem 1rem;border-bottom:1px solid var(--border);font-size:0.9rem;transition:all 0.2s}}
+.calendar-table tbody tr{{cursor:pointer;transition:all 0.2s}}
+.calendar-table tbody tr:hover{{background:rgba(55,66,250,0.15);transform:scale(1.01)}}
+.calendar-table tbody tr:hover td{{color:var(--text)}}
+.calendar-table tbody tr:hover td:first-child::before{{content:'👉 ';}}
+.click-hint{{font-size:0.75rem;color:var(--text-secondary);margin-top:0.5rem;text-align:right}}
 .importance{{color:var(--yellow)}}
 .event-time{{color:var(--blue);font-weight:600}}
 .futures-grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}}
@@ -177,6 +181,7 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 <thead><tr><th>날짜</th><th>시간(KST)</th><th>이벤트</th><th>예측</th><th>이전</th><th>중요도</th></tr></thead>
 <tbody id="calendarBody"></tbody>
 </table>
+<p class="click-hint">💡 행을 클릭하면 상세 해설을 볼 수 있습니다</p>
 </div>
 </section>
 
