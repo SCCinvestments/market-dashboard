@@ -263,10 +263,10 @@ function renderFutures() {
 }
 
 const tvSymbols = {
-    nasdaq: { symbol: 'NASDAQ:NDX', name: '나스닥100' },
-    gold: { symbol: 'TVC:GOLD', name: '골드' },
-    btc: { symbol: 'BITSTAMP:BTCUSD', name: '비트코인' },
-    kospi: { symbol: 'KRX:KOSPI', name: '코스피' }
+    nasdaq: { symbol: 'FOREXCOM:NSXUSD', name: '나스닥100' },
+    gold: { symbol: 'OANDA:XAUUSD', name: '골드' },
+    btc: { symbol: 'BINANCE:BTCUSDT', name: '비트코인' },
+    kospi: { symbol: 'CAPITALCOM:KOSPI', name: '코스피' }
 };
 
 let currentTvChart = 'nasdaq';
