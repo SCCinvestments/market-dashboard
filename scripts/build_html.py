@@ -284,7 +284,7 @@ function renderIndices() {
         { key: 'gold', name: '골드', tvSymbol: 'OANDA:XAUUSD' },
         { key: 'btc', name: '비트코인', tvSymbol: 'BINANCE:BTCUSDT' },
         { key: 'usdkrw', name: '원/달러', tvSymbol: 'FX_IDC:USDKRW' },
-        { key: 'vix', name: 'VIX (변동성)', tvSymbol: 'TVC:VIX' }
+        { key: 'vix', name: 'VIX (변동성)', tvSymbol: 'CBOE:VIX' }
     ];
     
     const us = decryptedData.us_indices || [];
@@ -633,7 +633,7 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 <div class="header-content">
 <div class="header-left">
 <div class="logo">🚀 AI 마켓 대시보드</div>
-<div class="update-time"><span class="live-dot"></span>{updated_at}</div>
+<div class="update-time"><span class="live-dot"></span>데일리 리포트 · {updated_at}</div>
 </div>
 <div class="header-right">
 <div class="theme-toggle" onclick="toggleTheme()" title="테마 변경">
@@ -669,7 +669,7 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 <div id="tradingview_chart"></div>
 </div>
 <table class="table chart-select-table">
-<thead><tr><th>종목</th><th>현재가</th><th>등락률</th></tr></thead>
+<thead><tr><th>종목</th><th>현재가 (09:30 KST)</th><th>등락률</th></tr></thead>
 <tbody id="indicesTable"></tbody>
 </table>
 </div>
