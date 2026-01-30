@@ -89,15 +89,18 @@ def search_economic_calendar():
     kst = timezone(timedelta(hours=9))
     today = datetime.now(kst)
     
+    # 미국 동부시간 기준 날짜 (KST - 14시간)
+    est = timezone(timedelta(hours=-5))
+    today_est = datetime.now(est)
+    
     try:
         response = requests.post(
             "https://api.tavily.com/search",
             json={
                 "api_key": api_key,
-                "query": f"site:investing.com economic calendar USD today {today.strftime('%B %d %Y')}",
+                "query": f"investing.com economic calendar {today_est.strftime('%B %d %Y')} USD United States",
                 "search_depth": "advanced",
-                "max_results": 5,
-                "include_domains": ["investing.com", "kr.investing.com"]
+                "max_results": 5
             },
             timeout=30
         )
@@ -105,9 +108,10 @@ def search_economic_calendar():
         
         results = data.get("results", [])
         if results:
-            search_content = ""
-            for r in results[:3]:
-                search_content += r.get("content", "") + "\n"
+            search_content = f"오늘 날짜 (미국시간): {today_est.strftime('%Y-%m-%d')}\n"
+            search_content += f"오늘 날짜 (한국시간): {today.strftime('%Y-%m-%d')}\n\n"
+            for r in results[:5]:
+                search_content += r.get("content", "") + "\n\n"
             return search_content
         return None
     except Exception as e:
@@ -136,28 +140,33 @@ def generate_economic_calendar():
     else:
         print("  검색 결과 없음, Claude 지식으로 생성...")
     
-    prompt = f"""오늘은 {today_str} ({weekday}요일)입니다.
+    # 미국 동부시간
+    est = timezone(timedelta(hours=-5))
+    today_est = datetime.now(est)
+    
+    prompt = f"""현재 시간:
+- 한국시간(KST): {today_str} ({weekday}요일) {today.strftime('%H:%M')}
+- 미국동부시간(EST): {today_est.strftime('%Y년 %m월 %d일')} {today_est.strftime('%H:%M')}
 
 {search_info}
 
-오늘 예정된 **미국(USD) 경제지표**를 Investing.com 경제캘린더 기준으로 정리해주세요.
+**중요**: 위 검색 결과를 참고하여, 오늘 미국(USD) 경제지표를 Investing.com 기준으로 정리하세요.
 
-**포함 범위**: 오늘 {today_str} 00:00 KST ~ 내일 06:00 KST (새벽 발표분 포함)
+**포함 범위**: 한국시간 기준 오늘 00:00 ~ 내일 06:00
 
 중요도 별 2개(⭐⭐) 이상만 선별해주세요.
 
-다음 JSON 형식으로만 응답하세요 (다른 텍스트 없이):
+다음 JSON 형식으로만 응답하세요:
 [
-  {{"date": "{today.strftime('%m/%d')}", "time": "22:30", "event": "생산자물가지수 (MoM) (12월)", "forecast": "0.2%", "previous": "0.2%", "importance": "medium"}},
-  {{"date": "{(today + timedelta(days=1)).strftime('%m/%d')}", "time": "00:00", "event": "미시건대 소비자심리지수(최종)", "forecast": "73.2", "previous": "73.2", "importance": "medium"}}
+  {{"date": "1/30", "time": "22:30", "event": "생산자물가지수 (MoM) (12월)", "forecast": "0.2%", "previous": "0.2%", "importance": "medium"}}
 ]
 
 규칙:
-- 시간은 한국시간(KST)으로 표시
-- importance: "high"(별3개) 또는 "medium"(별2개)
+- 시간은 한국시간(KST)
+- importance: "high"(별3개) 또는 "medium"(별2개)  
 - 이벤트명은 한국어로
-- 오늘 00:00 ~ 내일 06:00 KST 범위만 포함
-- 예정된 지표가 없으면 빈 배열 []
+- 검색 결과에 나온 실제 지표만 포함
+- 검색 결과가 없거나 불확실하면 빈 배열 []
 
 JSON만 출력하세요."""
 
