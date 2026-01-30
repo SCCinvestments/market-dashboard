@@ -145,28 +145,18 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 
 <main class="container">
 
-<!-- 경제지표 일정 (TradingView 위젯) -->
+<!-- 경제지표 일정 -->
 <section class="section" id="calendarSection">
 <div class="section-header" onclick="toggleSection('calendarSection')">
-<h2 class="section-title orange">📅 경제지표 일정</h2>
+<h2 class="section-title orange">📅 미국 경제지표 일정</h2>
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
-<div class="tradingview-widget-container">
-<div class="tradingview-widget-container__widget"></div>
-<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
-{{
-  "colorTheme": "dark",
-  "isTransparent": true,
-  "width": "100%",
-  "height": "400",
-  "locale": "ko_KR",
-  "importanceFilter": "2,3",
-  "countryFilter": "us"
-}}
-</script>
-</div>
-<p style="margin-top:0.75rem;font-size:0.75rem;color:var(--text-secondary);">데이터 제공: <a href="https://www.tradingview.com/" target="_blank" style="color:var(--blue);">TradingView</a></p>
+<table class="calendar-table">
+<thead><tr><th>날짜</th><th>시간(KST)</th><th>이벤트</th><th>예측</th><th>이전</th><th>중요도</th></tr></thead>
+<tbody id="calendarBody"></tbody>
+</table>
+<p style="margin-top:0.75rem;font-size:0.75rem;color:var(--text-secondary);">데이터 제공: Finnhub | 🇺🇸 미국 | ⭐⭐ 이상</p>
 </div>
 </section>
 
@@ -301,18 +291,20 @@ function toggleSection(id) {{
 function renderCalendar() {{
     const tbody = document.getElementById('calendarBody');
     if (!economicCalendar || economicCalendar.length === 0) {{
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-secondary)">경제지표 일정이 없습니다</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-secondary);padding:2rem;">예정된 주요 경제지표가 없습니다</td></tr>';
         return;
     }}
     
     tbody.innerHTML = economicCalendar.map(item => {{
-        const stars = '⭐'.repeat(item.importance || 3);
+        const importance = item.importance === 'high' ? '⭐⭐⭐' : item.importance === 'medium' ? '⭐⭐' : '⭐';
+        const impClass = item.importance === 'high' ? 'color:var(--yellow)' : 'color:var(--text-secondary)';
         return `<tr>
-            <td>${{item.date}}</td>
-            <td class="event-time">${{item.time}}</td>
-            <td>${{item.event}} <span class="importance">${{stars}}</span></td>
+            <td>${{item.date || '-'}}</td>
+            <td class="event-time">${{item.time || '-'}}</td>
+            <td>${{item.event || '-'}}</td>
             <td>${{item.forecast || '-'}}</td>
             <td>${{item.previous || '-'}}</td>
+            <td style="${{impClass}}">${{importance}}</td>
         </tr>`;
     }}).join('');
 }}
