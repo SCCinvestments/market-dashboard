@@ -401,8 +401,16 @@ function renderFearGreed() {
 
 function renderAnalysis() {
     const analysis = decryptedData.analysis || {};
-    document.getElementById('globalAnalysis').innerHTML = analysis.global_analysis || '<p>분석 데이터 없음</p>';
-    document.getElementById('predictionAnalysis').innerHTML = analysis.prediction_analysis || '<p>분석 데이터 없음</p>';
+    
+    // 한줄 코멘트
+    document.getElementById('oneLiner').textContent = analysis.one_liner || '📊 시장 분석을 불러오는 중...';
+    
+    // 각 섹션별 분석
+    document.getElementById('usMarketAnalysis').innerHTML = analysis.us_market || '<p>분석 데이터 없음</p>';
+    document.getElementById('cryptoAnalysis').innerHTML = analysis.crypto || '<p>분석 데이터 없음</p>';
+    document.getElementById('commoditiesAnalysis').innerHTML = analysis.commodities || '<p>분석 데이터 없음</p>';
+    document.getElementById('koreaMarketAnalysis').innerHTML = analysis.korea_market || '<p>분석 데이터 없음</p>';
+    document.getElementById('strategyAnalysis').innerHTML = analysis.strategy || '<p>분석 데이터 없음</p>';
 }
 
 document.addEventListener('keydown', function(e) {
@@ -507,6 +515,9 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 .section-title.green::before{{background:var(--green)}}
 .section-title.yellow::before{{background:var(--yellow)}}
 .section-title.orange::before{{background:var(--orange)}}
+.section-title.red::before{{background:var(--red)}}
+.one-liner{{background:linear-gradient(135deg,rgba(102,126,234,0.15),rgba(118,75,162,0.15));border:1px solid rgba(102,126,234,0.3);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;font-size:1.1rem;font-weight:600;text-align:center}}
+.futures-summary{{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}}
 .toggle-btn{{color:var(--text-secondary);font-size:0.85rem}}
 .section.collapsed .toggle-btn{{transform:rotate(180deg)}}
 .section-content{{padding:1.5rem}}
@@ -646,19 +657,10 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 
 <main class="container">
 
-<section class="section" id="calendarSection">
-<div class="section-header" onclick="toggleSection('calendarSection')">
-<h2 class="section-title orange">📅 미국 경제지표 일정</h2>
-<span class="toggle-btn">▲</span>
-</div>
-<div class="section-content">
-<table class="calendar-table">
-<thead><tr><th>날짜</th><th>시간(KST)</th><th>이벤트</th><th>예측</th><th>이전</th><th>중요도</th></tr></thead>
-<tbody id="calendarBody"></tbody>
-</table>
-</div>
-</section>
+<!-- 한줄 코멘트 -->
+<div class="one-liner" id="oneLiner">📊 시장 분석을 불러오는 중...</div>
 
+<!-- 글로벌 시장 -->
 <section class="section" id="chartSection">
 <div class="section-header" onclick="toggleSection('chartSection')">
 <h2 class="section-title">📈 글로벌 시장</h2>
@@ -675,38 +677,35 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 </div>
 </section>
 
-<section class="section" id="futuresSection">
-<div class="section-header" onclick="toggleSection('futuresSection')">
-<h2 class="section-title blue">⚡ BTC 선물 데이터</h2>
+<!-- 미국 경제지표 일정 -->
+<section class="section" id="calendarSection">
+<div class="section-header" onclick="toggleSection('calendarSection')">
+<h2 class="section-title orange">📅 미국 경제지표 일정</h2>
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
-<div class="futures-grid">
-<div class="futures-card"><h5>롱/숏 비율</h5><div class="value" id="lsRatio">-</div><div class="sub" id="lsDetail">-</div></div>
-<div class="futures-card"><h5>펀딩비 (8H)</h5><div class="value" id="fundingRate">-</div><div class="sub" id="fundingDesc">-</div></div>
-<div class="futures-card"><h5>미결제약정</h5><div class="value" id="openInterest">-</div><div class="sub">Open Interest</div></div>
-</div>
-<div class="long-short-bar"><div class="long-bar" id="longBar" style="width:50%">롱 50%</div><div class="short-bar" id="shortBar" style="width:50%">숏 50%</div></div>
-<table class="funding-table" id="fundingTable"></table>
+<table class="calendar-table">
+<thead><tr><th>날짜</th><th>시간(KST)</th><th>이벤트</th><th>예측</th><th>이전</th><th>중요도</th></tr></thead>
+<tbody id="calendarBody"></tbody>
+</table>
 </div>
 </section>
 
-<section class="section" id="analysisSection">
-<div class="section-header" onclick="toggleSection('analysisSection')">
-<h2 class="section-title yellow">🤖 AI 시장 분석</h2>
+<!-- 미국 증시 분석 -->
+<section class="section" id="usMarketSection">
+<div class="section-header" onclick="toggleSection('usMarketSection')">
+<h2 class="section-title blue">🇺🇸 미국 증시 분석</h2>
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
-<div class="grid-2">
-<div class="analysis-content" id="globalAnalysis"></div>
-<div class="analysis-content" id="predictionAnalysis"></div>
-</div>
+<div class="analysis-content" id="usMarketAnalysis"></div>
 </div>
 </section>
 
+<!-- 암호화폐 분석 -->
 <section class="section" id="cryptoSection">
 <div class="section-header" onclick="toggleSection('cryptoSection')">
-<h2 class="section-title green">💰 암호화폐</h2>
+<h2 class="section-title yellow">🪙 암호화폐 분석</h2>
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
@@ -719,19 +718,53 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 <span class="fg-label" id="fgLabel">중립</span>
 </div>
 </div>
+<div class="futures-summary">
+<div class="futures-grid">
+<div class="futures-card"><h5>롱/숏 비율</h5><div class="value" id="lsRatio">-</div><div class="sub" id="lsDetail">-</div></div>
+<div class="futures-card"><h5>펀딩비 (8H)</h5><div class="value" id="fundingRate">-</div><div class="sub" id="fundingDesc">-</div></div>
+<div class="futures-card"><h5>미결제약정</h5><div class="value" id="openInterest">-</div><div class="sub">Open Interest</div></div>
+</div>
+<div class="long-short-bar"><div class="long-bar" id="longBar" style="width:50%">롱 50%</div><div class="short-bar" id="shortBar" style="width:50%">숏 50%</div></div>
+<table class="funding-table" id="fundingTable"></table>
+</div>
+<div class="analysis-content" id="cryptoAnalysis" style="margin-top:1.5rem;"></div>
 </div>
 </section>
 
-<section class="section" id="krSection">
-<div class="section-header" onclick="toggleSection('krSection')">
-<h2 class="section-title">🇰🇷 국내 증시</h2>
+<!-- 원자재 분석 -->
+<section class="section" id="commoditiesSection">
+<div class="section-header" onclick="toggleSection('commoditiesSection')">
+<h2 class="section-title">🥇 원자재 분석</h2>
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
-<table class="table">
-<thead><tr><th>지수</th><th>현재가</th><th>등락률</th></tr></thead>
+<div class="analysis-content" id="commoditiesAnalysis"></div>
+</div>
+</section>
+
+<!-- 국내 증시 분석 -->
+<section class="section" id="krSection">
+<div class="section-header" onclick="toggleSection('krSection')">
+<h2 class="section-title green">🇰🇷 국내 증시 분석</h2>
+<span class="toggle-btn">▲</span>
+</div>
+<div class="section-content">
+<table class="table" style="margin-bottom:1.5rem;">
+<thead><tr><th>지수</th><th>09:30 기준가</th><th>등락률</th></tr></thead>
 <tbody id="krTable"></tbody>
 </table>
+<div class="analysis-content" id="koreaMarketAnalysis"></div>
+</div>
+</section>
+
+<!-- 투자 전략 -->
+<section class="section" id="strategySection">
+<div class="section-header" onclick="toggleSection('strategySection')">
+<h2 class="section-title red">💡 투자 전략</h2>
+<span class="toggle-btn">▲</span>
+</div>
+<div class="section-content">
+<div class="analysis-content" id="strategyAnalysis"></div>
 </div>
 </section>
 
