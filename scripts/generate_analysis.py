@@ -100,7 +100,7 @@ def get_economic_calendar_from_einfomax():
                     "date": date,
                     "country": ["1"],  # 미국만
                     "frequencyType": "today",
-                    "impact": ["2", "3"],  # 중요도 2, 3만
+                    "impact": [1, 2, 3],  # 모든 중요도 가져온 후 필터링
                     "isAdmin": False,
                     "paramCountry": None
                 },
@@ -145,15 +145,29 @@ def generate_economic_calendar():
             utc_time = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
             kst_time = utc_time + timedelta(hours=9)
             
-            # 오늘 00:00 ~ 내일 06:00 KST 범위만
+            # 오늘 날짜 ~ 내일 06:00 KST 범위
             today_start = today.replace(hour=0, minute=0, second=0, microsecond=0)
             tomorrow_6am = tomorrow.replace(hour=6, minute=0, second=0, microsecond=0)
             
-            if not (today_start <= kst_time <= tomorrow_6am):
+            # 오늘 날짜이거나, 내일 06:00 이전이면 포함
+            kst_date = kst_time.date()
+            today_date = today.date()
+            tomorrow_date = tomorrow.date()
+            
+            # 오늘 날짜 전체 포함
+            if kst_date == today_date:
+                pass  # 포함
+            # 내일 06:00 이전까지 포함
+            elif kst_date == tomorrow_date and kst_time.hour < 6:
+                pass  # 포함
+            else:
+                continue  # 제외
+            
+            # 중요도 2, 3만 포함
+            impact = event.get("impact", 1)
+            if impact < 2:
                 continue
             
-            # 중요도 변환
-            impact = event.get("impact", 1)
             importance = "high" if impact == 3 else "medium"
             
             # 한국어 이벤트명 (없으면 영어)
