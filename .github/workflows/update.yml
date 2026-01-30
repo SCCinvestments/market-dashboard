@@ -2,7 +2,7 @@ name: Update Market Data
 
 on:
   schedule:
-    - cron: '0 23 * * *'
+  - cron: '30 0 * * *'  # UTC 00:30 = KST 09:30
   workflow_dispatch:
 
 jobs:
