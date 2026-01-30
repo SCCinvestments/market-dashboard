@@ -2,9 +2,11 @@ import json
 import base64
 
 def obfuscate_js(js_code):
-    """JavaScript 코드 난독화 (Base64 + eval)"""
-    encoded = base64.b64encode(js_code.encode('utf-8')).decode('utf-8')
-    return f'eval(atob("{encoded}"))'
+    """JavaScript 코드 난독화 (UTF-8 안전한 Base64)"""
+    # UTF-8 바이트로 변환 후 Base64
+    encoded = base64.b64encode(js_code.encode('utf-8')).decode('ascii')
+    # decodeURIComponent + atob 조합으로 UTF-8 복원
+    return f'eval(decodeURIComponent(escape(atob("{encoded}"))))'
 
 def main():
     print("build start")
@@ -24,13 +26,22 @@ let currentChart = null;
 
 function decrypt(encrypted, password) {
     try {
-        const decoded = atob(encrypted);
-        const key = password.repeat(Math.ceil(decoded.length / password.length)).slice(0, decoded.length);
-        let decrypted = '';
-        for (let i = 0; i < decoded.length; i++) {
-            decrypted += String.fromCharCode(decoded.charCodeAt(i) ^ key.charCodeAt(i));
+        const binaryStr = atob(encrypted);
+        const bytes = new Uint8Array(binaryStr.length);
+        for (let i = 0; i < binaryStr.length; i++) {
+            bytes[i] = binaryStr.charCodeAt(i);
         }
-        return JSON.parse(decrypted);
+        const keyBytes = [];
+        for (let i = 0; i < bytes.length; i++) {
+            keyBytes.push(password.charCodeAt(i % password.length));
+        }
+        const decryptedBytes = new Uint8Array(bytes.length);
+        for (let i = 0; i < bytes.length; i++) {
+            decryptedBytes[i] = bytes[i] ^ keyBytes[i];
+        }
+        const decoder = new TextDecoder('utf-8');
+        const jsonStr = decoder.decode(decryptedBytes);
+        return JSON.parse(jsonStr);
     } catch (e) {
         return null;
     }
