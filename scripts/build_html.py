@@ -262,25 +262,82 @@ function renderFutures() {
     }
 }
 
-const tvSymbols = {
-    nasdaq: { symbol: 'FOREXCOM:NSXUSD', name: '나스닥100' },
-    gold: { symbol: 'OANDA:XAUUSD', name: '골드' },
-    btc: { symbol: 'BINANCE:BTCUSDT', name: '비트코인' },
-    usdkrw: { symbol: 'FX_IDC:USDKRW', name: '원/달러' },
-    vix: { symbol: 'TVC:VIX', name: 'VIX' }
-};
-
 let currentTvChart = 'nasdaq';
 
-function switchChart(chartId) {
-    currentTvChart = chartId;
-    document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
-    loadTradingViewChart(chartId);
+function renderChartTabs() {
+    loadTradingViewChartBySymbol('FOREXCOM:NSXUSD');
 }
 
-function loadTradingViewChart(chartId) {
-    const info = tvSymbols[chartId];
+function renderCrypto() {
+    const crypto = decryptedData.crypto || [];
+    const grid = document.getElementById('cryptoGrid');
+    grid.innerHTML = crypto.map(c => {
+        const cls = c.change >= 0 ? 'up' : 'down';
+        return '<div class="crypto-card '+cls+'"><div class="crypto-symbol">'+c.symbol+'</div><div class="crypto-name">'+c.name+'</div><div class="crypto-price">$'+c.price.toLocaleString()+'</div><div class="crypto-change">'+(c.change>=0?'+':'')+c.change.toFixed(2)+'%</div></div>';
+    }).join('');
+}
+
+function renderIndices() {
+    // 차트에 표시할 종목 매핑
+    const chartItems = [
+        { key: 'nasdaq100', name: '나스닥100', tvSymbol: 'FOREXCOM:NSXUSD' },
+        { key: 'gold', name: '골드', tvSymbol: 'OANDA:XAUUSD' },
+        { key: 'btc', name: '비트코인', tvSymbol: 'BINANCE:BTCUSDT' },
+        { key: 'usdkrw', name: '원/달러', tvSymbol: 'FX_IDC:USDKRW' },
+        { key: 'vix', name: 'VIX (변동성)', tvSymbol: 'TVC:VIX' }
+    ];
+    
+    const us = decryptedData.us_indices || [];
+    const crypto = decryptedData.crypto || [];
+    
+    document.getElementById('indicesTable').innerHTML = chartItems.map((item, idx) => {
+        let price = '-';
+        let change = 0;
+        let changeStr = '-';
+        
+        // 데이터에서 가격 찾기
+        if (item.key === 'btc') {
+            const btc = crypto.find(c => c.symbol === 'BTC');
+            if (btc) {
+                price = '$' + btc.price.toLocaleString();
+                change = btc.change;
+                changeStr = (change >= 0 ? '+' : '') + change.toFixed(2) + '%';
+            }
+        } else {
+            const found = us.find(i => i.key === item.key);
+            if (found) {
+                if (item.key === 'usdkrw') {
+                    price = found.price.toLocaleString() + '원';
+                } else if (item.key === 'gold') {
+                    price = '$' + found.price.toLocaleString();
+                } else {
+                    price = found.price.toLocaleString();
+                }
+                change = found.change;
+                changeStr = (change >= 0 ? '+' : '') + change.toFixed(2) + '%';
+            }
+        }
+        
+        const cls = change >= 0 ? 'positive' : 'negative';
+        const activeClass = idx === 0 ? ' active' : '';
+        
+        return '<tr class="'+activeClass+'" onclick="selectChartRow(this, \\''+item.tvSymbol+'\\')"><td>'+item.name+'</td><td>'+price+'</td><td class="'+cls+'">'+changeStr+'</td></tr>';
+    }).join('');
+    
+    const kr = decryptedData.kr_indices || [];
+    document.getElementById('krTable').innerHTML = kr.map(i => {
+        const cls = i.change >= 0 ? 'positive' : 'negative';
+        return '<tr><td>'+i.name+'</td><td>'+i.price.toLocaleString()+'</td><td class="'+cls+'">'+(i.change>=0?'+':'')+i.change.toFixed(2)+'%</td></tr>';
+    }).join('');
+}
+
+function selectChartRow(row, symbol) {
+    document.querySelectorAll('.chart-select-table tbody tr').forEach(r => r.classList.remove('active'));
+    row.classList.add('active');
+    loadTradingViewChartBySymbol(symbol);
+}
+
+function loadTradingViewChartBySymbol(symbol) {
     const container = document.getElementById('tvChartContainer');
     const isLight = document.body.getAttribute('data-theme') === 'light';
     const theme = isLight ? 'light' : 'dark';
@@ -290,7 +347,7 @@ function loadTradingViewChart(chartId) {
     new TradingView.widget({
         "width": "100%",
         "height": 400,
-        "symbol": info.symbol,
+        "symbol": symbol,
         "interval": "60",
         "timezone": "Asia/Seoul",
         "theme": theme,
@@ -304,39 +361,6 @@ function loadTradingViewChart(chartId) {
         "container_id": "tradingview_chart",
         "hide_volume": true
     });
-}
-
-function renderChartTabs() {
-    loadTradingViewChart('nasdaq');
-}
-
-function renderCrypto() {
-    const crypto = decryptedData.crypto || [];
-    const grid = document.getElementById('cryptoGrid');
-    grid.innerHTML = crypto.map(c => {
-        const cls = c.change >= 0 ? 'up' : 'down';
-        return '<div class="crypto-card '+cls+'"><div class="crypto-symbol">'+c.symbol+'</div><div class="crypto-name">'+c.name+'</div><div class="crypto-price">$'+c.price.toLocaleString()+'</div><div class="crypto-change">'+(c.change>=0?'+':'')+c.change.toFixed(2)+'%</div></div>';
-    }).join('');
-}
-
-function renderIndices() {
-    // 차트에 표시된 종목들 (TradingView에서 실시간으로 가져옴)
-    const chartItems = [
-        { name: '나스닥100', symbol: 'FOREXCOM:NSXUSD' },
-        { name: '골드', symbol: 'OANDA:XAUUSD' },
-        { name: '비트코인', symbol: 'BINANCE:BTCUSDT' },
-        { name: '원/달러', symbol: 'FX_IDC:USDKRW' },
-        { name: 'VIX (변동성)', symbol: 'TVC:VIX' }
-    ];
-    document.getElementById('indicesTable').innerHTML = chartItems.map(item => {
-        return '<tr><td>'+item.name+'</td><td colspan="2" style="color:var(--text-secondary);font-size:0.85rem;">차트에서 실시간 확인</td></tr>';
-    }).join('');
-    
-    const kr = decryptedData.kr_indices || [];
-    document.getElementById('krTable').innerHTML = kr.map(i => {
-        const cls = i.change >= 0 ? 'positive' : 'negative';
-        return '<tr><td>'+i.name+'</td><td>'+i.price.toLocaleString()+'</td><td class="'+cls+'">'+(i.change>=0?'+':'')+i.change.toFixed(2)+'%</td></tr>';
-    }).join('');
 }
 
 function renderFearGreed() {
@@ -531,6 +555,9 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 .chart-tab.active .change{{color:rgba(255,255,255,0.9)}}
 .chart-container{{position:relative;height:350px;margin-bottom:1rem}}
 .tv-chart-container{{position:relative;height:400px;margin-bottom:1rem;border-radius:8px;overflow:hidden}}
+.chart-select-table tbody tr{{cursor:pointer;transition:all 0.2s}}
+.chart-select-table tbody tr:hover{{background:rgba(55,66,250,0.15)}}
+.chart-select-table tbody tr.active{{background:rgba(55,66,250,0.25);border-left:3px solid var(--blue)}}
 
 /* 선물 */
 .futures-grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}}
@@ -638,17 +665,10 @@ body{{font-family:'Noto Sans KR',sans-serif;background:var(--bg-primary);color:v
 <span class="toggle-btn">▲</span>
 </div>
 <div class="section-content">
-<div class="chart-tabs">
-<button class="chart-tab active" onclick="switchChart('nasdaq')">나스닥100</button>
-<button class="chart-tab" onclick="switchChart('gold')">골드</button>
-<button class="chart-tab" onclick="switchChart('btc')">비트코인</button>
-<button class="chart-tab" onclick="switchChart('usdkrw')">원/달러</button>
-<button class="chart-tab" onclick="switchChart('vix')">VIX (변동성)</button>
-</div>
 <div class="tv-chart-container" id="tvChartContainer">
 <div id="tradingview_chart"></div>
 </div>
-<table class="table">
+<table class="table chart-select-table">
 <thead><tr><th>종목</th><th>현재가</th><th>등락률</th></tr></thead>
 <tbody id="indicesTable"></tbody>
 </table>
