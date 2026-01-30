@@ -64,13 +64,20 @@ def get_stock_indices():
     
     try:
         symbols = {
+            # 미국 주요 지수
             "^GSPC": ("S&P 500", "sp500"),
             "^DJI": ("다우존스", "dow"),
             "^IXIC": ("나스닥", "nasdaq"),
-            "^VIX": ("VIX", "vix"),
             "^NDX": ("나스닥100", "nasdaq100"),
+            "^VIX": ("VIX", "vix"),
+            # 원자재
             "GC=F": ("골드", "gold"),
-            "KRW=X": ("원/달러", "usdkrw")
+            "SI=F": ("은", "silver"),
+            "CL=F": ("WTI 유가", "wti"),
+            # 환율 & 금리
+            "DX-Y.NYB": ("달러인덱스", "dxy"),
+            "KRW=X": ("원/달러", "usdkrw"),
+            "^TNX": ("미국 10년물 금리", "us10y"),
         }
         
         for symbol, (name, key) in symbols.items():
@@ -93,8 +100,9 @@ def get_stock_indices():
                         "price": round(price, 2),
                         "change": round(change, 2)
                     })
+                    print(f"    {name}: {price:.2f} ({change:+.2f}%)")
             except Exception as e:
-                print(f"{name} 데이터 수집 실패: {e}")
+                print(f"    {name} 수집 실패: {e}")
                 
     except Exception as e:
         print(f"주식 지수 데이터 수집 실패: {e}")
