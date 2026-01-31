@@ -107,7 +107,7 @@ def call_claude(prompt, use_web_search=False):
         print(f"    Claude API 에러: {e}")
         return None
 
-def generate_one_liner(market_data):
+def generate_one_liner(market_data, use_web_search=True):
     """한줄 코멘트 생성 (웹 검색으로 최신 이슈 반영)"""
     crypto = market_data.get("crypto", [])
     indices = market_data.get("us_indices", [])
@@ -141,9 +141,9 @@ def generate_one_liner(market_data):
 
 한 문장만 출력하세요."""
 
-    return call_claude(prompt, use_web_search=True)
+    return call_claude(prompt, use_web_search=use_web_search)
 
-def generate_us_market_analysis(market_data):
+def generate_us_market_analysis(market_data, use_web_search=True):
     """미국 증시 분석 (웹 검색으로 최신 뉴스 반영)"""
     indices = market_data.get("us_indices", [])
     
@@ -191,9 +191,9 @@ def generate_us_market_analysis(market_data):
 - 간결하고 핵심적인 분석
 - HTML 코드만 출력"""
 
-    return call_claude(prompt, use_web_search=True)
+    return call_claude(prompt, use_web_search=use_web_search)
 
-def generate_crypto_analysis(market_data):
+def generate_crypto_analysis(market_data, use_web_search=True):
     """암호화폐 분석 (웹 검색으로 최신 뉴스 반영)"""
     crypto = market_data.get("crypto", [])
     fear_greed = market_data.get("fear_greed", {})
@@ -247,9 +247,9 @@ def generate_crypto_analysis(market_data):
 - 간결하고 핵심적인 분석
 - HTML 코드만 출력"""
 
-    return call_claude(prompt, use_web_search=True)
+    return call_claude(prompt, use_web_search=use_web_search)
 
-def generate_commodities_analysis(market_data):
+def generate_commodities_analysis(market_data, use_web_search=True):
     """원자재 분석 (웹 검색으로 최신 뉴스 반영)"""
     indices = market_data.get("us_indices", [])
     
@@ -292,9 +292,9 @@ def generate_commodities_analysis(market_data):
 - 간결하고 핵심적인 분석
 - HTML 코드만 출력"""
 
-    return call_claude(prompt, use_web_search=True)
+    return call_claude(prompt, use_web_search=use_web_search)
 
-def generate_korea_market_analysis(market_data):
+def generate_korea_market_analysis(market_data, use_web_search=True):
     """국내 증시 분석 (웹 검색으로 최신 뉴스 반영)"""
     kr_indices = market_data.get("kr_indices", [])
     us_indices = market_data.get("us_indices", [])
@@ -334,9 +334,9 @@ def generate_korea_market_analysis(market_data):
 - 간결하고 핵심적인 분석
 - HTML 코드만 출력"""
 
-    return call_claude(prompt, use_web_search=True)
+    return call_claude(prompt, use_web_search=use_web_search)
 
-def generate_investment_strategy(market_data):
+def generate_investment_strategy(market_data, use_web_search=True):
     """투자 전략 (웹 검색으로 최신 뉴스 기반 전략)"""
     crypto = market_data.get("crypto", [])
     indices = market_data.get("us_indices", [])
@@ -385,7 +385,7 @@ def generate_investment_strategy(market_data):
 - 간결하고 실행 가능한 전략
 - HTML 코드만 출력"""
 
-    return call_claude(prompt, use_web_search=True)
+    return call_claude(prompt, use_web_search=use_web_search)
 
 def get_economic_calendar_from_einfomax():
     """einfomax API에서 경제지표 가져오기 (100% 정확)"""
@@ -584,28 +584,31 @@ def main():
     market_data["futures_data"] = futures_data
     
     # V2 분석 생성 (Rate Limit 방지를 위해 120초 딜레이)
+    # 개발 중 웹 검색 비활성화 (비용 절감)
+    USE_WEB_SEARCH = False  # 완성 후 True로 변경
+    
     print("  한줄 코멘트 생성 중...")
-    one_liner = generate_one_liner(market_data)
-    time.sleep(120)  # 2분 대기
+    one_liner = generate_one_liner(market_data, USE_WEB_SEARCH)
+    time.sleep(30)  # 웹검색 없으면 30초면 충분
     
     print("  미국 증시 분석 중...")
-    us_market = generate_us_market_analysis(market_data)
-    time.sleep(120)  # 2분 대기
+    us_market = generate_us_market_analysis(market_data, USE_WEB_SEARCH)
+    time.sleep(30)
     
     print("  암호화폐 분석 중...")
-    crypto_analysis = generate_crypto_analysis(market_data)
-    time.sleep(120)  # 2분 대기
+    crypto_analysis = generate_crypto_analysis(market_data, USE_WEB_SEARCH)
+    time.sleep(30)
     
     print("  원자재 분석 중...")
-    commodities = generate_commodities_analysis(market_data)
-    time.sleep(120)  # 2분 대기
+    commodities = generate_commodities_analysis(market_data, USE_WEB_SEARCH)
+    time.sleep(30)
     
     print("  국내 증시 분석 중...")
-    korea_market = generate_korea_market_analysis(market_data)
-    time.sleep(120)  # 2분 대기
+    korea_market = generate_korea_market_analysis(market_data, USE_WEB_SEARCH)
+    time.sleep(30)
     
     print("  투자 전략 생성 중...")
-    strategy = generate_investment_strategy(market_data)
+    strategy = generate_investment_strategy(market_data, USE_WEB_SEARCH)
     
     market_data["analysis"] = {
         "one_liner": one_liner or "📊 시장 분석 준비 중입니다.",
